@@ -159,6 +159,58 @@ namespace HomeWork_5
             return resultString;
         }
 
+        public static string IsArithmeticOrGeometricProgression(int[] numbers)
+        {
+            if (numbers.Length < 3)
+            {
+                return "Не является прогрессией";
+            }
+
+            bool isArithmeticProgression = false;
+            for (int i = 2; i < numbers.Length; i++)
+            {
+                if (numbers[i] - numbers[i - 1] == numbers[i - 1] - numbers[i - 2])
+                {
+                    isArithmeticProgression = true;
+                }
+                else
+                {
+                    isArithmeticProgression = false;
+                    break;
+                }
+            }
+
+            bool isGeometricProgression = false;
+            if (numbers[0] != 0 && numbers[1] != 0 && numbers[2] != 0)
+            {
+                for (int i = 2; i < numbers.Length; i++)
+                {
+                    if (numbers[i] / numbers[i - 1] == numbers[i - 1] / numbers[i - 2])
+                    {
+                        isGeometricProgression = true;
+                    }
+                    else
+                    {
+                        isGeometricProgression = false;
+                        break;
+                    }
+                }
+            }
+
+            if (isArithmeticProgression)
+            {
+                return "Арифметическая прогрессия";
+            }
+
+            if (isGeometricProgression)
+            {
+                return "Геометрическая прогрессия";
+            }
+
+
+            return "Не является прогрессией";
+        }
+
         /// <summary>
         /// Вывод матрицы в консоль
         /// </summary>

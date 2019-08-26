@@ -90,7 +90,7 @@ namespace HomeWork_5
             #endregion
 
             #region Задание 2
-
+            Console.WriteLine("Задание 2:");
             var text = "A ББ ВВВ ГГГГ ДДДД  ДД ЕЕ ЖЖ ЗЗЗ";
 
             var str1 = Methods.MinСharacters(text);
@@ -103,10 +103,12 @@ namespace HomeWork_5
             }
             Console.WriteLine();
 
+            Console.WriteLine();
+
             #endregion
 
             #region Задание 3
-
+            Console.WriteLine("Задание 3:");
             var text1 = "ПППОООГГГООООДДДААА";
             var text2 = "Ххххоооорррооошшшиий деееннннь";
 
@@ -116,9 +118,39 @@ namespace HomeWork_5
             Console.WriteLine(t1);
             Console.WriteLine(t2);
 
+            Console.WriteLine();
+
             #endregion
 
             #region Задание 4
+            Console.WriteLine("Задание 4:");
+
+            int[] testArray01 = { 1, 3, 5, 7 };
+            int[] testArray02 = { 1, 2, 3, 4, 5, 6, 7 };
+            int[] testArray03 = { 1, 2, 3, 5, 6, 7 };
+            int[] testArray04 = { 1, 2, 4, 8, 16, 32 };
+            int[] testArray05 = { 1, 2, 4, 8, 16, 31 };
+            int[] testArray06 = { 1, 0, 5, 7 };
+            int[] testArray07 = { 0, 2, 4, 8 };
+            int[] testArray08 = { 1, 2, 4, 0, 8, 16, 32 };
+            int[] testArray09 = { -5, -3, -1, 1, 3, 5, 7 };
+            int[] testArray10 = { -1, -2, -4, -8, -16, -32 };
+            int[] testArray11 = { -1, 2, -4, 8, -16, 32 };
+            int[] testArray12 = { 1, -1, 1, -1, 1 };    
+
+
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray01));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray02));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray03));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray04));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray05));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray06));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray07));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray08));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray09));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray10));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray11));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray12));
 
             #endregion
 
