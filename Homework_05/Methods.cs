@@ -159,7 +159,12 @@ namespace HomeWork_5
             return resultString;
         }
 
-        public static string IsArithmeticOrGeometricProgression(int[] numbers)
+        /// <summary>
+        /// Определяет арифметическая или геомертическая последовательность 
+        /// </summary>
+        /// <param name="numbers">массив чисел</param>
+        /// <returns>Возвращает ответ в виде фраз: "Не является прогрессией", "Арифметическая прогрессия", "Геометрическая прогрессия"</returns>
+        public static string IsArithmeticOrGeometricProgression(double[] numbers)
         {
             if (numbers.Length < 3)
             {

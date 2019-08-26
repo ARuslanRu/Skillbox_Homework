@@ -125,18 +125,20 @@ namespace HomeWork_5
             #region Задание 4
             Console.WriteLine("Задание 4:");
 
-            int[] testArray01 = { 1, 3, 5, 7 };
-            int[] testArray02 = { 1, 2, 3, 4, 5, 6, 7 };
-            int[] testArray03 = { 1, 2, 3, 5, 6, 7 };
-            int[] testArray04 = { 1, 2, 4, 8, 16, 32 };
-            int[] testArray05 = { 1, 2, 4, 8, 16, 31 };
-            int[] testArray06 = { 1, 0, 5, 7 };
-            int[] testArray07 = { 0, 2, 4, 8 };
-            int[] testArray08 = { 1, 2, 4, 0, 8, 16, 32 };
-            int[] testArray09 = { -5, -3, -1, 1, 3, 5, 7 };
-            int[] testArray10 = { -1, -2, -4, -8, -16, -32 };
-            int[] testArray11 = { -1, 2, -4, 8, -16, 32 };
-            int[] testArray12 = { 1, -1, 1, -1, 1 };    
+            double[] testArray01 = { 1, 3, 5, 7 };
+            double[] testArray02 = { 1, 2, 3, 4, 5, 6, 7 };
+            double[] testArray03 = { 1, 2, 3, 5, 6, 7 };
+            double[] testArray04 = { 1, 2, 4, 8, 16, 32 };
+            double[] testArray05 = { 1, 2, 4, 8, 16, 31 };
+            double[] testArray06 = { 1, 0, 5, 7 };
+            double[] testArray07 = { 0, 2, 4, 8 };
+            double[] testArray08 = { 1, 2, 4, 0, 8, 16, 32 };
+            double[] testArray09 = { -5, -3, -1, 1, 3, 5, 7 };
+            double[] testArray10 = { -1, -2, -4, -8, -16, -32 };
+            double[] testArray11 = { -1, 2, -4, 8, -16, 32 };
+            double[] testArray12 = { 1, -1, 1, -1, 1 };
+            double[] testArray13 = { 50, 25, 12.5, 6.25, 3.125 };
+
 
 
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray01));
@@ -151,6 +153,7 @@ namespace HomeWork_5
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray10));
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray11));
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray12));
+            Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray13));
 
             #endregion
 
