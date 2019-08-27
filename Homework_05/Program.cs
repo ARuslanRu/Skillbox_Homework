@@ -50,7 +50,7 @@ namespace HomeWork_5
             #endregion
 
             #region Задание 1
-
+            Console.WriteLine("Задание 1:");
             int[,] matrix1 = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
             int[,] matrix2 = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
             int[,] matrixTestError = { { 1, 1, 1 }, { 1, 1, 1 } };
@@ -139,8 +139,6 @@ namespace HomeWork_5
             double[] testArray12 = { 1, -1, 1, -1, 1 };
             double[] testArray13 = { 50, 25, 12.5, 6.25, 3.125 };
 
-
-
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray01));
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray02));
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray03));
@@ -155,9 +153,13 @@ namespace HomeWork_5
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray12));
             Console.WriteLine(Methods.IsArithmeticOrGeometricProgression(testArray13));
 
+            Console.WriteLine();
+
             #endregion
 
             #region Задание 5
+
+            Console.WriteLine("Задание 5:");
 
             Console.WriteLine($"А(2,5): {Methods.AckermanFunction(2, 5)}");
             Console.WriteLine($"А(3,3): {Methods.AckermanFunction(3, 3)}");

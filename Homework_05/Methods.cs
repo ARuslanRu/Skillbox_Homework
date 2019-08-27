@@ -216,7 +216,6 @@ namespace HomeWork_5
             return "Не является прогрессией";
         }
 
-
         /// <summary>
         /// Вычисление функции Аккермана
         /// </summary>
