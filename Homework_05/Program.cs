@@ -159,6 +159,11 @@ namespace HomeWork_5
 
             #region Задание 5
 
+            Console.WriteLine($"А(2,5): {Methods.AckermanFunction(2, 5)}");
+            Console.WriteLine($"А(3,3): {Methods.AckermanFunction(3, 3)}");
+            Console.WriteLine($"А(1,2): {Methods.AckermanFunction(1, 2)}");
+            Console.WriteLine($"А(3,5): {Methods.AckermanFunction(3, 5)}");
+
             #endregion
 
             Console.ReadKey();

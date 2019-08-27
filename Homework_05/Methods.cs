@@ -216,6 +216,34 @@ namespace HomeWork_5
             return "Не является прогрессией";
         }
 
+
+        /// <summary>
+        /// Вычисление функции Аккермана
+        /// </summary>
+        /// <param name="n">Первое число</param>
+        /// <param name="m">Второе число</param>
+        /// <returns>Возвращает результат вычисления функции Аккермана, при неверно введенных данных возвращает -1 </returns>
+        public static int AckermanFunction(int n, int m)
+        {
+            if (n < 0 || m < 0)
+            {
+                return -1;
+            }
+
+            int result;
+            if (n == 0)
+            {
+                return result = m + 1;
+            }
+            else if (n > 0 && m == 0)
+            {
+                return result = AckermanFunction(n - 1, 1);
+            }else
+            {
+                return result = AckermanFunction(n - 1, AckermanFunction(n, m - 1));
+            }
+        }
+
         /// <summary>
         /// Вывод матрицы в консоль
         /// </summary>
