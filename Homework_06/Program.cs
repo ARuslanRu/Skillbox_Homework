@@ -77,7 +77,9 @@ namespace Homework_06
             string path; //путь к файлу
             int number; //число из файла
             int numOfGroups; //количество групп
-
+            DateTime date; //начальное время
+            TimeSpan timeSpan; //интервал за который выполнилась задача
+            List<int>[] numsInGroups; //массив чисел распределенных по группам
 
 
             Console.Write("Укажите путь к файлу с числом N \n(если остависть пустым, то по умолчанию будет указан файл number.txt в текущем каталоге): ");
@@ -116,10 +118,6 @@ namespace Homework_06
                 Console.Write("Введено недопустимое значение." +
                         "\nПовторите ввод (выберите (1) или (2)): ");
             }
-
-            DateTime date;
-            TimeSpan timeSpan;
-            List<int>[] numsInGroups;
 
             switch (mode)
             {
@@ -164,7 +162,6 @@ namespace Homework_06
                     break;
             }
 
-
             Console.WriteLine("Заархивировать результат" +
                 "\n1. Да" +
                 "\n2. Нет");
@@ -194,14 +191,18 @@ namespace Homework_06
                     }
                 }
             }
-            
-
 
             Console.ReadKey();
         }
 
-        #region Задача 1
+        #region Методы
 
+        /// <summary>
+        /// Пытаемся получить номер из файла
+        /// </summary>
+        /// <param name="path">Путь к файлу с указанием его имени</param>
+        /// <param name="number">Считанное число</param>
+        /// <returns>Получаем результат удалось ли считать число или нет</returns>
         static bool TryReadNumFromFile(string path, out int number)
         {
             using (var sr = new StreamReader(path))
@@ -210,11 +211,22 @@ namespace Homework_06
             }
         }
 
+        /// <summary>
+        /// Вычисляем количество групп
+        /// </summary>
+        /// <param name="num">максимальное число</param>
+        /// <returns>возвращаем количество групп</returns>
         static int GetNumOfGroups(int num)
         {
             return (int)Math.Log(num, 2) + 1;
         }
-
+       
+        /// <summary>
+        /// распеределяем числа по группам (с большим максимальным числом работает очень долго)
+        /// </summary>
+        /// <param name="num">максимальное число</param>
+        /// <param name="numOfGroups">количество групп для максимального числа</param>
+        /// <returns>возвращаем массив чисел распределенных по спискам</returns>
         static List<int>[] AssignNumbersToGroups(int num, int numOfGroups)
         {
             List<int>[] nums = new List<int>[numOfGroups];
@@ -255,163 +267,6 @@ namespace Homework_06
             return nums;
         }
 
-        #endregion
-
-        #region Тест
-        //для 100_000_000 чисел выполняется 33 сек
-        static void SaveNumbersToFile_1(int nums)
-        {
-            using (var sw = new StreamWriter("test.txt"))
-            {
-                for (int i = 0; i < nums; i++)
-                {
-                    sw.Write($"{i + 1}\n");
-                }
-            }
-        }
-
-        //для 100_000_000 чисел выполняется 30 сек
-        static void SaveNumbersToFile_2(int nums)
-        {
-            using (var sw = new StreamWriter("test.txt", true, Encoding.UTF8, 65536))
-            {
-                for (int i = 0; i < nums; i++)
-                {
-                    sw.Write($"{i + 1}\n");
-                }
-            }
-        }
-
-
-        //для 100_000_000 чисел выполняется 44 сек
-        static void SaveNumbersToFile1(int nums)
-        {
-            var text = new StringBuilder();
-
-            for (int i = 0; i < nums; i++)
-            {
-                text.Append($"{i + 1}\n");
-            }
-
-            using (var sw = new StreamWriter("test.txt"))
-            {
-                sw.Write(text);
-            }
-        }
-
-        //для 100_000_000 чисел выполняется 40 сек
-        static void SaveNumbersToFile_3(int nums)
-        {
-            using (var fs = new FileStream("test.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite, 65536, true))
-            {
-                for (int i = 0; i < nums; i++)
-                {
-                    byte[] array = Encoding.Default.GetBytes($"{i + 1}\n");
-                    fs.Write(array, 0, array.Length);
-                }
-            }
-        }
-
-        //
-        static int[] ReadFile_1(string name)
-        {
-            var text = new StringBuilder();
-            using (var sw = new StreamReader(name))
-            {
-                text.Append(sw.ReadToEnd());
-            }
-            return text.ToString().Trim().Split('\n').Select(x => int.Parse(x)).ToArray();
-        }
-
-        //
-        static int[] ReadFile_2(string fileName)
-        {
-            byte[] bytes;
-            using (var fsSource = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
-                bytes = new byte[fsSource.Length];
-                int numBytesToRead = (int)fsSource.Length;
-                int numBytesRead = 0;
-
-                while (numBytesToRead > 0)
-                {
-                    int n = fsSource.Read(bytes, numBytesRead, numBytesToRead);
-
-                    if (n == 0)
-                        break;
-                    numBytesRead += n;
-                    numBytesToRead -= n;
-                }
-                numBytesToRead = bytes.Length;
-            }
-            return Encoding.ASCII.GetString(bytes).Trim().Split('\n').Select(x => int.Parse(x)).ToArray();
-        }
-
-        static int[] ReadFile_3(string name)
-        {
-            IEnumerable<string> nums = File.ReadAllLines(name);
-
-            return null;
-
-            //return text.ToString().Trim().Split('\n').Select(x => int.Parse(x)).ToArray();
-        }
-
-        static byte[] ReadFile_4(string fileName)
-        {
-            byte[] bytes;
-            using (var fsSource = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-            {
-                bytes = new byte[fsSource.Length];
-                int numBytesToRead = (int)fsSource.Length;
-                int numBytesRead = 0;
-
-                while (numBytesToRead > 0)
-                {
-                    int n = fsSource.Read(bytes, numBytesRead, numBytesToRead);
-
-                    if (n == 0)
-                        break;
-                    numBytesRead += n;
-                    numBytesToRead -= n;
-                }
-                numBytesToRead = bytes.Length;
-            }
-            return bytes;
-        }
-
-        static void Store()
-        {
-            double sum = 0;
-            //Подсчитываем количество символов в цифрах от 1 до 100 000 000
-            for (long i = 1, j = 1; i < 100_000_000; i *= 10, j++)
-            {
-                Console.WriteLine($"i = {i}");
-                Console.WriteLine($"j = {j}");
-                Console.WriteLine(9 * i);
-                sum += 9 * i * j;
-                Console.WriteLine(sum);
-            }
-
-            //Добавляем количество символов перехода на следующую строку
-            sum += 99_999_997;
-
-            //Умножаем на количество байт в символе
-            sum *= 2;
-            Console.WriteLine(sum / 1024 / 1024);
-
-        }
-
-        //Ругается если пробую создать массив из 1_000_000_000 элементов
-        static int[] CreateNumsArray(int num)
-        {
-            int[] nums = new int[num];
-            for (int i = 0; i < num; i++)
-            {
-                nums[i] = i;
-            }
-            return nums;
-        }
-
-        #endregion
+        #endregion   
     }
 }
