@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.IO.Compression;
 using System.Threading.Tasks;
 
 namespace Homework_06
@@ -73,48 +74,139 @@ namespace Homework_06
             ///   В обязательном порядке создать несколько собственных методов
             #endregion
 
-            var num = ReadNumFromFile("num.txt");
-            Console.WriteLine($"Число из файла: {num}");
-            var numOfGroups = GetNumOfGroups(num);
-            Console.WriteLine($"Количество групп: {numOfGroups}");
+            string path; //путь к файлу
+            int number; //число из файла
+            int numOfGroups; //количество групп
 
 
 
+            Console.Write("Укажите путь к файлу с числом N \n(если остависть пустым, то по умолчанию будет указан файл number.txt в текущем каталоге): ");
+            path = Console.ReadLine();
 
-            Console.WriteLine("Старт");
-            var date = DateTime.Now;
-
-
-
-            var L = AssignNumbersToGroups(num, numOfGroups);
-
-            foreach (var list in L)
+            if (string.IsNullOrEmpty(path))
             {
-                Console.WriteLine($"Группа: ");
-                foreach (var item in list)
-                {
-                    Console.Write($"{item}, ");
-                }
-                Console.WriteLine();
+                path = "number.txt";
+                Console.WriteLine($"Взято значение по умолчанию: {path}");
+            }
+
+            while (!File.Exists(path))
+            {
+                Console.Write($"Файл {path} не существует или неверно указан путь. Укажите путь повторно: ");
+                path = Console.ReadLine();
+            }
+
+            if (!TryReadNumFromFile(path, out number))
+            {
+                Console.WriteLine("Не удалось прочитать число из файла! Проверьте содержимое файла! Приложение будет закрыто!");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+
+            Console.WriteLine($"Число из файла: {number}");
+
+            Console.WriteLine("---------------");
+
+            Console.WriteLine("Выберите вариант работы (Введите число)" +
+                "\n1. Показать только количество групп." +
+                "\n2. Получить заполненные группы и записать их в файл.");
+
+            int mode;
+            while (!int.TryParse(Console.ReadLine(), out mode) && (mode != 1 || mode != 2))
+            {
+                Console.Write("Введено недопустимое значение." +
+                        "\nПовторите ввод (выберите (1) или (2)): ");
+            }
+
+            DateTime date;
+            TimeSpan timeSpan;
+            List<int>[] numsInGroups;
+
+            switch (mode)
+            {
+                case 1:
+                    date = DateTime.Now;
+
+                    numOfGroups = GetNumOfGroups(number);
+                    Console.WriteLine($"Количество групп: {numOfGroups}");
+
+                    timeSpan = DateTime.Now.Subtract(date);
+                    Console.WriteLine($"Затраченное время: {timeSpan.TotalMilliseconds}");
+
+                    break;
+                case 2:
+                    date = DateTime.Now;
+
+                    numOfGroups = GetNumOfGroups(number);
+                    numsInGroups = AssignNumbersToGroups(number, numOfGroups);
+
+                    int groupNum = 1;
+
+                    using (var sw = new StreamWriter("test.txt"))
+                    {
+                        foreach (var list in numsInGroups)
+                        {
+                            sw.Write($"Группа {groupNum}:\n");
+                            foreach (var item in list)
+                            {
+                                sw.Write($"{item} ");
+                            }
+                            sw.Write("\n");
+                            groupNum++;
+                        }
+                    }
+
+                    timeSpan = DateTime.Now.Subtract(date);
+                    Console.WriteLine($"Затраченное время: {timeSpan.TotalMilliseconds}");
+
+                    break;
+                default:
+                    Console.WriteLine("Что-то пошло не так.");
+                    break;
             }
 
 
+            Console.WriteLine("Заархивировать результат" +
+                "\n1. Да" +
+                "\n2. Нет");
+            while (!int.TryParse(Console.ReadLine(), out mode) && (mode != 1 || mode != 2))
+            {
+                Console.Write("Введено недопустимое значение." +
+                        "\nПовторите ввод (выберите (1) или (2)): ");
+            }
 
-            var timeSpan = DateTime.Now.Subtract(date);
+            if (mode == 1)
+            {
+                string source = "test.txt";
+                string compressed = "test.zip";
+                using (FileStream ss = new FileStream(source, FileMode.OpenOrCreate))
+                {
+                    using (FileStream ts = File.Create(compressed))   // поток для записи сжатого файла
+                    {
+                        // поток архивации
+                        using (GZipStream cs = new GZipStream(ts, CompressionMode.Compress))
+                        {
+                            ss.CopyTo(cs); // копируем байты из одного потока в другой
+                            Console.WriteLine("Сжатие файла {0} завершено. Было: {1}  стало: {2}.",
+                                              source,
+                                              ss.Length,
+                                              ts.Length);
+                        }
+                    }
+                }
+            }
+            
 
-            Console.WriteLine($"Затраченное время: {timeSpan.TotalMilliseconds}");
 
             Console.ReadKey();
         }
 
-
         #region Задача 1
 
-        static int ReadNumFromFile(string fileName)
+        static bool TryReadNumFromFile(string path, out int number)
         {
-            using (var sr = new StreamReader(fileName))
+            using (var sr = new StreamReader(path))
             {
-                return int.Parse(sr.ReadToEnd());
+                return int.TryParse(sr.ReadToEnd(), out number);
             }
         }
 
