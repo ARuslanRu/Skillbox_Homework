@@ -39,14 +39,18 @@ namespace Homework_07
             {
                 Console.Write("Меню:" +
                 "\n1. Добавить запись." +
-                "\n2. Найти запись." +
+                "\n2. Удалить запись." +
                 "\n3. Редактироать запись." +
-                "\n4. Удалить запись." +
+                "\n4. Найти запись." +               
                 "\n5. Вывести все записи в консоль." +
                 "\n6. Сохранить записи и выйти." +
                 "\nВаш выбор: ");
 
                 int mode;
+                int number;
+                Record rec;
+                string caption;
+                string description;
 
                 while (!int.TryParse(Console.ReadLine(), out mode) || mode < 1 || mode > 6)
                 {
@@ -54,43 +58,64 @@ namespace Homework_07
                             "\nПовторите ввод: ");
                 }
 
-                int number;
-
+                //Без верификации вводимой из консоли информации
                 switch (mode)
                 {
                     case 1:
+                        //Добавление записи
                         Console.Write("Введите заголовок записи: ");
-                        var caption = Console.ReadLine();
-
+                        caption = Console.ReadLine();
                         Console.Write("Введите текст записи: ");
-                        var description = Console.ReadLine();
-
-                        recordsRepository.AddNewRecord(caption, description);
+                        description = Console.ReadLine();
+                        rec =  recordsRepository.AddNewRecord(caption, description);
+                        Console.WriteLine("Добавлена запись:");
+                        recordsRepository.SortByNumber();
                         break;
+
                     case 2:
+                        //Удаление записи по номеру
                         Console.Write("Введите номер записи: ");
                         number = int.Parse(Console.ReadLine());
-
-
-
-
+                        rec = recordsRepository.FindRecordByNumber(number);
+                        recordsRepository.DeleteRecord(rec);
+                        Console.WriteLine("Удалена запись:");
+                        recordsRepository.PrintRecord(rec);
                         break;
+
                     case 3:
-                        break;
-                    case 4:
+                        //Редактирование записи
                         Console.Write("Введите номер записи: ");
                         number = int.Parse(Console.ReadLine());
+                        rec = recordsRepository.FindRecordByNumber(number);
+                        Console.WriteLine("Редактирование записи:");
+                        recordsRepository.PrintRecord(rec);
 
-                        var r =  recordsRepository.FindRecordByNumber(number);
+                        Console.Write("Введите новый заголовок записи: ");
+                        caption = Console.ReadLine();
+                        Console.Write("Введите новый текст записи: ");
+                        description = Console.ReadLine();
+                        rec = recordsRepository.UpdateRecord(number, caption, description);
 
-                        recordsRepository.DeleteRecord(r);
-
+                        Console.WriteLine("Запись отредактирована:");
+                        recordsRepository.PrintRecord(rec);
                         break;
+
+                    case 4:
+                        //Поиск записи
+                        Console.Write("Введите номер записи: ");
+                        number = int.Parse(Console.ReadLine());
+                        rec = recordsRepository.FindRecordByNumber(number);
+                        Console.WriteLine("Найдена запись:");
+                        recordsRepository.PrintRecord(rec);
+                        break;
+
                     case 5:
-                        recordsRepository.PrintRecords();
+                        //Выввод в консоль всех записей
+                        recordsRepository.PrintAllRecords();
 
                         break;
                     case 6:
+                        //Сохранение в файлик
                         recordsRepository.SaveRecords("data.csv");
                         Console.WriteLine("Данные сохранены. Нажмите любую клавишу для выхода.");
                         flag = false;
@@ -98,6 +123,15 @@ namespace Homework_07
                     default:
                         Console.WriteLine("Что-то пошло не так.");
                         break;
+
+
+
+                        //TODO: Надо доделать
+
+
+
+
+
                 }
 
 
