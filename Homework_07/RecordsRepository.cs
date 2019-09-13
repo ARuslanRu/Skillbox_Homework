@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Homework_07
 {
@@ -12,16 +10,21 @@ namespace Homework_07
 
         #region Поля
 
-        private List<Record> records;
         private string[] titles;
 
         #endregion
 
+        #region Свойства
+
+        public List<Record> Records { get; }
+        #endregion
+
         #region Конструкторы
+
         public RecordsRepository(string path)
         {
             this.titles = new string[0];
-            this.records = new List<Record>();
+            Records = new List<Record>();
             this.LoadRecords(path);
         }
 
@@ -42,27 +45,21 @@ namespace Homework_07
                 {
                     string[] args = sr.ReadLine().Split(',');
 
-                    records.Add(new Record(Convert.ToInt32(args[0]), args[1], args[2], Convert.ToDateTime(args[3]), Convert.ToDateTime(args[4])));
+                    Records.Add(new Record(Convert.ToInt32(args[0]), args[1], args[2], Convert.ToDateTime(args[3]), Convert.ToDateTime(args[4])));
                 }
             }
         }
 
-        #endregion
-
-        #region Public методы
-
         /// <summary>
-        ///Создание и добавление новой записи в репозиторий и возврат ее для дальнейшего использования, например вывода в консоль.
+        /// Поучение свободного идентификатора
         /// </summary>
-        /// <param name="caption">Заголовок</param>
-        /// <param name="descripition">Описание</param>
-        /// <returns>Возвращает записанную запись</returns>
-        public Record AddNewRecord(string caption, string descripition)
+        /// <returns></returns>
+        private int GettId()
         {
             int id;
-            if (records.Count != 0)
+            if (Records.Count != 0)
             {
-                int[] number = records.Select(x => x.Number).ToArray();
+                int[] number = Records.Select(x => x.Number).ToArray();
                 int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
                 id = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
             }
@@ -70,11 +67,39 @@ namespace Homework_07
             {
                 id = 1;
             }
+            return id;
+        }
+
+        #endregion
+
+        #region Public методы
+
+        /// <summary>
+        ///Создание новой записи в репозиторий и возврат ее для дальнейшего использования, например вывода в консоль.
+        /// </summary>
+        /// <param name="caption">Заголовок</param>
+        /// <param name="descripition">Описание</param>
+        /// <returns>Возвращает записанную запись</returns>
+        public Record AddNewRecord(string caption, string descripition)
+        {
+            var id = GettId();
             var rec = new Record(id, caption, descripition, DateTime.Now, DateTime.Now);
 
-            records.Add(rec);
+            Records.Add(rec);
 
             return rec;
+        }
+
+        /// <summary>
+        /// Добавление записи в существующий справочник
+        /// </summary>
+        /// <param name="rec">Запись</param>
+        public void AddRecord(Record rec)
+        {
+            var id = GettId();
+            var newRec = new Record(id, rec.Caption, rec.Description, rec.CreateDateTime, rec.LastModifyDateTime);
+
+            Records.Add(newRec);
         }
 
         /// <summary>
@@ -83,7 +108,7 @@ namespace Homework_07
         /// <param name="record">Запись</param>
         public void DeleteRecord(Record record)
         {
-            records.Remove(record);
+            Records.Remove(record);
         }
 
         /// <summary>
@@ -102,7 +127,7 @@ namespace Homework_07
         {
             Console.WriteLine($"{this.titles[0],6} {this.titles[1],15} {this.titles[2],25} {this.titles[3],20} {this.titles[4],20}");
 
-            foreach (var item in records)
+            foreach (var item in Records)
             {
                 PrintRecord(item);
             }
@@ -125,7 +150,7 @@ namespace Homework_07
 
                 sw.WriteLine(temp);
 
-                foreach (var item in records)
+                foreach (var item in Records)
                 {
                     temp = String.Format("{0},{1},{2},{3},{4}",
                                             item.Number,
@@ -147,36 +172,33 @@ namespace Homework_07
         /// <returns>Возвращает отредактированную запись, для вывода в консоль</returns>
         public Record UpdateRecord(int id, string caption, string description)
         {
-            var rec = records.Where(x => x.Number == id).FirstOrDefault();
-            records.Remove(rec);
+            var rec = Records.Where(x => x.Number == id).FirstOrDefault();
+            Records.Remove(rec);
             rec.Caption = caption;
             rec.Description = description;
             rec.LastModifyDateTime = DateTime.Now;
-            records.Add(rec);
+            Records.Add(rec);
             return rec;
         }
 
         /// <summary>
         /// Сортировка списка по номеру
         /// </summary>
-        public void SortByNumber() => records.OrderBy(x => x.Number);
+        public void SortByNumber() => Records.OrderBy(x => x.Number);
 
         /// <summary>
         /// Сортировка списка по дате создания
         /// </summary>
-        public void SortByCreateDate() => records.OrderBy(x => x.CreateDateTime);
+        public void SortByCreateDate() => Records.OrderBy(x => x.CreateDateTime);
 
         /// <summary>
         /// Поиск записи по номеру
         /// </summary>
         /// <param name="number">Номер записи</param>
         /// <returns>Возвращает запись</returns>
-        public Record FindRecordByNumber(int number) => records.Where(x => x.Number == number).FirstOrDefault();
+        public Record FindRecordByNumber(int number) => Records.Where(x => x.Number == number).FirstOrDefault();
 
         #endregion
-
-
-
 
         #region Тестовые методы
 
@@ -185,14 +207,14 @@ namespace Homework_07
         /// </summary>
         /// <param name="caption">Искомый заголовок</param>
         /// <returns>Возвращает запись</returns>
-        public Record FindRecordByCaption(string caption) => records.Where(x => x.Caption.Contains(caption)).FirstOrDefault();
+        public Record FindRecordByCaption(string caption) => Records.Where(x => x.Caption.Contains(caption)).FirstOrDefault();
 
         /// <summary>
         /// Поиск по тексту записи
         /// </summary>
         /// <param name="description">Искомый текст</param>
         /// <returns>Возвтращает найденную запись</returns>
-        public Record FindRecordByDescription(string description) => records.Where(x => x.Description.Contains(description)).FirstOrDefault();
+        public Record FindRecordByDescription(string description) => Records.Where(x => x.Description.Contains(description)).FirstOrDefault();
 
         /// <summary>
         /// Поиск записей в интервале времени по дате создания
@@ -200,7 +222,7 @@ namespace Homework_07
         /// <param name="dateFrom">С какой даты</param>
         /// <param name="dateTo">По какую дату</param>
         /// <returns></returns>
-        public List<Record> FindRecordByDate(DateTime dateFrom, DateTime dateTo)=> records.Where(x => x.CreateDateTime > dateFrom && x.CreateDateTime < dateTo).ToList();
+        public List<Record> FindRecordByDate(DateTime dateFrom, DateTime dateTo)=> Records.Where(x => x.CreateDateTime > dateFrom && x.CreateDateTime < dateTo).ToList();
 
         /// <summary>
         /// Вывод в консоль нескольких записей
@@ -215,9 +237,5 @@ namespace Homework_07
         }
 
         #endregion
-
-
-
-
     }
 }

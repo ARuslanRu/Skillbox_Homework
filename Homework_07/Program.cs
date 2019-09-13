@@ -22,15 +22,13 @@ namespace Homework_07
         /// - Загрузки даннах из файла
         /// - Выгрузки даннах в файл
         /// - Добавления данных в текущий ежедневник из выбранного файла
-        /// - Импорт записей по выбранному диапазону дат
-        /// - Упорядочивания записей ежедневника по выбранному полю
+        /// - Импорт записей по выбранному диапазону дат???
+        /// - Упорядочивания записей ежедневника по выбранному полю???
 
 
         static void Main(string[] args)
         {
             var recordsRepository = new RecordsRepository("data.csv");
-
-
 
             bool flag = true;
 
@@ -41,9 +39,10 @@ namespace Homework_07
                 "\n1. Добавить запись." +
                 "\n2. Удалить запись." +
                 "\n3. Редактироать запись." +
-                "\n4. Найти запись." +               
+                "\n4. Найти запись." +
                 "\n5. Вывести все записи в консоль." +
                 "\n6. Сохранить записи и выйти." +
+                "\n7. Догрузить данные из выбранного файла" +
                 "\nВаш выбор: ");
 
                 int mode;
@@ -52,7 +51,7 @@ namespace Homework_07
                 string caption;
                 string description;
 
-                while (!int.TryParse(Console.ReadLine(), out mode) || mode < 1 || mode > 6)
+                while (!int.TryParse(Console.ReadLine(), out mode) || mode < 1 || mode > 7)
                 {
                     Console.Write("Введено недопустимое значение." +
                             "\nПовторите ввод: ");
@@ -67,7 +66,7 @@ namespace Homework_07
                         caption = Console.ReadLine();
                         Console.Write("Введите текст записи: ");
                         description = Console.ReadLine();
-                        rec =  recordsRepository.AddNewRecord(caption, description);
+                        rec = recordsRepository.AddNewRecord(caption, description);
                         Console.WriteLine("Добавлена запись:");
                         recordsRepository.SortByNumber();
                         break;
@@ -115,30 +114,38 @@ namespace Homework_07
 
                         break;
                     case 6:
-                        //Сохранение в файлик
+                        //Сохранение в файл
                         recordsRepository.SaveRecords("data.csv");
                         Console.WriteLine("Данные сохранены. Нажмите любую клавишу для выхода.");
                         flag = false;
+                        break;
+                    case 7:
+                        Console.Write("Укажите имя файла для импорта данных:");
+                        var path = Console.ReadLine();
+                        var tempRepository = new RecordsRepository(path);
+
+                        Console.WriteLine("Укажите интервал дат, записи за которые необходимо добавить.");
+                        Console.Write("С какой даты? (в формате ДД.ММ.ГГГГ):");
+                        var dateFrom = Convert.ToDateTime(Console.ReadLine());
+                        Console.Write("С какой даты? (в формате ДД.ММ.ГГГГ):");
+                        var dateTo = Convert.ToDateTime(Console.ReadLine());
+                     
+                        foreach (var item in tempRepository.Records)
+                        {
+                            if (item.CreateDateTime > dateFrom && item.CreateDateTime < dateTo)
+                            {
+                                recordsRepository.AddRecord(item);
+                            }
+                        }
+
+                        Console.WriteLine("Записи добавлены.");
+
                         break;
                     default:
                         Console.WriteLine("Что-то пошло не так.");
                         break;
 
-
-
-                        //TODO: Надо доделать
-
-
-
-
-
                 }
-
-
-
-
-
-
             }
         }
     }
