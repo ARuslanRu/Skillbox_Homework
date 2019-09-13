@@ -120,14 +120,14 @@ namespace Homework_07
                         flag = false;
                         break;
                     case 7:
+                        //добавление записей из уже существующего файла
                         Console.Write("Укажите имя файла для импорта данных:");
                         var path = Console.ReadLine();
                         var tempRepository = new RecordsRepository(path);
-
                         Console.WriteLine("Укажите интервал дат, записи за которые необходимо добавить.");
                         Console.Write("С какой даты? (в формате ДД.ММ.ГГГГ):");
                         var dateFrom = Convert.ToDateTime(Console.ReadLine());
-                        Console.Write("С какой даты? (в формате ДД.ММ.ГГГГ):");
+                        Console.Write("По какую дату? (в формате ДД.ММ.ГГГГ):");
                         var dateTo = Convert.ToDateTime(Console.ReadLine());
                      
                         foreach (var item in tempRepository.Records)
@@ -137,7 +137,6 @@ namespace Homework_07
                                 recordsRepository.AddRecord(item);
                             }
                         }
-
                         Console.WriteLine("Записи добавлены.");
 
                         break;

@@ -37,6 +37,13 @@ namespace Homework_07
         /// </summary>
         private void LoadRecords(string path)
         {
+            if (!File.Exists("data.csv"))
+            {
+                string[] str = { "Номер,Заголовок,Описание,Создан,Последнее изменение" };
+                File.WriteAllLines("data.csv", str);
+            }
+
+
             using (var sr = new StreamReader(path))
             {
                 titles = sr.ReadLine().Split(',');
