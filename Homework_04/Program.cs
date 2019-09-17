@@ -164,7 +164,11 @@ namespace Homework_Theme_04
             Console.WriteLine("{0,10} {1,20} {2,20} {3,20}", "Месяц", "Доход, тыс. руб.", "Расход, тыс.руб.", "Прибыль, тыс. руб.");
             for (int i = 0; i < array.GetLength(0); i++)
             {
-                Console.WriteLine("{0,10:### ###} {1,20:### ###} {2,20:### ###} {3,20:### ###}", array[i, 0], array[i, 1], array[i, 2], array[i, 3]);
+                Console.WriteLine("{0,10:### ###} {1,20:### ###} {2,20:### ###} {3,20:### ###}",
+                    array[i, 0], 
+                    array[i, 1], 
+                    array[i, 2], 
+                    array[i, 3]);
             }
             Console.WriteLine();
 
