@@ -87,6 +87,33 @@ namespace Homework_08
             /// 
             #endregion
 
+            Controller cr = new Controller();
+
+            while (true)
+            {
+
+                Console.WriteLine("Выберете дейстивие:" +
+                    "\n1. Добавить департамент." +
+                    "\n2. Добавить сотрудника." +
+                    "\n3. Вывести всю информацию.");
+
+                var actionNum = int.Parse(Console.ReadLine());
+
+                switch (actionNum)
+                {
+                    case 1:
+                      cr.AddNewDepartment();
+                        break;
+                    case 2:
+                        cr.AddNewEmployee();
+                        break;
+                    case 3:
+                        cr.PrintAll();
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

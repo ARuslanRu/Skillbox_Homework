@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Homework_08
 {
-    struct Department
+    class Department
     {
-        public string DepartmentName { get; set; }
-        public DateTime CreateDate { get; set; }
-        public int NumberOfEmployees { get; set; }
+        public string DepartmentName { get; }
+        public DateTime CreateDate { get; }
+        public int NumberOfEmployees { get { return Employees.Count; } }
+        public List<Employee> Employees { get; set; }
+
+        public Department(string departmentName)
+        {
+            DepartmentName = departmentName;
+            CreateDate = DateTime.Now;           
+            Employees = new List<Employee>();
+        }
     }
 }
