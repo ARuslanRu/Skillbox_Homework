@@ -1,6 +1,6 @@
 ﻿namespace Homework_08
 {
-    class Employee
+    public class Employee
     {
         public int EmployeeId { get; set; }
         public string Surname { get; set; }
@@ -9,6 +9,11 @@
         public string DepartmentName { get; set; }
         public int Salary { get; set; }
         public int NumberOfProjects { get; set; }
+
+        public Employee()
+        {
+
+        }
 
         public Employee(int employeeId, string surname, string name, int age, string departmentName, int salary, int numberOfProjects)
         {

@@ -95,7 +95,15 @@ namespace Homework_08
                 Console.WriteLine("Выберете дейстивие:" +
                     "\n1. Добавить департамент." +
                     "\n2. Добавить сотрудника." +
-                    "\n3. Вывести всю информацию.");
+                    "\n3. Вывод списка сотрудников по департаментам." +
+                    "\n4. Вывод всех сотрудников." +
+                    "\n5. Выгрузить в XML." +
+                    "\n6. Загрузить из XML" +
+                    "\n7. Изменить сотрудника." +
+                    "\n8. Удалить сотрудника." +
+                    "\n9. Упорядочивание по возрасту." +
+                    "\n9. Упорядочивание по возрасту и оплате труда." +
+                    "\n9. Упорядочивание по возрасту и оплате труда в рамках одного департамента.");
 
                 var actionNum = int.Parse(Console.ReadLine());
 
@@ -108,7 +116,31 @@ namespace Homework_08
                         cr.AddNewEmployee();
                         break;
                     case 3:
-                        cr.PrintAll();
+                        cr.PrintHierarchy();
+                        break;
+                    case 4:
+                        cr.PrintAllUsers();
+                        break;
+                    case 5:
+                        cr.ExportToXml();
+                        break;
+                    case 6:
+                        cr.ImportFromXml();
+                        break;
+                    case 7:
+                        cr.EditEmployee();
+                        break;
+                    case 8:
+                        cr.RemoveEmployee();
+                        break;
+                    case 9:
+                        cr.SortByAge();
+                        break;
+                    case 10:
+                        cr.SortByAgeAndSalary();
+                        break;
+                    case 11:
+                        cr.SortByDepartmentAndAgeAndSalary();
                         break;
                     default:
                         break;

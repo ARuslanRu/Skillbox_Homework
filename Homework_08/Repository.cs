@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Homework_08
 {
@@ -19,12 +21,7 @@ namespace Homework_08
 
         private int GettId()
         {
-            var employees = new List<Employee>();
-
-            foreach (var e in Departments.Select(x => x.Employees))
-            {
-                employees.AddRange(e);
-            }
+            var employees = GetAllEmployee();
 
             int employeeId;
             if (employees.Count != 0)
@@ -76,6 +73,48 @@ namespace Homework_08
             var employeeId = GettId();
             Employee empl = new Employee(employeeId, surname, name, age, department.DepartmentName, salary, numberOfProjects);
             department.Employees.Add(empl);
+        }
+
+        public List<Employee> GetAllEmployee()
+        {
+            var employees = new List<Employee>();
+
+            foreach (var e in Departments.Select(x => x.Employees))
+            {
+                employees.AddRange(e);
+            }
+
+            return employees;
+        }
+
+        public void ExportToXML(string path)
+        {
+            // Создаем сериализатор на основе указанного типа 
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Department>));
+
+            // Создаем поток для сохранения данных
+            Stream fStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+
+            // Запускаем процесс сериализации
+            xmlSerializer.Serialize(fStream, Departments);
+
+            // Закрываем поток
+            fStream.Close();
+        }
+
+        public void ImportFromXML(string path)
+        {
+            // Создаем сериализатор на основе указанного типа 
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Department>));
+
+            // Создаем поток для чтения данных
+            Stream fStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            // Запускаем процесс десериализации
+            Departments = xmlSerializer.Deserialize(fStream) as List<Department>;
+
+            // Закрываем поток
+            fStream.Close();
         }
 
         #endregion

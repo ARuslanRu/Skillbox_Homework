@@ -3,12 +3,17 @@ using System.Collections.Generic;
 
 namespace Homework_08
 {
-    class Department
+    public class Department
     {
-        public string DepartmentName { get; }
-        public DateTime CreateDate { get; }
+        public string DepartmentName { get; set; }
+        public DateTime CreateDate { get; set; }
         public int NumberOfEmployees { get { return Employees.Count; } }
         public List<Employee> Employees { get; set; }
+
+        public Department()
+        {
+
+        }
 
         public Department(string departmentName)
         {
