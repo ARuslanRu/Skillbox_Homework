@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Homework_08
 {
@@ -87,7 +83,7 @@ namespace Homework_08
             /// 
             #endregion
 
-            Controller cr = new Controller();
+            Controller controller = new Controller();
 
             while (true)
             {
@@ -102,45 +98,53 @@ namespace Homework_08
                     "\n7. Изменить сотрудника." +
                     "\n8. Удалить сотрудника." +
                     "\n9. Упорядочивание по возрасту." +
-                    "\n9. Упорядочивание по возрасту и оплате труда." +
-                    "\n9. Упорядочивание по возрасту и оплате труда в рамках одного департамента.");
+                    "\n10. Упорядочивание по возрасту и оплате труда." +
+                    "\n11. Упорядочивание по возрасту и оплате труда в рамках одного департамента." +
+                    "\n12. Выгрузить в JSON." +
+                    "\n13. Загрузить из JSON.");
 
                 var actionNum = int.Parse(Console.ReadLine());
 
                 switch (actionNum)
                 {
                     case 1:
-                      cr.AddNewDepartment();
+                      controller.AddNewDepartment();
                         break;
                     case 2:
-                        cr.AddNewEmployee();
+                        controller.AddNewEmployee();
                         break;
                     case 3:
-                        cr.PrintHierarchy();
+                        controller.PrintHierarchy();
                         break;
                     case 4:
-                        cr.PrintAllUsers();
+                        controller.PrintAllUsers();
                         break;
                     case 5:
-                        cr.ExportToXml();
+                        controller.ExportToXml();
                         break;
                     case 6:
-                        cr.ImportFromXml();
+                        controller.ImportFromXml();
                         break;
                     case 7:
-                        cr.EditEmployee();
+                        controller.EditEmployee();
                         break;
                     case 8:
-                        cr.RemoveEmployee();
+                        controller.RemoveEmployee();
                         break;
                     case 9:
-                        cr.SortByAge();
+                        controller.SortByAge();
                         break;
                     case 10:
-                        cr.SortByAgeAndSalary();
+                        controller.SortByAgeAndSalary();
                         break;
                     case 11:
-                        cr.SortByDepartmentAndAgeAndSalary();
+                        controller.SortByDepartmentAndAgeAndSalary();
+                        break;
+                    case 12:
+                        controller.ExportToJson();
+                        break;
+                    case 13:
+                        controller.ImportFromJson();
                         break;
                     default:
                         break;

@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Homework_08
 {
     class Repository
     {
+        /// <summary>
+        /// Список департаментов с их сотрудниками
+        /// </summary>
         public List<Department> Departments { get; set; }
 
         public Repository()
@@ -19,6 +20,10 @@ namespace Homework_08
 
         #region Private методы
 
+        /// <summary>
+        /// Получение свободного идентификатора для создания пользователя
+        /// </summary>
+        /// <returns>Возвращает идентификатор</returns>
         private int GettId()
         {
             var employees = GetAllEmployee();
@@ -60,14 +65,14 @@ namespace Homework_08
         }
 
         /// <summary>
-        /// Добавление нового сотрудника
+        /// Создание нового сотрудника
         /// </summary>
-        /// <param name="surname"></param>
-        /// <param name="name"></param>
-        /// <param name="age"></param>
-        /// <param name="departmentId"></param>
-        /// <param name="salary"></param>
-        /// <param name="numberOfProjects"></param>
+        /// <param name="surname">Фамилия</param>
+        /// <param name="name">Имя</param>
+        /// <param name="age">Возраст</param>
+        /// <param name="department">Департамент</param>
+        /// <param name="salary">Зарплата</param>
+        /// <param name="numberOfProjects">Количество проектов</param>
         public void AddNewEmployee(string surname, string name, int age, Department department, int salary, int numberOfProjects)
         {
             var employeeId = GettId();
@@ -75,6 +80,10 @@ namespace Homework_08
             department.Employees.Add(empl);
         }
 
+        /// <summary>
+        /// Получение списка всех сотрудников
+        /// </summary>
+        /// <returns>Возвращает список всех сотрудников</returns>
         public List<Employee> GetAllEmployee()
         {
             var employees = new List<Employee>();
@@ -87,6 +96,10 @@ namespace Homework_08
             return employees;
         }
 
+        /// <summary>
+        /// Экспорт в XML по указанному пути
+        /// </summary>
+        /// <param name="path">Путь</param>
         public void ExportToXML(string path)
         {
             // Создаем сериализатор на основе указанного типа 
@@ -102,6 +115,10 @@ namespace Homework_08
             fStream.Close();
         }
 
+        /// <summary>
+        /// Импорт из указанного XML файла
+        /// </summary>
+        /// <param name="path">Путь</param>
         public void ImportFromXML(string path)
         {
             // Создаем сериализатор на основе указанного типа 
@@ -115,6 +132,26 @@ namespace Homework_08
 
             // Закрываем поток
             fStream.Close();
+        }
+
+        /// <summary>
+        /// Экспорт в Json по указанному пути
+        /// </summary>
+        /// <param name="path">Путь</param>
+        public void ExportToJson(string path)
+        {
+            string json = JsonConvert.SerializeObject(Departments);
+            File.WriteAllText(path, json);
+        }
+
+        /// <summary>
+        /// Импорт из указанного Json файла
+        /// </summary>
+        /// <param name="path">Путь</param>
+        public void ImportFromJson(string path)
+        {
+            var json = File.ReadAllText(path);
+            Departments = JsonConvert.DeserializeObject<List<Department>>(json);
         }
 
         #endregion
