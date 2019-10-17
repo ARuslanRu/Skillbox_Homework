@@ -78,6 +78,7 @@ namespace Homework_09
 
             //bot.OnMessage += MessageListener; // подписываемся на событие получения сообщения
             bot.OnUpdate += UpdateListener; // подписываемся на получение любых обновлений
+            
             bot.StartReceiving();
 
             Console.ReadKey();
@@ -88,89 +89,114 @@ namespace Homework_09
         private static void UpdateListener(object sender, UpdateEventArgs e)
         {
 
-            if (e.Update.Type == UpdateType.CallbackQuery)
+            switch (e.Update.Type)
             {
-                bot.SendTextMessageAsync(e.Update.CallbackQuery.Message.Chat.Id, "Заглушка");
-                return;
-            }
+                case UpdateType.Unknown:
+                    break;
+                case UpdateType.Message:
+                    string text = $"OnUpdate: {DateTime.Now.ToLongTimeString()} | Type: {e.Update.Message.Type.ToString()}";
+                    Console.WriteLine(text);
 
-            string text = $"OnUpdate: {DateTime.Now.ToLongTimeString()} | Type: {e.Update.Message.Type.ToString()}";
-            Console.WriteLine(text);
-
-            var keyboard = new InlineKeyboardMarkup(new[]
-            {
-             new[] { InlineKeyboardButton.WithUrl("site", "https://google.com") }, //первая строка
-             new[] { InlineKeyboardButton.WithCallbackData("menu", "menu") } //вторая строка
-            });
+                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(new[]
+                    {
+                        new[] { InlineKeyboardButton.WithUrl("site", "https://google.com") }, //первая строка
+                        new[] { InlineKeyboardButton.WithCallbackData("menu", "menu") } //вторая строка
+                    });
 
 
-            switch (e.Update.Message.Type)
-            {
-                case MessageType.Unknown:
+                    switch (e.Update.Message.Type)
+                    {
+                        case MessageType.Unknown:
+                            break;
+                        case MessageType.Text:
+                            //bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text, replyMarkup: keyboard);
+                            break;
+                        case MessageType.Photo:
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            break;
+                        case MessageType.Audio:
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            break;
+                        case MessageType.Video:
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            break;
+                        case MessageType.Voice:
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            break;
+                        case MessageType.Document:
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            break;
+                        case MessageType.Sticker:
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                            break;
+                        case MessageType.Location:
+                            break;
+                        case MessageType.Contact:
+                            break;
+                        case MessageType.Venue:
+                            break;
+                        case MessageType.Game:
+                            break;
+                        case MessageType.VideoNote:
+                            break;
+                        case MessageType.Invoice:
+                            break;
+                        case MessageType.SuccessfulPayment:
+                            break;
+                        case MessageType.WebsiteConnected:
+                            break;
+                        case MessageType.ChatMembersAdded:
+                            break;
+                        case MessageType.ChatMemberLeft:
+                            break;
+                        case MessageType.ChatTitleChanged:
+                            break;
+                        case MessageType.ChatPhotoChanged:
+                            break;
+                        case MessageType.MessagePinned:
+                            break;
+                        case MessageType.ChatPhotoDeleted:
+                            break;
+                        case MessageType.GroupCreated:
+                            break;
+                        case MessageType.SupergroupCreated:
+                            break;
+                        case MessageType.ChannelCreated:
+                            break;
+                        case MessageType.MigratedToSupergroup:
+                            break;
+                        case MessageType.MigratedFromGroup:
+                            break;
+                        case MessageType.Animation:
+                            break;
+                        case MessageType.Poll:
+                            break;
+                        default:
+                            break;
+                    }
+
+
+
                     break;
-                case MessageType.Text:
-                    //bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text, replyMarkup: keyboard);
+                case UpdateType.InlineQuery:
                     break;
-                case MessageType.Photo:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                case UpdateType.ChosenInlineResult:
                     break;
-                case MessageType.Audio:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                case UpdateType.CallbackQuery:
+                    Helpers.AnswerCallbackQerry(bot, e);
                     break;
-                case MessageType.Video:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                case UpdateType.EditedMessage:
                     break;
-                case MessageType.Voice:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                case UpdateType.ChannelPost:
                     break;
-                case MessageType.Document:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                case UpdateType.EditedChannelPost:
                     break;
-                case MessageType.Sticker:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                case UpdateType.ShippingQuery:
                     break;
-                case MessageType.Location:
+                case UpdateType.PreCheckoutQuery:
                     break;
-                case MessageType.Contact:
-                    break;
-                case MessageType.Venue:
-                    break;
-                case MessageType.Game:
-                    break;
-                case MessageType.VideoNote:
-                    break;
-                case MessageType.Invoice:
-                    break;
-                case MessageType.SuccessfulPayment:
-                    break;
-                case MessageType.WebsiteConnected:
-                    break;
-                case MessageType.ChatMembersAdded:
-                    break;
-                case MessageType.ChatMemberLeft:
-                    break;
-                case MessageType.ChatTitleChanged:
-                    break;
-                case MessageType.ChatPhotoChanged:
-                    break;
-                case MessageType.MessagePinned:
-                    break;
-                case MessageType.ChatPhotoDeleted:
-                    break;
-                case MessageType.GroupCreated:
-                    break;
-                case MessageType.SupergroupCreated:
-                    break;
-                case MessageType.ChannelCreated:
-                    break;
-                case MessageType.MigratedToSupergroup:
-                    break;
-                case MessageType.MigratedFromGroup:
-                    break;
-                case MessageType.Animation:
-                    break;
-                case MessageType.Poll:
+                case UpdateType.Poll:
                     break;
                 default:
                     break;
