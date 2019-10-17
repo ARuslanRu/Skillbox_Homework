@@ -85,106 +85,21 @@ namespace Homework_09
             #endregion
         }
 
-
         private static void UpdateListener(object sender, UpdateEventArgs e)
         {
-
             switch (e.Update.Type)
             {
                 case UpdateType.Unknown:
                     break;
                 case UpdateType.Message:
-                    string text = $"OnUpdate: {DateTime.Now.ToLongTimeString()} | Type: {e.Update.Message.Type.ToString()}";
-                    Console.WriteLine(text);
-
-                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(new[]
-                    {
-                        new[] { InlineKeyboardButton.WithUrl("site", "https://google.com") }, //первая строка
-                        new[] { InlineKeyboardButton.WithCallbackData("menu", "menu") } //вторая строка
-                    });
-
-
-                    switch (e.Update.Message.Type)
-                    {
-                        case MessageType.Unknown:
-                            break;
-                        case MessageType.Text:
-                            //bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text, replyMarkup: keyboard);
-                            break;
-                        case MessageType.Photo:
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            break;
-                        case MessageType.Audio:
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            break;
-                        case MessageType.Video:
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            break;
-                        case MessageType.Voice:
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            break;
-                        case MessageType.Document:
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            break;
-                        case MessageType.Sticker:
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
-                            break;
-                        case MessageType.Location:
-                            break;
-                        case MessageType.Contact:
-                            break;
-                        case MessageType.Venue:
-                            break;
-                        case MessageType.Game:
-                            break;
-                        case MessageType.VideoNote:
-                            break;
-                        case MessageType.Invoice:
-                            break;
-                        case MessageType.SuccessfulPayment:
-                            break;
-                        case MessageType.WebsiteConnected:
-                            break;
-                        case MessageType.ChatMembersAdded:
-                            break;
-                        case MessageType.ChatMemberLeft:
-                            break;
-                        case MessageType.ChatTitleChanged:
-                            break;
-                        case MessageType.ChatPhotoChanged:
-                            break;
-                        case MessageType.MessagePinned:
-                            break;
-                        case MessageType.ChatPhotoDeleted:
-                            break;
-                        case MessageType.GroupCreated:
-                            break;
-                        case MessageType.SupergroupCreated:
-                            break;
-                        case MessageType.ChannelCreated:
-                            break;
-                        case MessageType.MigratedToSupergroup:
-                            break;
-                        case MessageType.MigratedFromGroup:
-                            break;
-                        case MessageType.Animation:
-                            break;
-                        case MessageType.Poll:
-                            break;
-                        default:
-                            break;
-                    }
-
-
-
+                    Helpers.AnswerOnMessage(bot, e);
                     break;
                 case UpdateType.InlineQuery:
                     break;
                 case UpdateType.ChosenInlineResult:
                     break;
                 case UpdateType.CallbackQuery:
-                    Helpers.AnswerCallbackQerry(bot, e);
+                    Helpers.AnswerOnCallbackQerry(bot, e);
                     break;
                 case UpdateType.EditedMessage:
                     break;
@@ -204,41 +119,28 @@ namespace Homework_09
         }
 
 
-        private static void MessageListener(object sender, MessageEventArgs e)
-        {
-            string text = $"OnMessage: {DateTime.Now.ToLongTimeString()}: {e.Message.Type.ToString()} {e.Message.Chat.FirstName} {e.Message.Chat.Id} {e.Message.Text}";
+        //private static void MessageListener(object sender, MessageEventArgs e)
+        //{
+        //    string text = $"OnMessage: {DateTime.Now.ToLongTimeString()}: {e.Message.Type.ToString()} {e.Message.Chat.FirstName} {e.Message.Chat.Id} {e.Message.Text}";
 
-            Console.WriteLine(text);
+        //    Console.WriteLine(text);
 
-            if (e.Message.Type == MessageType.Document)
-            {
-                Console.WriteLine(e.Message.Document.FileId);
-                Console.WriteLine(e.Message.Document.FileName);
-                Console.WriteLine(e.Message.Document.FileSize);
+        //    if (e.Message.Type == MessageType.Document)
+        //    {
+        //        Console.WriteLine(e.Message.Document.FileId);
+        //        Console.WriteLine(e.Message.Document.FileName);
+        //        Console.WriteLine(e.Message.Document.FileSize);
 
-                DownloadAsync(e.Message.Document.FileId, e.Message.Document.FileName);
-            }
+        //        DownloadAsync(e.Message.Document.FileId, e.Message.Document.FileName);
+        //    }
 
-            if (e.Message.Text != null)
-            {
-                //отправка ответного сообщения ботом
-                bot.SendTextMessageAsync(e.Message.Chat.Id, text);
-            }
-        }
+        //    if (e.Message.Text != null)
+        //    {
+        //        //отправка ответного сообщения ботом
+        //        bot.SendTextMessageAsync(e.Message.Chat.Id, text);
+        //    }
+        //}
 
-        /// <summary>
-        /// Сохранение документа полученного ботом в сообщение
-        /// </summary>
-        /// <param name="fileId">Идентификатор файла</param>
-        /// <param name="path"></param>
-        static async void DownloadAsync(string fileId, string path)
-        {
-            var file = await bot.GetFileAsync(fileId);
-
-            using (FileStream fs = new FileStream($"_{path}", FileMode.Create))
-            {
-                await bot.DownloadFileAsync(file.FilePath, fs);
-            }
-        }
+        
     }
 }
