@@ -78,6 +78,11 @@ namespace Homework_09
             }
         }
 
+        /// <summary>
+        /// Прослушивание изменений от бота
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateListener(object sender, UpdateEventArgs e)
         {
             switch (e.Update.Type)
@@ -121,7 +126,6 @@ namespace Homework_09
             Console.WriteLine(text);
 
             var callbackQuery = e.Update.CallbackQuery;
-            //var buttons = Repository.getInstance().Buttons;
 
             if (callbackQuery.Data == "0")
             {
@@ -192,12 +196,18 @@ namespace Homework_09
                     switch (e.Update.Message.Text.Split(' ').First())
                     {
                         case "/inline":
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, "Основное меню", replyMarkup: StartKeyboard());
+                            bot.SendTextMessageAsync(
+                                e.Update.Message.Chat.Id,
+                                "Основное меню",
+                                replyMarkup: StartKeyboard());
                             break;
                         default:
                             const string usage = "Помощь:" +
                                 "\n/inline - получить инлайн клавиатуру";
-                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, usage, replyMarkup: new ReplyKeyboardRemove());
+                            bot.SendTextMessageAsync(
+                                e.Update.Message.Chat.Id,
+                                usage,
+                                replyMarkup: new ReplyKeyboardRemove());
                             break;
                     }
                     break;
@@ -291,6 +301,9 @@ namespace Homework_09
 
         #region Public Methods
 
+        /// <summary>
+        /// Запуск бота
+        /// </summary>
         public void Start()
         {
             //Проверяем доступность API (надо бы поправить, при недоступности валится в ошибку)
