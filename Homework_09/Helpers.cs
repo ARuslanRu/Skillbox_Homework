@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -57,11 +58,10 @@ namespace Homework_09
                     inlineKeyboard.Add(listRowButtons);
                 }
 
+                //Возврат в основное меню
                 var parentId = Repository.getInstance().Buttons.Where(x => x.Id == id).First().ParentId;
+                BotButton backButton;
 
-                BotButton backButton = new BotButton();
-
-                //Проверка для возврата в основное меню
                 if (parentId != 0)
                 {
                     backButton = Repository.getInstance().Buttons.Where(x => x.Id == parentId).First();
@@ -83,24 +83,24 @@ namespace Homework_09
         /// <summary>
         /// Сохранение документа полученного ботом в сообщение
         /// </summary>
+        /// <param name="bot"></param>
         /// <param name="fileId">Идентификатор файла</param>
         /// <param name="path"></param>
-        //static async void DownloadAsync(string fileId, string path)
-        //{
-        //    var file = await bot.GetFileAsync(fileId);
-        //    using (FileStream fs = new FileStream($"_{path}", FileMode.Create))
-        //    {
-        //        await bot.DownloadFileAsync(file.FilePath, fs);
-        //    }
-        //}
+        static async void DownloadAsync(TelegramBotClient bot, string fileId, string path)
+        {
+            var file = await bot.GetFileAsync(fileId);
+            using (FileStream fs = new FileStream($"_{path}", FileMode.Create))
+            {
+                await bot.DownloadFileAsync(file.FilePath, fs);
+            }
+        }
 
         #endregion
 
         #region Public Methods
 
-
         /// <summary>
-        /// Ответ на нажатие по инлайн клавиатуре
+        /// Ответ на нажатие по кнопке инлайн клавиатуры
         /// </summary>
         /// <param name="bot"></param>
         /// <param name="e"></param>
@@ -129,7 +129,17 @@ namespace Homework_09
                 case MessageType.Unknown:
                     break;
                 case MessageType.Text:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text, replyMarkup: Keyboard("0"));
+                    switch (e.Update.Message.Text.Split(' ').First())
+                    {
+                        case "/inline":
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, "Основное меню", replyMarkup: Keyboard("0"));
+                            break;
+                        default:
+                            const string usage = "Помощь:" +
+                                "\n/inline - получить инлайн клавиатуру";
+                            bot.SendTextMessageAsync(e.Update.Message.Chat.Id, usage, replyMarkup: new ReplyKeyboardRemove());
+                            break;
+                    }
                     break;
                 case MessageType.Photo:
                     bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
