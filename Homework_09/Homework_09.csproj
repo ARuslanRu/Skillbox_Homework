@@ -49,7 +49,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers.cs" />
+    <Compile Include="MyBot.cs" />
     <Compile Include="Model\BotButton.cs" />
     <Compile Include="Model\Repository.cs" />
     <Compile Include="Program.cs" />
