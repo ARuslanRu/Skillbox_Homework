@@ -116,31 +116,6 @@ namespace Homework_09
                 default:
                     break;
             }
-        }
-
-
-        //private static void MessageListener(object sender, MessageEventArgs e)
-        //{
-        //    string text = $"OnMessage: {DateTime.Now.ToLongTimeString()}: {e.Message.Type.ToString()} {e.Message.Chat.FirstName} {e.Message.Chat.Id} {e.Message.Text}";
-
-        //    Console.WriteLine(text);
-
-        //    if (e.Message.Type == MessageType.Document)
-        //    {
-        //        Console.WriteLine(e.Message.Document.FileId);
-        //        Console.WriteLine(e.Message.Document.FileName);
-        //        Console.WriteLine(e.Message.Document.FileSize);
-
-        //        DownloadAsync(e.Message.Document.FileId, e.Message.Document.FileName);
-        //    }
-
-        //    if (e.Message.Text != null)
-        //    {
-        //        //отправка ответного сообщения ботом
-        //        bot.SendTextMessageAsync(e.Message.Chat.Id, text);
-        //    }
-        //}
-
-        
+        }       
     }
 }
