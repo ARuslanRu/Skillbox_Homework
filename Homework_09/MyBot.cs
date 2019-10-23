@@ -10,6 +10,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.ReplyMarkups;
 using Homework_09.Model;
+using Telegram.Bot.Types;
 
 namespace Homework_09
 {
@@ -53,7 +54,7 @@ namespace Homework_09
             //HttpClient hc = new HttpClient(httpClienHandler);
             #endregion
 
-            token = File.ReadAllText("token");
+            token = System.IO.File.ReadAllText("token");
             bot = new TelegramBotClient(token);
             buttons = Repository.getInstance().Buttons;
             //при использовании прокси
@@ -74,6 +75,7 @@ namespace Homework_09
             var file = await bot.GetFileAsync(fileId);
             using (FileStream fs = new FileStream($"_{path}", FileMode.Create))
             {
+                Console.WriteLine(file.GetType().Name);
                 await bot.DownloadFileAsync(file.FilePath, fs);
             }
         }
@@ -90,14 +92,14 @@ namespace Homework_09
                 case UpdateType.Unknown:
                     break;
                 case UpdateType.Message:
-                    ResponseOnMessage(e);
+                    ResponseOnMessage(e.Update);
                     break;
                 case UpdateType.InlineQuery:
                     break;
                 case UpdateType.ChosenInlineResult:
                     break;
                 case UpdateType.CallbackQuery:
-                    ResponseOnCallbackQerry(e);
+                    ResponseOnCallbackQerry(e.Update);
                     break;
                 case UpdateType.EditedMessage:
                     break;
@@ -120,12 +122,12 @@ namespace Homework_09
         /// Ответ на нажатие по кнопке инлайн клавиатуры
         /// </summary>
         /// <param name="e"></param>
-        private void ResponseOnCallbackQerry(UpdateEventArgs e)
+        private void ResponseOnCallbackQerry(Update update)
         {
-            string text = $"{DateTime.Now.ToLongTimeString()} | Type: {e.Update.Type.ToString()} | Data: {e.Update.CallbackQuery.Data}";
+            string text = $"{DateTime.Now.ToLongTimeString()} | Type: {update.Type.ToString()} | Data: {update.CallbackQuery.Data}";
             Console.WriteLine(text);
 
-            var callbackQuery = e.Update.CallbackQuery;
+            var callbackQuery = update.CallbackQuery;
 
             if (callbackQuery.Data == "0")
             {
@@ -152,7 +154,7 @@ namespace Homework_09
                     inlineKeyboard.Add(listRowButtons);
                 }
 
-                //Возврат в основное меню
+                //Кнопка возврата в предыдущее меню
                 var parentId = buttons.Where(x => x.Id == id).First().ParentId;
                 BotButton backButton;
 
@@ -181,23 +183,22 @@ namespace Homework_09
         /// <summary>
         /// Ответ на сообщение
         /// </summary>
-        /// <param name="bot"></param>
         /// <param name="e"></param>
-        private void ResponseOnMessage(UpdateEventArgs e)
+        private void ResponseOnMessage(Update update)
         {
-            string text = $"{DateTime.Now.ToLongTimeString()} | Type: {e.Update.Type.ToString()} | Text: {e.Update.Message.Text}";
+            string text = $"{DateTime.Now.ToLongTimeString()} | Type: {update.Type.ToString()} | Text: {update.Message.Text}";
             Console.WriteLine(text);
 
-            switch (e.Update.Message.Type)
+            switch (update.Message.Type)
             {
                 case MessageType.Unknown:
                     break;
                 case MessageType.Text:
-                    switch (e.Update.Message.Text.Split(' ').First())
+                    switch (update.Message.Text.Split(' ').First())
                     {
                         case "/inline":
                             bot.SendTextMessageAsync(
-                                e.Update.Message.Chat.Id,
+                                update.Message.Chat.Id,
                                 "Основное меню",
                                 replyMarkup: StartKeyboard());
                             break;
@@ -205,29 +206,41 @@ namespace Homework_09
                             const string usage = "Помощь:" +
                                 "\n/inline - получить инлайн клавиатуру";
                             bot.SendTextMessageAsync(
-                                e.Update.Message.Chat.Id,
+                                update.Message.Chat.Id,
                                 usage,
                                 replyMarkup: new ReplyKeyboardRemove());
                             break;
                     }
                     break;
                 case MessageType.Photo:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                    bot.SendTextMessageAsync(update.Message.Chat.Id, text);
+
+                    //TODO: Сохраняет и уменьшеное изображение и оригинал, надо как-то обрезать
+                    var photos = update.Message.Photo;                 
+                    foreach (var photo in photos)
+                    {                        
+                        DownloadAsync(photo.FileId, Guid.NewGuid().ToString());                     
+                    }
+
+
+
                     break;
                 case MessageType.Audio:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                    bot.SendTextMessageAsync(update.Message.Chat.Id, text);
                     break;
                 case MessageType.Video:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                    bot.SendTextMessageAsync(update.Message.Chat.Id, text);
                     break;
                 case MessageType.Voice:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                    bot.SendTextMessageAsync(update.Message.Chat.Id, text);
                     break;
                 case MessageType.Document:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                    bot.SendTextMessageAsync(update.Message.Chat.Id, text);
+                    DownloadAsync(update.Message.Document.FileId, update.Message.Document.FileName);
+
                     break;
                 case MessageType.Sticker:
-                    bot.SendTextMessageAsync(e.Update.Message.Chat.Id, text);
+                    bot.SendTextMessageAsync(update.Message.Chat.Id, text);
                     break;
                 case MessageType.Location:
                     break;
