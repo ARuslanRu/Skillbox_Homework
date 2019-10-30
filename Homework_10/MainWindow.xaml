@@ -1,0 +1,40 @@
+﻿<Window x:Class="Homework_10.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Homework_10"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <ListBox x:Name="buttonList" 
+                 Grid.Column="0"
+                 HorizontalAlignment="Stretch" 
+                 Margin="5" 
+                 VerticalAlignment="Stretch"
+                 MouseDoubleClick="btnDoubleClik">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ButtonName}"></TextBlock>
+                    
+                    <!--<Border BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="10">
+                    <StackPanel Margin="10">
+                            <Button Content="{Binding ButtonName}" MouseDoubleClick="btnDoubleClik"></Button>
+                            <TextBlock Text="{Binding ButtonName}" Margin="0" FontSize="15"/>
+                            <TextBlock Text="{Binding Id}" Margin="0" FontSize="20"/>
+                            <TextBlock Text="{Binding ParentId}" Margin="10 0" FontSize="10" Foreground="Gray" TextAlignment="Right"/>
+                        </StackPanel>
+                    </Border>-->
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+
+    </Grid>
+</Window>
