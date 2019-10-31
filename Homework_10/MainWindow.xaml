@@ -13,17 +13,18 @@
         </Grid.ColumnDefinitions>
 
 
-        <ListBox x:Name="buttonList" 
-                 Grid.Column="0"
+        <StackPanel Grid.Column="0">
+            <TextBlock x:Name="tempId" Text="0"></TextBlock>
+            <ListBox x:Name="buttonList"
                  HorizontalAlignment="Stretch" 
                  Margin="5" 
                  VerticalAlignment="Stretch"
                  MouseDoubleClick="btnDoubleClik">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding ButtonName}"></TextBlock>
-                    
-                    <!--<Border BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="10">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ButtonName}"></TextBlock>
+
+                        <!--<Border BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="10">
                     <StackPanel Margin="10">
                             <Button Content="{Binding ButtonName}" MouseDoubleClick="btnDoubleClik"></Button>
                             <TextBlock Text="{Binding ButtonName}" Margin="0" FontSize="15"/>
@@ -31,9 +32,33 @@
                             <TextBlock Text="{Binding ParentId}" Margin="10 0" FontSize="10" Foreground="Gray" TextAlignment="Right"/>
                         </StackPanel>
                     </Border>-->
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+
+            <Button x:Name="btnBack" Content="Назад" Click="btnBack_Click" Visibility="Collapsed"></Button>
+        </StackPanel>
+        <GroupBox Grid.Column="1" 
+                  FontSize="20"
+                  Header="Тест"
+                  HorizontalAlignment="Stretch" 
+                  Margin="5"
+                  VerticalAlignment="Stretch" 
+                  >
+            <StackPanel>
+                <TextBlock Text="{Binding ElementName=buttonList, Path=SelectedItem.Id}"></TextBlock>
+                <Button Content="Button" Click="Button_Click"/>
+                <!--<TextBlock x:Name="TargetSend" 
+                           Text="{Binding ElementName=logList, Path=SelectedItem.Id}"
+                           Visibility="Collapsed"
+                           Margin="5"/>
+
+                <TextBox x:Name="txtMsgSend" FontSize="20" Margin="5"/>
+
+                <Button x:Name="btnMsgSend" FontSize="20" Content="Отправить" Margin="5" Click="btnMsgSendClick"/>-->
+            </StackPanel>
+        </GroupBox>
 
 
     </Grid>

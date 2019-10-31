@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Homework_09.Model
 {
+
+    //TODO: Заменить репозиторий на хранение в файле JSON
     class Repository
     {
         private static Repository instance;
-        public List<BotButton> Buttons { get; private set; }
+        public static List<BotButton> Buttons { get; private set; }
         private Repository()
         {
             Buttons = new List<BotButton>();
@@ -42,6 +45,41 @@ namespace Homework_09.Model
             if (instance == null)
                 instance = new Repository();
             return instance;
+        }
+
+        public static void AddBotButton(int row, int column, int parentId, string buttonName, string content)
+        {
+            var id = GettId();
+
+            BotButton botButton = new BotButton
+            {
+                Id = id,
+                Row = row,
+                Column = column,
+                ParentId = parentId,
+                ButtonName = buttonName,
+                Content = content
+            };
+
+            Buttons.Add(botButton);
+        }
+
+        /// <summary>
+        /// Поучение свободного идентификатора
+        /// </summary>
+        /// <returns></returns>
+        private static int GettId()
+        {
+            if (Buttons.Count != 0)
+            {
+                int[] number = Buttons.Select(x => x.Id).ToArray();
+                int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
+                return missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
+            }
+            else
+            {
+               return 1;
+            }
         }
     }
 }

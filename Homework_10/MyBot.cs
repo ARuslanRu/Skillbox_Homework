@@ -11,6 +11,7 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using Newtonsoft.Json;
 
 namespace Homework_10
 {
@@ -23,7 +24,9 @@ namespace Homework_10
 
         public MyBot(MainWindow w, string pathToken = "token")
         {
-            this.botButtons = new ObservableCollection<BotButton>(Repository.getInstance().Buttons);
+            var json  = System.IO.File.ReadAllText("buttons.json");
+            botButtons = JsonConvert.DeserializeObject<ObservableCollection<BotButton>>(json);
+
             this.w = w;
             token = System.IO.File.ReadAllText(pathToken);
             this.bot = new TelegramBotClient(token);
@@ -282,6 +285,27 @@ namespace Homework_10
         }
 
         /// <summary>
+        /// Поучение свободного идентификатора
+        /// </summary>
+        /// <returns></returns>
+        private int GettId()
+        {
+            if (botButtons.Count != 0)
+            {
+                int[] number = botButtons.Select(x => x.Id).ToArray();
+                int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
+                return missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+
+
+
+        /// <summary>
         /// Запуск бота
         /// </summary>
         public void Start()
@@ -300,6 +324,34 @@ namespace Homework_10
                     "\nПроверьте интернет соединение." +
                     "\nИли возможно проблема с блокировкой.");
             }
+        }
+
+        /// <summary>
+        /// Добавление кнопки
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="parentId"></param>
+        /// <param name="buttonName"></param>
+        /// <param name="content"></param>
+        public void AddBotButton(int row, int column, int parentId, string buttonName, string content)
+        {
+            var id = GettId();
+
+            BotButton botButton = new BotButton
+            {
+                Id = id,
+                Row = row,
+                Column = column,
+                ParentId = parentId,
+                ButtonName = buttonName,
+                Content = content
+            };
+
+            botButtons.Add(botButton);           
+
+            string json = JsonConvert.SerializeObject(botButtons);
+            System.IO.File.WriteAllText("buttons.json", json);
         }
     }
 }
