@@ -12,54 +12,57 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-
         <StackPanel Grid.Column="0">
-            <TextBlock x:Name="tempId" Text="0"></TextBlock>
             <ListBox x:Name="buttonList"
                  HorizontalAlignment="Stretch" 
                  Margin="5" 
                  VerticalAlignment="Stretch"
+                 BorderThickness="0"
                  MouseDoubleClick="btnDoubleClik">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding ButtonName}"></TextBlock>
-
-                        <!--<Border BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="10">
-                    <StackPanel Margin="10">
-                            <Button Content="{Binding ButtonName}" MouseDoubleClick="btnDoubleClik"></Button>
-                            <TextBlock Text="{Binding ButtonName}" Margin="0" FontSize="15"/>
-                            <TextBlock Text="{Binding Id}" Margin="0" FontSize="20"/>
-                            <TextBlock Text="{Binding ParentId}" Margin="10 0" FontSize="10" Foreground="Gray" TextAlignment="Right"/>
-                        </StackPanel>
-                    </Border>-->
+                        <Border BorderBrush="Gray" Margin="2" BorderThickness="1" CornerRadius="10">
+                            <StackPanel Margin="2">
+                                <TextBlock Text="{Binding ButtonName}"></TextBlock>
+                                <TextBlock FontSize="10" Foreground="Gray" Margin="10 0">
+                                <Run>Строка:</Run>
+                                <Run Text="{Binding Row}"></Run>
+                                </TextBlock>
+                                <TextBlock FontSize="10" Foreground="Gray"  Margin="10 0">
+                                <Run>Колонка:</Run>
+                                <Run Text="{Binding Column}"></Run>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-
-
-            <Button x:Name="btnBack" Content="Назад" Click="btnBack_Click" Visibility="Collapsed"></Button>
+            <Button Width="100" x:Name="btnBack" Content="Назад" Click="btnBack_Click" IsEnabled="False"></Button>
         </StackPanel>
+
         <GroupBox Grid.Column="1" 
-                  FontSize="20"
-                  Header="Тест"
+                  Header="Настройка"
                   HorizontalAlignment="Stretch" 
                   Margin="5"
-                  VerticalAlignment="Stretch" 
-                  >
+                  VerticalAlignment="Stretch" >
             <StackPanel>
-                <TextBlock Text="{Binding ElementName=buttonList, Path=SelectedItem.Id}"></TextBlock>
-                <Button Content="Button" Click="Button_Click"/>
-                <!--<TextBlock x:Name="TargetSend" 
-                           Text="{Binding ElementName=logList, Path=SelectedItem.Id}"
-                           Visibility="Collapsed"
-                           Margin="5"/>
-
-                <TextBox x:Name="txtMsgSend" FontSize="20" Margin="5"/>
-
-                <Button x:Name="btnMsgSend" FontSize="20" Content="Отправить" Margin="5" Click="btnMsgSendClick"/>-->
+                <TextBlock Text="{Binding ElementName=buttonList, Path=SelectedItem.Id}" Visibility="Collapsed"></TextBlock>
+                <TextBlock>
+                    <TextBlock Text="Название:" Width="100"/>
+                    <TextBox x:Name="BtnName" Width="100"></TextBox>
+                </TextBlock>
+                <TextBlock>
+                    <TextBlock Text="Строка:" Width="100"/>
+                    <TextBox x:Name="Row" Width="100"></TextBox>
+                </TextBlock>
+                <TextBlock>
+                    <TextBlock Text="Колонка:" Width="100"/>
+                    <TextBox x:Name="Column"  Width="100"></TextBox>
+                </TextBlock>
+                <Button Content="Добавить кнопку" Click="AddButton_Click" Width="100"/>
+                <Button Content="Удалить кнопку" Click="DeleteButton_Click" Width="100"/>
             </StackPanel>
-        </GroupBox>
-
+               </GroupBox>
 
     </Grid>
 </Window>

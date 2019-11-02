@@ -12,6 +12,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Homework_10
 {
@@ -24,7 +25,7 @@ namespace Homework_10
 
         public MyBot(MainWindow w, string pathToken = "token")
         {
-            var json  = System.IO.File.ReadAllText("buttons.json");
+            var json = System.IO.File.ReadAllText("buttons.json");
             botButtons = JsonConvert.DeserializeObject<ObservableCollection<BotButton>>(json);
 
             this.w = w;
@@ -302,9 +303,6 @@ namespace Homework_10
             }
         }
 
-
-
-
         /// <summary>
         /// Запуск бота
         /// </summary>
@@ -348,10 +346,31 @@ namespace Homework_10
                 Content = content
             };
 
-            botButtons.Add(botButton);           
+            botButtons.Add(botButton);
 
             string json = JsonConvert.SerializeObject(botButtons);
             System.IO.File.WriteAllText("buttons.json", json);
         }
+
+        /// <summary>
+        /// Удлание кнопки и всех дочерних кнопок
+        /// </summary>
+        /// <param name="botButton"></param>
+        public void DeleteBotButton(BotButton botButton)
+        {
+            //Рекрсивно удаляем все вложенные кнопки
+            var childBotButtons = botButtons.Where(x => x.ParentId == botButton.Id).ToList();       
+            foreach (var childButton in childBotButtons)
+            {
+                DeleteBotButton(childButton);
+            }
+
+            botButtons.Remove(botButton);
+            Debug.WriteLine($"Удалена кнопка с id: {botButton.Id} и именем: {botButton.ButtonName}");
+
+            string json = JsonConvert.SerializeObject(botButtons);
+            System.IO.File.WriteAllText("buttons.json", json);
+        }
+
     }
 }
