@@ -24,7 +24,6 @@ namespace Homework_10
     {
         //TODO: попробовать реализовать отображение кнопок как в телеграмме, с учетом расположения в строке и колонке.
 
-
         MyBot client;
         int selectedId;
         public MainWindow()
@@ -32,21 +31,63 @@ namespace Homework_10
             InitializeComponent();
             client = new MyBot(this);
             buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == 0).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+            buttonList.MouseDoubleClick += BtnNext_DoubleClik;
+
+            tbName.TextChanged += Tb_TextChanged;
+            tbRow.TextChanged += Tb_TextChanged;
+            tbColumn.TextChanged += Tb_TextChanged;
+
+            tbRow.PreviewTextInput += NumbersValidation;
+            tbColumn.PreviewTextInput += NumbersValidation;
+
+            btnBack.Click += BtnBack_Click;
+            btnAdd.Click += BtnAddButton_Click;
+            btnDelete.Click += BtnDeleteButton_Click;
         }
 
-        private void btnDoubleClik(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// При изменении содержимого TextBox менять цвет рамки на дефолтный
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Tb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var sourse = e.Source as TextBox;
+            var color = (Color)ColorConverter.ConvertFromString("#FFABADB3");
+            sourse.BorderBrush = new SolidColorBrush(color);
+        }
+
+        /// <summary>
+        /// Запрет ввода в TextBox всего кроме чисел 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NumbersValidation(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !(Char.IsDigit(e.Text, 0));
+        }
+
+        /// <summary>
+        /// Провалиться в следующую кнопку
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnNext_DoubleClik(object sender, MouseButtonEventArgs e)
         {
             var button = buttonList.SelectedItem as BotButton;
             Debug.WriteLine($"Двойной клик: {button.Id}");
 
             selectedId = button.Id; //Id выбранной кнопки по которой откроется следующее меню. Необходимо для возврата назад.
-
-            //btnBack.Visibility = button.Id > 0 ? Visibility.Visible : Visibility.Collapsed; //Скрываем кнопку если находимся на самом верхнем уровне меню
             btnBack.IsEnabled = button.Id > 0; //Скрываем кнопку если находимся на самом верхнем уровне меню
             buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == button.Id).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
 
-        private void btnBack_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Возврат в меню на уровень вверх
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             var buttonListItems = buttonList.ItemsSource as IEnumerable<BotButton>;
 
@@ -54,33 +95,76 @@ namespace Homework_10
 
             selectedId = backId; // Перезаписываем Id выбранной кнопки для того что бы вернуться еще на уровень выше
 
-            //btnBack.Visibility = backId > 0 ? Visibility.Visible : Visibility.Collapsed; //Скрываем кнопку если находимся на самом верхнем уровне меню
             btnBack.IsEnabled = backId > 0; //Скрываем кнопку если находимся на самом верхнем уровне меню
             buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == backId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Валидация текстового поля и подсветка красной рамкой
+        /// </summary>
+        /// <param name="tb"></param>
+        /// <param name="fieldName"></param>
+        /// <returns>Возвращает сообщение для последующего вывода в MessageBox</returns>
+        private string TextBoxValidation(TextBox tb, string fieldName)
         {
+            if (string.IsNullOrEmpty(tb.Text))
+            {
+                tb.BorderBrush = Brushes.Red;
+                return $"Поле \"{fieldName}\" не заполнено\n";
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-            var btnName = BtnName.Text;
-            var row = int.Parse(Row.Text);
-            var column = int.Parse(Column.Text);
+        /// <summary>
+        /// Добавить кнопку для бота
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnAddButton_Click(object sender, RoutedEventArgs e)
+        {
+            string message = string.Empty;
+
+            message += TextBoxValidation(tbName, "Название");
+            message += TextBoxValidation(tbRow, "Строка");
+            message += TextBoxValidation(tbColumn, "Колонка");
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                MessageBox.Show(message);
+                return;
+            }
+
+            var btnName = tbName.Text;
+            var row = int.Parse(tbRow.Text);
+            var column = int.Parse(tbColumn.Text);
 
             client.AddBotButton(row, column, selectedId, btnName, null);
 
-
-
-            //TODO: сделать нормальное добавление кнопки с выбором строки и колонки расположения в меню.
-            //тест добавления кнопки
-            //client.AddBotButton(1, 1, 0, "test", null);
+            tbName.Text = string.Empty;
+            tbRow.Text = string.Empty;
+            tbColumn.Text = string.Empty;
 
             //обновление отображаемых кнопок
             buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == selectedId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Удалить кнопку у бота
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BtnDeleteButton_Click(object sender, RoutedEventArgs e)
         {
             var selectedButton = buttonList.SelectedItem as BotButton;
+
+            if (selectedButton == null)
+            {
+                //TODO: попробовать заменить на то что если кнопка не выбрана то удаление не активно.
+                MessageBox.Show("Выберите кнопку для удаления.");
+            }
 
             client.DeleteBotButton(selectedButton);
 

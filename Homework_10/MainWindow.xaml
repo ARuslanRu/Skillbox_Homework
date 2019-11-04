@@ -6,63 +6,72 @@
         xmlns:local="clr-namespace:Homework_10"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0">
-            <ListBox x:Name="buttonList"
-                 HorizontalAlignment="Stretch" 
-                 Margin="5" 
-                 VerticalAlignment="Stretch"
-                 BorderThickness="0"
-                 MouseDoubleClick="btnDoubleClik">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="Gray" Margin="2" BorderThickness="1" CornerRadius="10">
-                            <StackPanel Margin="2">
-                                <TextBlock Text="{Binding ButtonName}"></TextBlock>
-                                <TextBlock FontSize="10" Foreground="Gray" Margin="10 0">
+    <TabControl>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="3">Сообщения</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <TabItem.Content>
+                <StackPanel>
+                    <RadioButton IsChecked="True">Для теста</RadioButton>
+                    <RadioButton>Для теста</RadioButton>
+                    <RadioButton>Для теста</RadioButton>
+                </StackPanel>
+            </TabItem.Content>
+        </TabItem>
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="3">Админка</TextBlock>
+                </StackPanel>
+            </TabItem.Header>
+            <TabItem.Content>
+                <StackPanel>
+                    <ListBox x:Name="buttonList"
+                             HorizontalAlignment="Stretch" 
+                             Margin="5" 
+                             VerticalAlignment="Stretch"
+                             BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" Margin="2" BorderThickness="1" CornerRadius="10">
+                                    <StackPanel Margin="2">
+                                        <TextBlock Text="{Binding ButtonName}"></TextBlock>
+                                        <TextBlock FontSize="10" Foreground="Gray" Margin="10 0">
                                 <Run>Строка:</Run>
                                 <Run Text="{Binding Row}"></Run>
-                                </TextBlock>
-                                <TextBlock FontSize="10" Foreground="Gray"  Margin="10 0">
+                                        </TextBlock>
+                                        <TextBlock FontSize="10" Foreground="Gray"  Margin="10 0">
                                 <Run>Колонка:</Run>
                                 <Run Text="{Binding Column}"></Run>
-                                </TextBlock>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Button Width="100" x:Name="btnBack" Content="Назад" Click="btnBack_Click" IsEnabled="False"></Button>
-        </StackPanel>
-
-        <GroupBox Grid.Column="1" 
-                  Header="Настройка"
-                  HorizontalAlignment="Stretch" 
-                  Margin="5"
-                  VerticalAlignment="Stretch" >
-            <StackPanel>
-                <TextBlock Text="{Binding ElementName=buttonList, Path=SelectedItem.Id}" Visibility="Collapsed"></TextBlock>
-                <TextBlock>
-                    <TextBlock Text="Название:" Width="100"/>
-                    <TextBox x:Name="BtnName" Width="100"></TextBox>
-                </TextBlock>
-                <TextBlock>
-                    <TextBlock Text="Строка:" Width="100"/>
-                    <TextBox x:Name="Row" Width="100"></TextBox>
-                </TextBlock>
-                <TextBlock>
-                    <TextBlock Text="Колонка:" Width="100"/>
-                    <TextBox x:Name="Column"  Width="100"></TextBox>
-                </TextBlock>
-                <Button Content="Добавить кнопку" Click="AddButton_Click" Width="100"/>
-                <Button Content="Удалить кнопку" Click="DeleteButton_Click" Width="100"/>
-            </StackPanel>
-               </GroupBox>
-
-    </Grid>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="btnBack" Content="Назад" Width="100" Margin="2" IsEnabled="False"/>
+                        <Button x:Name="btnAdd" Content="Добавить кнопку" Width="100" Margin="2"/>
+                        <Button x:Name="btnDelete" Content="Удалить кнопку" Width="100" Margin="2"/>
+                    </StackPanel>
+                    <TextBlock>
+                        <TextBlock Text="Название:" Width="100"/>
+                        <TextBox x:Name="tbName" Width="100"></TextBox>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock Text="Строка:" Width="100"/>
+                        <TextBox x:Name="tbRow" Width="100"></TextBox>
+                    </TextBlock>
+                    <TextBlock>
+                        <TextBlock Text="Колонка:" Width="100"/>
+                        <TextBox x:Name="tbColumn"  Width="100"></TextBox>
+                    </TextBlock>
+                </StackPanel>
+            </TabItem.Content>
+        </TabItem>
+    </TabControl>
 </Window>

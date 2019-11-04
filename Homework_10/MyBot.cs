@@ -359,6 +359,7 @@ namespace Homework_10
         public void DeleteBotButton(BotButton botButton)
         {
             //Рекрсивно удаляем все вложенные кнопки
+
             var childBotButtons = botButtons.Where(x => x.ParentId == botButton.Id).ToList();       
             foreach (var childButton in childBotButtons)
             {
@@ -371,6 +372,5 @@ namespace Homework_10
             string json = JsonConvert.SerializeObject(botButtons);
             System.IO.File.WriteAllText("buttons.json", json);
         }
-
     }
 }
