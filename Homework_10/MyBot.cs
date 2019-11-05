@@ -20,20 +20,43 @@ namespace Homework_10
     {
         private MainWindow w;
         private TelegramBotClient bot;
-        public ObservableCollection<BotButton> botButtons;
         private string token;
 
+        public ObservableCollection<BotMessage> BotMessages { get; set; }
+        public ObservableCollection<BotButton> BotButtons { get; set; }
         public MyBot(MainWindow w, string pathToken = "token")
         {
-            var json = System.IO.File.ReadAllText("buttons.json");
-            botButtons = JsonConvert.DeserializeObject<ObservableCollection<BotButton>>(json);
-
-            this.w = w;
             token = System.IO.File.ReadAllText(pathToken);
+
+            var json = System.IO.File.ReadAllText("buttons.json");
+            BotButtons = JsonConvert.DeserializeObject<ObservableCollection<BotButton>>(json);
+            BotMessages = new ObservableCollection<BotMessage>();
+            this.w = w;
             this.bot = new TelegramBotClient(token);
 
             bot.OnUpdate += UpdateListener;
             bot.StartReceiving();
+        }
+
+        /// <summary>
+        /// Сохранение текстовых сообщений в коллекцию
+        /// </summary>
+        /// <param name="msg"></param>
+        private void MessageLogger(Message msg)
+        {
+            string text = $"{DateTime.Now.ToLongTimeString()}: {msg.Chat.FirstName} {msg.Chat.Id} {msg.Text}";
+            Debug.WriteLine($"{text} TypeMessage: {msg.Type.ToString()}");
+
+            if (msg.Text == null) return;
+
+            var messageText = msg.Text;
+
+            w.Dispatcher.Invoke(() =>
+            {
+                BotMessages.Add(
+                new BotMessage(
+                    DateTime.Now.ToLongTimeString(), messageText, msg.Chat.FirstName, msg.Chat.Id));
+            });
         }
 
         /// <summary>
@@ -81,7 +104,7 @@ namespace Homework_10
         private void ResponseOnMessage(Update update)
         {
             string text = $"{DateTime.Now.ToLongTimeString()} | Type: {update.Type.ToString()} | Text: {update.Message.Text}";
-            Console.WriteLine(text);
+            Debug.WriteLine(text);
 
             switch (update.Message.Type)
             {
@@ -90,6 +113,13 @@ namespace Homework_10
                 case MessageType.Text:
                     switch (update.Message.Text.Split(' ').First())
                     {
+                        case "/start":
+                            const string start = "/inline - получить инлайн клавиатуру";
+                            bot.SendTextMessageAsync(
+                                update.Message.Chat.Id,
+                                start,
+                                replyMarkup: new ReplyKeyboardRemove());
+                            break;
                         case "/inline":
                             bot.SendTextMessageAsync(
                                 update.Message.Chat.Id,
@@ -97,12 +127,7 @@ namespace Homework_10
                                 replyMarkup: StartKeyboard());
                             break;
                         default:
-                            const string usage = "Помощь:" +
-                                "\n/inline - получить инлайн клавиатуру";
-                            bot.SendTextMessageAsync(
-                                update.Message.Chat.Id,
-                                usage,
-                                replyMarkup: new ReplyKeyboardRemove());
+                            MessageLogger(update.Message);
                             break;
                     }
                     break;
@@ -204,8 +229,7 @@ namespace Homework_10
             {
                 Int32.TryParse(callbackQuery.Data, out int id);
 
-                //var row = buttons.Where(x => x.ParentId == id).OrderBy(x => x.Row).ThenBy(x => x.Column).GroupBy(x => x.Row).ToList();
-                var row = botButtons.Where(x => x.ParentId == id).OrderBy(x => x.Row).ThenBy(x => x.Column).GroupBy(x => x.Row).ToList();
+                var row = BotButtons.Where(x => x.ParentId == id).OrderBy(x => x.Row).ThenBy(x => x.Column).GroupBy(x => x.Row).ToList();
 
                 var inlineKeyboard = new List<List<InlineKeyboardButton>>();
                 foreach (var item in row)
@@ -219,14 +243,26 @@ namespace Homework_10
                 }
 
                 //Кнопка возврата в предыдущее меню
-                //var parentId = buttons.Where(x => x.Id == id).First().ParentId;
-                var parentId = botButtons.Where(x => x.Id == id).First().ParentId;
+                //TODO: Сделать проверку parentId на NULL, необходимо для случаев когда кнопки были обновлены через админку, а в телеграмме осталось старое инлайн меню.
+                //Пока что простой костыль
+                int parentId = 0;
+                try
+                {
+                    parentId = BotButtons.Where(x => x.Id == id).First().ParentId;
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+
+
+
+                //TODO: Так же возможно нужно пересмотреть выдачу идшников для кнопок, например придумать какую-нибудь последовательность. Необходимо для того что бы если в админке изменили кнопки и не провалиться в непонятно какое меню.
                 BotButton backButton;
 
                 if (parentId != 0)
                 {
-                    //backButton = buttons.Where(x => x.Id == parentId).First();
-                    backButton = botButtons.Where(x => x.Id == parentId).First();
+                    backButton = BotButtons.Where(x => x.Id == parentId).First();
                 }
                 else
                 {
@@ -241,8 +277,7 @@ namespace Homework_10
                 bot.EditMessageTextAsync(
                     callbackQuery.Message.Chat.Id,
                     callbackQuery.Message.MessageId,
-                    //buttons.Where(x => x.Id == id).First().ButtonName,
-                    botButtons.Where(x => x.Id == id).First().ButtonName,
+                    BotButtons.Where(x => x.Id == id).First().ButtonName,
                     replyMarkup: new InlineKeyboardMarkup(inlineKeyboard));
             }
         }
@@ -254,7 +289,7 @@ namespace Homework_10
         private InlineKeyboardMarkup StartKeyboard()
         {
             //var row = buttons.Where(x => x.ParentId == 0).OrderBy(x => x.Row).ThenBy(x => x.Column).GroupBy(x => x.Row).ToList();
-            var row = botButtons.Where(x => x.ParentId == 0).OrderBy(x => x.Row).ThenBy(x => x.Column).GroupBy(x => x.Row).ToList();
+            var row = BotButtons.Where(x => x.ParentId == 0).OrderBy(x => x.Row).ThenBy(x => x.Column).GroupBy(x => x.Row).ToList();
             var inlineKeyboard = new List<List<InlineKeyboardButton>>();
             foreach (var item in row)
             {
@@ -291,9 +326,9 @@ namespace Homework_10
         /// <returns></returns>
         private int GettId()
         {
-            if (botButtons.Count != 0)
+            if (BotButtons.Count != 0)
             {
-                int[] number = botButtons.Select(x => x.Id).ToArray();
+                int[] number = BotButtons.Select(x => x.Id).ToArray();
                 int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
                 return missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
             }
@@ -346,9 +381,9 @@ namespace Homework_10
                 Content = content
             };
 
-            botButtons.Add(botButton);
+            BotButtons.Add(botButton);
 
-            string json = JsonConvert.SerializeObject(botButtons);
+            string json = JsonConvert.SerializeObject(BotButtons);
             System.IO.File.WriteAllText("buttons.json", json);
         }
 
@@ -360,16 +395,16 @@ namespace Homework_10
         {
             //Рекрсивно удаляем все вложенные кнопки
 
-            var childBotButtons = botButtons.Where(x => x.ParentId == botButton.Id).ToList();       
+            var childBotButtons = BotButtons.Where(x => x.ParentId == botButton.Id).ToList();       
             foreach (var childButton in childBotButtons)
             {
                 DeleteBotButton(childButton);
             }
 
-            botButtons.Remove(botButton);
+            BotButtons.Remove(botButton);
             Debug.WriteLine($"Удалена кнопка с id: {botButton.Id} и именем: {botButton.ButtonName}");
 
-            string json = JsonConvert.SerializeObject(botButtons);
+            string json = JsonConvert.SerializeObject(BotButtons);
             System.IO.File.WriteAllText("buttons.json", json);
         }
     }

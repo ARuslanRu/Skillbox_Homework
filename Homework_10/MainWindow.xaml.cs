@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -23,14 +24,17 @@ namespace Homework_10
     public partial class MainWindow : Window
     {
         //TODO: попробовать реализовать отображение кнопок как в телеграмме, с учетом расположения в строке и колонке.
-
         MyBot client;
         int selectedId;
+
         public MainWindow()
         {
             InitializeComponent();
             client = new MyBot(this);
-            buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == 0).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+
+            buttonList.ItemsSource = client.BotButtons.Where(x => x.ParentId == 0).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+            messageList.ItemsSource = client.BotMessages;
+
             buttonList.MouseDoubleClick += BtnNext_DoubleClik;
 
             tbName.TextChanged += Tb_TextChanged;
@@ -79,7 +83,7 @@ namespace Homework_10
 
             selectedId = button.Id; //Id выбранной кнопки по которой откроется следующее меню. Необходимо для возврата назад.
             btnBack.IsEnabled = button.Id > 0; //Скрываем кнопку если находимся на самом верхнем уровне меню
-            buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == button.Id).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+            buttonList.ItemsSource = client.BotButtons.Where(x => x.ParentId == button.Id).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
 
         /// <summary>
@@ -91,12 +95,12 @@ namespace Homework_10
         {
             var buttonListItems = buttonList.ItemsSource as IEnumerable<BotButton>;
 
-            var backId = client.botButtons.Where(x => x.Id == selectedId).Select(x => x.ParentId).FirstOrDefault(); // получаем ParenId кнопки по нажатию на которую открыто текущее меню,                                                                                                                     // для того чтобы получить все кнопки верхнего уровня меню
+            var backId = client.BotButtons.Where(x => x.Id == selectedId).Select(x => x.ParentId).FirstOrDefault(); // получаем ParenId кнопки по нажатию на которую открыто текущее меню,                                                                                                                     // для того чтобы получить все кнопки верхнего уровня меню
 
             selectedId = backId; // Перезаписываем Id выбранной кнопки для того что бы вернуться еще на уровень выше
 
             btnBack.IsEnabled = backId > 0; //Скрываем кнопку если находимся на самом верхнем уровне меню
-            buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == backId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+            buttonList.ItemsSource = client.BotButtons.Where(x => x.ParentId == backId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
 
         /// <summary>
@@ -148,7 +152,7 @@ namespace Homework_10
             tbColumn.Text = string.Empty;
 
             //обновление отображаемых кнопок
-            buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == selectedId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+            buttonList.ItemsSource = client.BotButtons.Where(x => x.ParentId == selectedId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
 
         /// <summary>
@@ -166,6 +170,7 @@ namespace Homework_10
                 MessageBox.Show("Выберите кнопку для удаления.");
             }
             
+            //Подтверждение удаления
             if (MessageBox.Show("Удаление кнопки приведет к удалению всех вложенных кнопок.\nПродолжить удаление?", "Предупреждение!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
                 return;
@@ -174,7 +179,7 @@ namespace Homework_10
             client.DeleteBotButton(selectedButton);
 
             //обновление отображаемых кнопок
-            buttonList.ItemsSource = client.botButtons.Where(x => x.ParentId == selectedId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
+            buttonList.ItemsSource = client.BotButtons.Where(x => x.ParentId == selectedId).OrderBy(x => x.Row).ThenBy(x => x.Column).Distinct();
         }
     }
 }

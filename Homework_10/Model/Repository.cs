@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Homework_10.Model
 {
+    /// <summary>
+    /// Не используется
+    /// Оставлен на всякий случай
+    /// </summary>
     class Repository
     {
         private static Repository instance;
