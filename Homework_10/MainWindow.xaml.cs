@@ -162,8 +162,13 @@ namespace Homework_10
 
             if (selectedButton == null)
             {
-                //TODO: попробовать заменить на то что если кнопка не выбрана то удаление не активно.
+                //TODO: попробовать заменить на "если кнопка не выбрана то удаление не активно".
                 MessageBox.Show("Выберите кнопку для удаления.");
+            }
+            
+            if (MessageBox.Show("Удаление кнопки приведет к удалению всех вложенных кнопок.\nПродолжить удаление?", "Предупреждение!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
             }
 
             client.DeleteBotButton(selectedButton);
