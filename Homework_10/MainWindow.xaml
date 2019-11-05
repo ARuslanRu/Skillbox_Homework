@@ -15,21 +15,32 @@
             </TabItem.Header>
             <TabItem.Content>
                 <Grid ShowGridLines="True">
-                    
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <ListBox x:Name="messageList" Grid.Column="0" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Stretch" >
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Black" Margin="5" BorderThickness="1" CornerRadius="5">
-                                    <StackPanel Margin="10">
-                                        <TextBlock Text="{Binding FirstName}" Margin="0" FontSize="15"/>
-                                        <TextBlock Text="{Binding Msg}" Margin="0" FontSize="20"/>
-                                        <TextBlock Text="{Binding Time}" Margin="10 0" FontSize="10" Foreground="Gray" TextAlignment="Right"/>
-                                    </StackPanel>
+                                <Border BorderBrush="Black" Margin="2" BorderThickness="1" CornerRadius="5" Background="AliceBlue">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding FirstName}" Margin="2 0 2 0" FontSize="12" FontWeight="Bold"/>
+                                        <TextBlock Grid.Row="1" Grid.ColumnSpan="4" Text="{Binding Msg}" Margin="2 0 2 0" FontSize="12"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding Time}" Margin="2 0 2 0" FontSize="10" Foreground="Gray" TextAlignment="Right"/>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -41,7 +52,7 @@
                             <Button x:Name="btnMsgSend" FontSize="20" Content="Отправить" Margin="5"/>
                         </StackPanel>
                     </GroupBox>
-                    
+
                 </Grid>
             </TabItem.Content>
         </TabItem>
@@ -57,34 +68,38 @@
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="100" ></RowDefinition>
                     </Grid.RowDefinitions>
-                    <ScrollViewer BorderThickness="1" BorderBrush="Red">
+                    <ScrollViewer Grid.ColumnSpan="2">
                         <ListBox x:Name="buttonList"
                                  Grid.Row="0"
                                  HorizontalAlignment="Stretch" 
-                                 Margin="5"
                                  VerticalAlignment="Stretch"
                                  BorderThickness="0">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="Gray" Margin="2" BorderThickness="1" CornerRadius="10">
-                                        <StackPanel Margin="2">
-                                            <TextBlock Text="{Binding ButtonName}"></TextBlock>
-                                            <TextBlock FontSize="10" Foreground="Gray" Margin="10 0">
-                                <Run>Строка:</Run>
-                                <Run Text="{Binding Row}"></Run>
+                                    <Border BorderBrush="Gray" Margin="1" BorderThickness="1" CornerRadius="5">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="{Binding ButtonName}" Margin="2"></TextBlock>
+                                            <TextBlock Grid.Column="1" FontSize="10" Foreground="Gray" Margin="2">
+                                                <Run>Строка:</Run>
+                                                <Run Text="{Binding Row}"></Run>
                                             </TextBlock>
-                                            <TextBlock FontSize="10" Foreground="Gray"  Margin="10 0">
-                                <Run>Колонка:</Run>
-                                <Run Text="{Binding Column}"></Run>
+                                            <TextBlock Grid.Column="2" FontSize="10" Foreground="Gray" Margin="2">
+                                                <Run>Колонка:</Run>
+                                                <Run Text="{Binding Column}"></Run>
                                             </TextBlock>
-                                        </StackPanel>
+                                        </Grid>
                                     </Border>
                                 </DataTemplate>
 
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </ScrollViewer>
-                    <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+                    <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="btnBack" Content="Назад" Width="100" Margin="2" IsEnabled="False"/>
                             <Button x:Name="btnAdd" Content="Добавить кнопку" Width="100" Margin="2"/>

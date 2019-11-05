@@ -50,6 +50,11 @@ namespace Homework_10
             btnDelete.Click += BtnDeleteButton_Click;
         }
 
+        /// <summary>
+        /// Отправка сообщения в ответ на текстовое сообщение полученное через телеграм бота
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnMsgSend_Click(object sender, RoutedEventArgs e)
         {
             var botMessage = messageList.SelectedItem as BotMessage;
@@ -58,7 +63,6 @@ namespace Homework_10
             var message = tbMsgSend.Text;
 
             client.SendMessage(message, botMessageChatId, botMessageId);
-
         }
 
         /// <summary>
