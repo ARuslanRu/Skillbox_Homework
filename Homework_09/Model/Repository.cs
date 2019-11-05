@@ -3,8 +3,6 @@ using System.Linq;
 
 namespace Homework_09.Model
 {
-
-    //TODO: Заменить репозиторий на хранение в файле JSON
     class Repository
     {
         private static Repository instance;

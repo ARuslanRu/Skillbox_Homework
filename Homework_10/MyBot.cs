@@ -55,7 +55,7 @@ namespace Homework_10
             {
                 BotMessages.Add(
                 new BotMessage(
-                    DateTime.Now.ToLongTimeString(), messageText, msg.Chat.FirstName, msg.Chat.Id));
+                    DateTime.Now.ToLongTimeString(), messageText, msg.Chat.FirstName, msg.Chat.Id, msg.MessageId));
             });
         }
 
@@ -255,8 +255,6 @@ namespace Homework_10
                     return;
                 }
 
-
-
                 //TODO: Так же возможно нужно пересмотреть выдачу идшников для кнопок, например придумать какую-нибудь последовательность. Необходимо для того что бы если в админке изменили кнопки и не провалиться в непонятно какое меню.
                 BotButton backButton;
 
@@ -346,17 +344,22 @@ namespace Homework_10
             //Проверяем доступность API (надо бы поправить, при недоступности валится в ошибку)
             if (bot.TestApiAsync().Result)
             {
-                Console.WriteLine("API доступен.");
+                Debug.WriteLine("API доступен.");
                 bot.OnUpdate += UpdateListener;
                 bot.StartReceiving();
-                Console.WriteLine($"Token: {token}");
+                Debug.WriteLine($"Token: {token}");
             }
             else
             {
-                Console.WriteLine("API не доступен." +
+                Debug.WriteLine("API не доступен." +
                     "\nПроверьте интернет соединение." +
                     "\nИли возможно проблема с блокировкой.");
             }
+        }
+
+        public void SendMessage(string message, long chatId, int messageId)
+        {
+            bot.SendTextMessageAsync(chatId, message, replyToMessageId: messageId);
         }
 
         /// <summary>
@@ -395,7 +398,7 @@ namespace Homework_10
         {
             //Рекрсивно удаляем все вложенные кнопки
 
-            var childBotButtons = BotButtons.Where(x => x.ParentId == botButton.Id).ToList();       
+            var childBotButtons = BotButtons.Where(x => x.ParentId == botButton.Id).ToList();
             foreach (var childButton in childBotButtons)
             {
                 DeleteBotButton(childButton);

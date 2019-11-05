@@ -37,8 +37,7 @@
 
                     <GroupBox Grid.Column="1" FontSize="20" Header="Отправка сообщения" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Stretch">
                         <StackPanel>
-                            <TextBlock x:Name="TargetSend" Text="{Binding ElementName=messageList, Path=SelectedItem.Id}" Visibility="Collapsed" Margin="5"/>
-                            <TextBox x:Name="txtMsgSend" FontSize="20" Margin="5"/>
+                            <TextBox x:Name="tbMsgSend" FontSize="20" Margin="5"/>
                             <Button x:Name="btnMsgSend" FontSize="20" Content="Отправить" Margin="5"/>
                         </StackPanel>
                     </GroupBox>

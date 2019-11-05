@@ -44,9 +44,21 @@ namespace Homework_10
             tbRow.PreviewTextInput += NumbersValidation;
             tbColumn.PreviewTextInput += NumbersValidation;
 
+            btnMsgSend.Click += BtnMsgSend_Click;
             btnBack.Click += BtnBack_Click;
             btnAdd.Click += BtnAddButton_Click;
             btnDelete.Click += BtnDeleteButton_Click;
+        }
+
+        private void BtnMsgSend_Click(object sender, RoutedEventArgs e)
+        {
+            var botMessage = messageList.SelectedItem as BotMessage;
+            var botMessageChatId = botMessage.ChatId;
+            var botMessageId = botMessage.Id;
+            var message = tbMsgSend.Text;
+
+            client.SendMessage(message, botMessageChatId, botMessageId);
+
         }
 
         /// <summary>
@@ -169,7 +181,7 @@ namespace Homework_10
                 //TODO: попробовать заменить на "если кнопка не выбрана то удаление не активно".
                 MessageBox.Show("Выберите кнопку для удаления.");
             }
-            
+
             //Подтверждение удаления
             if (MessageBox.Show("Удаление кнопки приведет к удалению всех вложенных кнопок.\nПродолжить удаление?", "Предупреждение!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
