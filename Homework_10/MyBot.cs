@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using Homework_10.Model;
 using System.Collections.ObjectModel;
 using Telegram.Bot;
@@ -18,12 +16,34 @@ namespace Homework_10
 {
     class MyBot
     {
+        #region Fields
+
         private MainWindow w;
         private TelegramBotClient bot;
         private string token;
 
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Сообщения
+        /// </summary>
         public ObservableCollection<BotMessage> BotMessages { get; set; }
+        /// <summary>
+        /// Кнопки
+        /// </summary>
         public ObservableCollection<BotButton> BotButtons { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="w"></param>
+        /// <param name="pathToken"></param>
         public MyBot(MainWindow w, string pathToken = "token")
         {
             token = System.IO.File.ReadAllText(pathToken);
@@ -37,6 +57,10 @@ namespace Homework_10
             bot.OnUpdate += UpdateListener;
             bot.StartReceiving();
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// Сохранение текстовых сообщений в коллекцию
@@ -336,6 +360,10 @@ namespace Homework_10
             }
         }
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         /// Запуск бота
         /// </summary>
@@ -357,6 +385,12 @@ namespace Homework_10
             }
         }
 
+        /// <summary>
+        /// Отправляет ответ на конкретное сообщение
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="chatId"></param>
+        /// <param name="messageId"></param>
         public void SendMessage(string message, long chatId, int messageId)
         {
             bot.SendTextMessageAsync(chatId, message, replyToMessageId: messageId);
@@ -410,5 +444,7 @@ namespace Homework_10
             string json = JsonConvert.SerializeObject(BotButtons);
             System.IO.File.WriteAllText("buttons.json", json);
         }
+
+        #endregion
     }
 }
