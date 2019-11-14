@@ -6,10 +6,11 @@ namespace Homework_09.Model
     class Repository
     {
         private static Repository instance;
-        public static List<BotButton> Buttons { get; private set; }
+        public static List<BotButton> buttons;
+        public List<BotButton> Buttons { get { return buttons; } }
         private Repository()
         {
-            Buttons = new List<BotButton>();
+            buttons = new List<BotButton>();
 
             Buttons.Add(new BotButton { Id = 1, ParentId = 0, Row = 1, Column = 1, ButtonName = "Игры" });
             Buttons.Add(new BotButton { Id = 2, ParentId = 0, Row = 2, Column = 1, ButtonName = "Рецепты" });
@@ -59,7 +60,7 @@ namespace Homework_09.Model
                 Content = content
             };
 
-            Buttons.Add(botButton);
+            buttons.Add(botButton);
         }
 
         /// <summary>
@@ -68,15 +69,15 @@ namespace Homework_09.Model
         /// <returns></returns>
         private static int GettId()
         {
-            if (Buttons.Count != 0)
+            if (buttons.Count != 0)
             {
-                int[] number = Buttons.Select(x => x.Id).ToArray();
+                int[] number = buttons.Select(x => x.Id).ToArray();
                 int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
                 return missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
             }
             else
             {
-               return 1;
+                return 1;
             }
         }
     }

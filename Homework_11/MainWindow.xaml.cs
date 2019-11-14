@@ -24,20 +24,7 @@ namespace Homework_11
     {
         public MainWindow()
         {
-            InitializeComponent();
-
-            Worker worker = new Worker("Test1");
-            Manager manager = new Manager("Test2");
-            Trainee trainee = new Trainee("Test3");
-
-            addEmployee.Click += AddEmployee_Click;
-
-            employeeList.ItemsSource = Employee.Employees;            
-        }
-
-        private void AddEmployee_Click(object sender, RoutedEventArgs e)
-        {
-            Worker worker = new Worker("Test4");
+            InitializeComponent();      
         }
     }
 }

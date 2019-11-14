@@ -11,12 +11,12 @@ namespace Homework_11.Model
     /// </summary>
     class Worker : Employee
     {
-        //TODO: Реализация
+        public override decimal Salary { get; }
 
-        public Worker(string name) 
-            : base(name)
+        public Worker(int id, string name, string dolzhnost, decimal salary)
+            : base(id, name, dolzhnost)
         {
-
+            Salary = salary;
         }
     }
 }

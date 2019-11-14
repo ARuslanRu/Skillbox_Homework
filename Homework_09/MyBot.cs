@@ -57,6 +57,9 @@ namespace Homework_09
             token = System.IO.File.ReadAllText("token");
             bot = new TelegramBotClient(token);
             buttons = Repository.getInstance().Buttons;
+            var b = Repository.getInstance();
+
+            
             //при использовании прокси
             //bot = new TelegramBotClient(token, hc);
         }
