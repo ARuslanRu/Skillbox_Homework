@@ -39,7 +39,7 @@ namespace Homework_11.Model
         {
             //С данной рекурсией много повторяющихся действий получается, можно ли как-то от этого избавиться?
 
-            Debug.WriteLine($"Департамент: {department.Name} | Имя: {Name} | Должность: {Dolzhnost}");
+            Debug.WriteLine($"Департамент: {department.Name} | Имя: {Name} | Должность: {Position}");
 
             decimal salary;
 

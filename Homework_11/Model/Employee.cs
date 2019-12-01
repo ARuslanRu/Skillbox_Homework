@@ -14,13 +14,13 @@ namespace Homework_11.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Dolzhnost { get; set; }
+        public string Position { get; set; }
         public abstract decimal Salary { get; }
         public Employee(int id, string name, string dolzhnost)
         {
             Id = id;
             Name = name;
-            Dolzhnost = dolzhnost;
+            Position = dolzhnost;
         }
 
         #region Неиспользуемое

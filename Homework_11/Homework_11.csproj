@@ -75,6 +75,7 @@
     <Compile Include="Model\Organization.cs" />
     <Compile Include="Model\Trainee.cs" />
     <Compile Include="Model\Worker.cs" />
+    <Compile Include="Model_2\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

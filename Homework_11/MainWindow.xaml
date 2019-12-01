@@ -43,7 +43,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Grid.Column="0" Text="{Binding Name}" Margin="2 0 2 0" FontSize="12" FontWeight="Bold"/>
-                            <TextBlock Grid.Column="1" Text="{Binding Dolzhnost}" Margin="2 0 2 0" FontSize="12" Foreground="Gray"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Position}" Margin="2 0 2 0" FontSize="12" Foreground="Gray"/>
                             <TextBlock Grid.Column="2" Text="{Binding Salary}" Margin="2 0 2 0" FontSize="12" Foreground="Gray"/>
                         </StackPanel>
                     </DataTemplate>

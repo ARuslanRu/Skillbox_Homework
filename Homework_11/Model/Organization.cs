@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Homework_11.Model
 {
@@ -40,8 +36,6 @@ namespace Homework_11.Model
             dep3.Employees.Add(new Manager(1, "Имя_12", "Зам_Начальник_113", dep3));
             dep3.Employees.Add(new Worker(2, "Имя_10", "Рабочий_11", 100));
             dep3.Employees.Add(new Worker(3, "Имя_11", "Рабочий_12", 100));
-
         }
-
     }
 }
