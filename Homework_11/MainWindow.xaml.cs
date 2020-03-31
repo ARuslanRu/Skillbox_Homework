@@ -23,26 +23,115 @@ namespace Homework_11
     /// </summary>
     public partial class MainWindow : Window
     {
-        Organization organization;
+        ObservableCollection<Employee> employees = new ObservableCollection<Employee>();
+
         public MainWindow()
         {
             InitializeComponent();
-            organization = new Organization();
 
-            treeViewDepartments.ItemsSource = organization.Departments;
+            LoadTreeViewItems(treeViewDepartments);
 
-            treeViewDepartments.SelectedItemChanged += Departments_SelectedItemChanged;
+            btnSaveToJson.Click += BtnSaveToJson_Click;
+
+            lvEmployees.ItemsSource = employees;
+
+            treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
         }
 
-        private void Departments_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void BtnSaveToJson_Click(object sender, RoutedEventArgs e)
         {
-            Department dep = treeViewDepartments.SelectedItem as Department;
-            employeeList.ItemsSource = dep.Employees;
-
-            Manager manager = dep.Manager;
-            managerName.Text = manager.Name;
-            managerSalary.Text = $" Зарплата: {manager.Salary.ToString()}";
-            Debug.WriteLine("Рассчитали и показали ЗП для начальника");
+            Repository.SaveData();
         }
+
+
+        #region TreeView
+
+        /// <summary>
+        /// Действие при изменении выбранного элемента в TreeView
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TreeViewDepartments_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is null)
+            {
+                return;
+            }
+            var n = int.Parse((e.NewValue as TreeViewItem).Tag.ToString(), null);
+            var empls = Repository.EmployeesDb.Where(x => x.DepartmentId == n).ToList();
+            employees.Clear();
+            empls.ForEach(x => employees.Add(x));
+        }
+
+        /// <summary>
+        /// Загрузка элементов для TreeView
+        /// </summary>
+        /// <param name="treeView"></param>
+        private void LoadTreeViewItems(TreeView treeView)
+        {
+            treeView.Items.Clear();
+            var rootDep = Repository.DepartmentsDb.Where(x => x.ParentId == 0).ToList();
+
+            rootDep.ForEach(dep =>
+            {
+                var item = new TreeViewItem()
+                {
+                    Header = dep.Name,
+                    Tag = dep.Id
+                };
+
+                item.Items.Add(null);
+
+                item.Expanded += Item_Expanded;
+
+                treeView.Items.Add(item);
+            });
+        }
+
+        /// <summary>
+        /// Действие при раскрытии элемента в TreeView
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Item_Expanded(object sender, RoutedEventArgs e)
+        {
+            var item = (TreeViewItem)sender;
+
+            if (item.Items.Count != 1 || item.Items[0] != null)
+            {
+                return;
+            }
+
+            item.Items.Clear();
+
+            var depId = int.Parse(item.Tag.ToString(), null);
+
+            #region Получение департаментов
+
+            var depsIn = Repository.DepartmentsDb.Where(x => x.ParentId == depId).ToList();
+
+            depsIn.ForEach(dep =>
+            {
+                var subItem = new TreeViewItem()
+                {
+                    Header = dep.Name,
+                    Tag = dep.Id
+                };
+
+
+                subItem.Items.Add(null);
+
+                subItem.Expanded += Item_Expanded;
+
+                item.Items.Add(subItem);
+
+            });
+
+            #endregion
+
+        }
+
+        #endregion
+
     }
 }

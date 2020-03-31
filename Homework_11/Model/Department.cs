@@ -8,19 +8,14 @@ namespace Homework_11.Model
 {
     class Department
     {
-        public int Id { get; set; }
         public string Name { get; set; }
-        public Manager Manager { get; set; }
-        public List<Employee> Employees { get; set; } // Возможно стоит заменить на приватное поле и методы для доступа к нему
-        public List<Department> Departments { get; set; }
-
-        public Department(int departmentId, string departmentName, Manager manager)
+        public int Id { get; set; }
+        public int ParentId { get; set; }
+        public Department(string name, int id, int parentId)
         {
-            Id = departmentId;
-            Name = departmentName;
-            Manager = manager;
-            Employees = new List<Employee>();
-            Departments = new List<Department>();
+            Name = name;
+            Id = id;
+            ParentId = parentId;
         }
     }
 }

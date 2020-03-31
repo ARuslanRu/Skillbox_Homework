@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Homework_11.Model
 {
-    class Worker : Employee
+    class Intertn : Employee
     {
         /// <summary>
         /// Зарплата
@@ -16,18 +16,17 @@ namespace Homework_11.Model
         /// <summary>
         /// Зарплата
         /// </summary>
-        public override decimal Salary { get { return salary * 8 * 20; } } //Почасовой расчет оплаты 8часов * 20рабочих деней в мес
+        public override decimal Salary { get { return salary; } }
 
         /// <summary>
-        /// Конструктор рабочего
+        /// Конструктор стажера
         /// </summary>
-        /// <param name="id">идентификатор</param>
+        /// <param name="id">Идентификатор</param>
         /// <param name="name">Имя</param>
         /// <param name="departmentId">Идентификатор департамента</param>
         /// <param name="position">Должность</param>
-        /// <param name="salary">Зарплата в час</param>
-        public Worker(int id, string name, int departmentId, string position, decimal salary)
-            : base(id, name, departmentId, position)
+        /// <param name="salary">Зарпалата в мес</param>
+        public Intertn(int id, string name, int departmentId, string position, decimal salary) : base(id, name, departmentId, position)
         {
             this.salary = salary;
         }
