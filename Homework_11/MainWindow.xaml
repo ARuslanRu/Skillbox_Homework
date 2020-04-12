@@ -28,6 +28,7 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="0" Grid.Row="1">
+            <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
             <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
         </StackPanel>
 

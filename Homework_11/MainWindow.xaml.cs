@@ -32,10 +32,17 @@ namespace Homework_11
             LoadTreeViewItems(treeViewDepartments);
 
             btnSaveToJson.Click += BtnSaveToJson_Click;
+            btnLoadFromJson.Click += BtnLoadFromJson_Click;
 
             lvEmployees.ItemsSource = employees;
 
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
+        }
+
+        private void BtnLoadFromJson_Click(object sender, RoutedEventArgs e)
+        {
+            Repository.LoadData();
+            LoadTreeViewItems(treeViewDepartments);
         }
 
         private void BtnSaveToJson_Click(object sender, RoutedEventArgs e)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Homework_11.Model
 {
@@ -11,12 +12,20 @@ namespace Homework_11.Model
         /// <summary>
         /// Зарплата
         /// </summary>
-        private decimal salary;
+        //[JsonProperty]
+        //private decimal salary;
 
         /// <summary>
         /// Зарплата
         /// </summary>
-        public override decimal Salary { get { return salary; } }
+        //public override decimal Salary => GetSalary();
+        [JsonProperty]
+        public override decimal Salary { get; set; }
+
+        public Intertn()
+        {
+
+        }
 
         /// <summary>
         /// Конструктор стажера
@@ -28,7 +37,7 @@ namespace Homework_11.Model
         /// <param name="salary">Зарпалата в мес</param>
         public Intertn(int id, string name, int departmentId, string position, decimal salary) : base(id, name, departmentId, position)
         {
-            this.salary = salary;
+            Salary = salary;
         }
     }
 }

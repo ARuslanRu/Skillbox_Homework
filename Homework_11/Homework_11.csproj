@@ -84,6 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Task_2\A.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +103,7 @@
     <Compile Include="Model\Employee.cs" />
     <Compile Include="Model\Intertn.cs" />
     <Compile Include="Model\Manager.cs" />
+    <Compile Include="Model\JsonData.cs" />
     <Compile Include="Model\Repository.cs" />
     <Compile Include="Model\Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

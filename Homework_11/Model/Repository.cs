@@ -9,12 +9,16 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Homework_11.Model
 {
     static class Repository
     {
+        [JsonProperty]
         public static List<Employee> EmployeesDb { get; set; }
+
+        [JsonProperty]
         public static List<Department> DepartmentsDb { get; set; }
 
         static Repository()
@@ -22,7 +26,7 @@ namespace Homework_11.Model
             EmployeesDb = new List<Employee>();
             DepartmentsDb = new List<Department>();
 
-            InitRepo();
+            //InitRepo();
         }
 
         private static void InitRepo()
@@ -59,16 +63,32 @@ namespace Homework_11.Model
 
         public static void LoadData()
         {
+
+            string jsonString = File.ReadAllText("data.json");
+
             //Загрузка из json
+            var restoredJson = JsonConvert.DeserializeObject<JsonData>(jsonString, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+
+            EmployeesDb = restoredJson.EmployeesDb;
+            DepartmentsDb = restoredJson.DepartmentsDb;
+
         }
 
-        public static async void SaveData()
+        public static void SaveData()
         {
-            //сохранение в json
-            using (FileStream fs = File.Create("test.json"))
-            {
-               await JsonSerializer.SerializeAsync(fs, EmployeesDb);
-            }
+            var jsonData = new JsonData(EmployeesDb, DepartmentsDb);
+
+            //Так сериализуется вроде ок
+            string jsonContent = JsonConvert.SerializeObject(jsonData, Formatting.Indented, new JsonSerializerSettings
+            { 
+                TypeNameHandling = TypeNameHandling.All
+            });
+
+            File.WriteAllText("data.json", jsonContent);
+        
         }
     }
 }
