@@ -27,6 +27,12 @@ namespace Homework_11
             InitializeComponent();
 
             btnSave.Click += BtnSave_Click;
+            btnCancel.Click += BtnCancel_Click;
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)

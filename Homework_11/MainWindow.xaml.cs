@@ -36,10 +36,25 @@ namespace Homework_11
             btnLoadFromJson.Click += BtnLoadFromJson_Click;
             btnAddDepartment.Click += BtnAddDepartment_Click;
             btnRefresh.Click += BtnRefresh_Click;
+            btnAddEmployee.Click += BtnAddEmployee_Click;
 
             lvEmployees.ItemsSource = employees;
 
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
+        }
+
+        private void BtnAddEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать департамент");
+            }
+            else
+            {
+                int depId = int.Parse((treeViewDepartments.SelectedItem as TreeViewItem).Tag.ToString());
+                new EmployeeWindow(depId).Show();
+               
+            }
         }
 
         private void BtnRefresh_Click(object sender, RoutedEventArgs e)

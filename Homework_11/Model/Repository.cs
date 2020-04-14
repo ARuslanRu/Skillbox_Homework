@@ -71,19 +71,26 @@ namespace Homework_11.Model
             }
         }
 
+        /// <summary>
+        /// Добавление департамента
+        /// </summary>
+        /// <param name="departmentName"></param>
+        /// <param name="parentId"></param>
         public static void AddDepartment(string departmentName, int parentId)
         {
-            //Добавление департамента
             int id = GetDepartmentId();
             DepartmentsDb.Add(new Department(departmentName, id, parentId));
         }
 
+        /// <summary>
+        /// Загрузка из json
+        /// </summary>
         public static void LoadData()
         {
-
+            //Загрузка из json
             string jsonString = File.ReadAllText("data.json");
 
-            //Загрузка из json
+            //Десериализация 
             var restoredJson = JsonConvert.DeserializeObject<JsonData>(jsonString, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.All
@@ -94,11 +101,14 @@ namespace Homework_11.Model
 
         }
 
+        /// <summary>
+        /// Сохраннение в json
+        /// </summary>
         public static void SaveData()
         {
             var jsonData = new JsonData(EmployeesDb, DepartmentsDb);
 
-            //Так сериализуется вроде ок
+            //Сериализация
             string jsonContent = JsonConvert.SerializeObject(jsonData, Formatting.Indented, new JsonSerializerSettings
             { 
                 TypeNameHandling = TypeNameHandling.All
