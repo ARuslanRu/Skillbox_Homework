@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Homework_11.Model
 {
@@ -11,12 +12,20 @@ namespace Homework_11.Model
         /// <summary>
         /// Зарплата
         /// </summary>
+        [JsonProperty]
         private decimal salary;
 
         /// <summary>
         /// Зарплата
         /// </summary>
-        public override decimal Salary { get { return salary * 8 * 20; } } //Почасовой расчет оплаты 8часов * 20рабочих деней в мес
+        //public override decimal Salary { get { return salary * 8 * 20; } } //Почасовой расчет оплаты 8часов * 20рабочих деней в мес
+
+        [JsonIgnore]
+        public override decimal Salary
+        {
+            get { return salary * 8 * 20; }
+            set { salary = value; }
+        }
 
         /// <summary>
         /// Конструктор рабочего

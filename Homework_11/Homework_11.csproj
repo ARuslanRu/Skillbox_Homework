@@ -84,6 +84,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DepartmentWindow.xaml.cs">
+      <DependentUpon>DepartmentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EmployeeWindow.xaml.cs">
+      <DependentUpon>EmployeeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Task_2\A.cs" />
+    <Page Include="DepartmentWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EmployeeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,6 +117,7 @@
     <Compile Include="Model\Employee.cs" />
     <Compile Include="Model\Intertn.cs" />
     <Compile Include="Model\Manager.cs" />
+    <Compile Include="Model\JsonData.cs" />
     <Compile Include="Model\Repository.cs" />
     <Compile Include="Model\Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -28,14 +28,58 @@ namespace Homework_11
         public MainWindow()
         {
             InitializeComponent();
+            Repository.LoadData();
 
             LoadTreeViewItems(treeViewDepartments);
 
             btnSaveToJson.Click += BtnSaveToJson_Click;
+            btnLoadFromJson.Click += BtnLoadFromJson_Click;
+            btnAddDepartment.Click += BtnAddDepartment_Click;
+            btnRefresh.Click += BtnRefresh_Click;
+            btnAddEmployee.Click += BtnAddEmployee_Click;
 
             lvEmployees.ItemsSource = employees;
 
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
+        }
+
+        private void BtnAddEmployee_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать департамент");
+            }
+            else
+            {
+                int depId = int.Parse((treeViewDepartments.SelectedItem as TreeViewItem).Tag.ToString());
+                new EmployeeWindow(depId).Show();
+               
+            }
+        }
+
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadTreeViewItems(treeViewDepartments);
+        }
+
+        private void BtnAddDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                new DepartmentWindow(0).Show();
+            }
+            else
+            {
+                var parentDep = treeViewDepartments.SelectedItem as TreeViewItem;
+                int parentId = int.Parse(parentDep.Tag.ToString());
+                new DepartmentWindow(parentId).Show();
+            }
+        }
+
+        private void BtnLoadFromJson_Click(object sender, RoutedEventArgs e)
+        {
+            Repository.LoadData();
+            LoadTreeViewItems(treeViewDepartments);
         }
 
         private void BtnSaveToJson_Click(object sender, RoutedEventArgs e)
