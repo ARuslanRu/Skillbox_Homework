@@ -28,7 +28,14 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="0" Grid.Row="1">
+            <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
             <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
+            <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
+            <Button x:Name="btnRefresh" Content="Обновить"></Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <Button x:Name="btnAddEmployee" Content="Добавить сотрудника"></Button>
         </StackPanel>
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Homework_11.Model
 {
@@ -20,13 +21,16 @@ namespace Homework_11.Model
         {
 
         }
-        
-        //private decimal salary;
 
         /// <summary>
         /// Зарплата
         /// </summary>
-        public override decimal Salary => GetSalary(this.DepartmentId) * 0.15m < 1300 ? 1300 : GetSalary(this.DepartmentId) * 0.15m;
+        [JsonIgnore]
+        public override decimal Salary 
+        {
+            get { return GetSalary(this.DepartmentId) * 0.15m < 1300 ? 1300 : GetSalary(this.DepartmentId) * 0.15m; }
+        } 
+
 
         /// <summary>
         /// Рассчет суммарной зарплаты всех подчиненных

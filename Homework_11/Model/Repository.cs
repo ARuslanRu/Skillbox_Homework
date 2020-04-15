@@ -9,20 +9,24 @@ using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Homework_11.Model
 {
     static class Repository
     {
         public static List<Employee> EmployeesDb { get; set; }
+
         public static List<Department> DepartmentsDb { get; set; }
+
+        //TODO: доделать добавление сотрудников
 
         static Repository()
         {
             EmployeesDb = new List<Employee>();
             DepartmentsDb = new List<Department>();
 
-            InitRepo();
+            //InitRepo();
         }
 
         private static void InitRepo()
@@ -47,28 +51,109 @@ namespace Homework_11.Model
             EmployeesDb.Add(new Intertn(10, "Стажер_2", 3, "Стажер", 2000));
         }
 
-        public static void AddEmployee(Employee employee)
+        public static void AddEmployee(string name, int departmentId, string position, decimal salary)
         {
+            int id = GetEmployeeId();
             //Добавление сотрудника
+            switch (position)
+            {
+                case "Начальник":
+                    EmployeesDb.Add(new Manager(id, name, departmentId, position));               
+                    break;
+                case "Рабочий":
+                    EmployeesDb.Add(new Worker(id, name, departmentId, position, salary));
+                    break;
+                case "Стажер":
+                    EmployeesDb.Add(new Intertn(id, name, departmentId, position, salary));
+                    break;
+                default:
+                    break;
+            }
         }
 
-        public static void AddDepartment(Department department)
+        /// <summary>
+        /// Добавление департамента
+        /// </summary>
+        /// <param name="departmentName"></param>
+        /// <param name="parentId"></param>
+        public static void AddDepartment(string departmentName, int parentId)
         {
-            //Добавление департамента
+            int id = GetDepartmentId();
+            DepartmentsDb.Add(new Department(departmentName, id, parentId));
         }
 
+        /// <summary>
+        /// Загрузка из json
+        /// </summary>
         public static void LoadData()
         {
             //Загрузка из json
+            string jsonString = File.ReadAllText("data.json");
+
+            //Десериализация 
+            var restoredJson = JsonConvert.DeserializeObject<JsonData>(jsonString, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+
+            EmployeesDb = restoredJson.EmployeesDb;
+            DepartmentsDb = restoredJson.DepartmentsDb;
+
         }
 
-        public static async void SaveData()
+        /// <summary>
+        /// Сохраннение в json
+        /// </summary>
+        public static void SaveData()
         {
-            //сохранение в json
-            using (FileStream fs = File.Create("test.json"))
+            var jsonData = new JsonData(EmployeesDb, DepartmentsDb);
+
+            //Сериализация
+            string jsonContent = JsonConvert.SerializeObject(jsonData, Formatting.Indented, new JsonSerializerSettings
+            { 
+                TypeNameHandling = TypeNameHandling.All
+            });
+
+            File.WriteAllText("data.json", jsonContent);
+        
+        }
+
+        /// <summary>
+        /// Поучение свободного идентификатора для сотрудников
+        /// </summary>
+        /// <returns></returns>
+        private static int GetEmployeeId()
+        {
+            if (EmployeesDb.Count != 0)
             {
-               await JsonSerializer.SerializeAsync(fs, EmployeesDb);
+                int[] number = EmployeesDb.Select(x => x.Id).ToArray();
+                int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
+                return missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
+            }
+            else
+            {
+                return 1;
             }
         }
+
+        /// <summary>
+        /// Поучение свободного идентификатора для сотрудников
+        /// </summary>
+        /// <returns></returns>
+        private static int GetDepartmentId()
+        {
+            if (DepartmentsDb.Count != 0)
+            {
+                int[] number = DepartmentsDb.Select(x => x.Id).ToArray();
+                int[] missingNumbers = Enumerable.Range(number[0], number[number.Length - 1]).Except(number).ToArray();
+                return missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+
     }
 }

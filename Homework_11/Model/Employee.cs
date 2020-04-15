@@ -12,7 +12,13 @@ namespace Homework_11.Model
         public string Name { get; set; }
         public int DepartmentId { get; set; }
         public string Position { get; set; }
-        public abstract decimal Salary { get; }
+        public virtual decimal Salary { get; set; }
+
+        public Employee()
+        {
+
+        }
+
         public Employee(int id, string name, int departmentId, string position)
         {
             Id = id;
