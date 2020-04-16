@@ -12,20 +12,8 @@ namespace Homework_12.Model
         /// <summary>
         /// Зарплата
         /// </summary>
-        //[JsonProperty]
-        //private decimal salary;
-
-        /// <summary>
-        /// Зарплата
-        /// </summary>
-        //public override decimal Salary => GetSalary();
         [JsonProperty]
         public override decimal Salary { get; set; }
-
-        public Intertn()
-        {
-
-        }
 
         /// <summary>
         /// Конструктор стажера
@@ -35,7 +23,7 @@ namespace Homework_12.Model
         /// <param name="departmentId">Идентификатор департамента</param>
         /// <param name="position">Должность</param>
         /// <param name="salary">Зарпалата в мес</param>
-        public Intertn(int id, string name, int departmentId, string position, decimal salary) : base(id, name, departmentId, position)
+        public Intertn(string name, int departmentId, string position, decimal salary) : base(name, departmentId, position)
         {
             Salary = salary;
         }

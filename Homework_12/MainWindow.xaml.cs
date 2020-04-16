@@ -29,8 +29,9 @@ namespace Homework_12
         {
             InitializeComponent();
             Repository.LoadData();
-
             LoadTreeViewItems(treeViewDepartments);
+
+            lvEmployees.ItemsSource = employees;
 
             btnSaveToJson.Click += BtnSaveToJson_Click;
             btnLoadFromJson.Click += BtnLoadFromJson_Click;
@@ -38,12 +39,7 @@ namespace Homework_12
             btnRefresh.Click += BtnRefresh_Click;
             btnAddEmployee.Click += BtnAddEmployee_Click;
 
-            lvEmployees.ItemsSource = employees;
-
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
-
-
-
         }
 
         private void BtnAddEmployee_Click(object sender, RoutedEventArgs e)
@@ -90,7 +86,6 @@ namespace Homework_12
             Repository.SaveData();
         }
 
-
         #region TreeView
 
         /// <summary>
@@ -105,7 +100,7 @@ namespace Homework_12
                 return;
             }
             var n = int.Parse((e.NewValue as TreeViewItem).Tag.ToString(), null);
-            var empls = Repository.EmployeesDb.Where(x => x.DepartmentId == n).ToList();
+            var empls = Employee.Employees.Where(x => x.DepartmentId == n).ToList();
             employees.Clear();
             empls.ForEach(x => employees.Add(x));
         }
@@ -117,7 +112,7 @@ namespace Homework_12
         private void LoadTreeViewItems(TreeView treeView)
         {
             treeView.Items.Clear();
-            var rootDep = Repository.DepartmentsDb.Where(x => x.ParentId == 0).ToList();
+            var rootDep = Department.Departments.Where(x => x.ParentId == 0).ToList();
 
             rootDep.ForEach(dep =>
             {
@@ -155,7 +150,7 @@ namespace Homework_12
 
             #region Получение департаментов
 
-            var depsIn = Repository.DepartmentsDb.Where(x => x.ParentId == depId).ToList();
+            var depsIn = Department.Departments.Where(x => x.ParentId == depId).ToList();
 
             depsIn.ForEach(dep =>
             {
@@ -167,7 +162,6 @@ namespace Homework_12
 
 
                 subItem.Items.Add(null);
-
                 subItem.Expanded += Item_Expanded;
 
                 item.Items.Add(subItem);

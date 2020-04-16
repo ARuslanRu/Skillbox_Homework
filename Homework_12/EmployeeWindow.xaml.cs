@@ -56,15 +56,31 @@ namespace Homework_12
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             string name = tbName.Text;
+
             TextBlock selectedItem = (TextBlock)cbEmployeePosition.SelectedItem;
+            string position = selectedItem.Text;
 
             decimal salary = 0;
-            if (!selectedItem.Text.Equals("Начальник"))
+            if (!position.Equals("Начальник"))
             {
                 salary = decimal.Parse(tbSalary.Text);
             }
 
-            Repository.AddEmployee(name, departmentId, selectedItem.Text, salary);
+            switch (position)
+            {
+                case "Начальник":
+                    new Manager(name, departmentId, position);
+                    break;
+                case "Рабочий":
+                    new Worker(name, departmentId, position, salary);
+                    break;
+                case "Стажер":
+                    new Intertn(name, departmentId, position, salary);
+                    break;
+                default:
+                    break;
+            }
+
             this.Close();
         }
     }

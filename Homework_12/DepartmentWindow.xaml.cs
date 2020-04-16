@@ -38,7 +38,7 @@ namespace Homework_12
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             string departmentName = tbDepartmentName.Text;
-            Repository.AddDepartment(departmentName, parentId);
+            new Department(departmentName, parentId);
             this.Close();
         }
     }

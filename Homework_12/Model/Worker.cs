@@ -18,8 +18,6 @@ namespace Homework_12.Model
         /// <summary>
         /// Зарплата
         /// </summary>
-        //public override decimal Salary { get { return salary * 8 * 20; } } //Почасовой расчет оплаты 8часов * 20рабочих деней в мес
-
         [JsonIgnore]
         public override decimal Salary
         {
@@ -35,8 +33,8 @@ namespace Homework_12.Model
         /// <param name="departmentId">Идентификатор департамента</param>
         /// <param name="position">Должность</param>
         /// <param name="salary">Зарплата в час</param>
-        public Worker(int id, string name, int departmentId, string position, decimal salary)
-            : base(id, name, departmentId, position)
+        public Worker(string name, int departmentId, string position, decimal salary)
+            : base(name, departmentId, position)
         {
             this.salary = salary;
         }

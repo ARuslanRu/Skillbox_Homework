@@ -16,8 +16,8 @@ namespace Homework_12.Model
         /// <param name="name">Имя</param>
         /// <param name="departmentId">Идентификатор департамента</param>
         /// <param name="position">Должность</param>
-        public Manager(int id, string name, int departmentId, string position)
-            : base(id, name, departmentId, position)
+        public Manager(string name, int departmentId, string position)
+            : base(name, departmentId, position)
         {
 
         }
@@ -31,7 +31,7 @@ namespace Homework_12.Model
             get { return GetSalary(this.DepartmentId) * 0.15m < 1300 ? 1300 : GetSalary(this.DepartmentId) * 0.15m; }
         } 
 
-
+        //TODO: Переделать метод для статического Employee
         /// <summary>
         /// Рассчет суммарной зарплаты всех подчиненных
         /// </summary>
@@ -44,15 +44,16 @@ namespace Homework_12.Model
             if (departmentId == this.DepartmentId)
             {
                 //Суммируем зарплату всех в текущем подразделении кроме начальника этого подразделения
-                sum = Repository.EmployeesDb.Where(x => x.DepartmentId == departmentId && !(x is Manager)).Select(x => x.Salary).Sum();
+                sum = Employees.Where(x => x.DepartmentId == departmentId && !(x is Manager)).Select(x => x.Salary).Sum();
             }
             else
             {
                 //Суммируем зарплату всех сотрудников если начальник не этого подразделения
-                sum = Repository.EmployeesDb.Where(x => x.DepartmentId == departmentId).Select(x => x.Salary).Sum();
+                sum = Employees.Where(x => x.DepartmentId == departmentId).Select(x => x.Salary).Sum();
             }
 
-            var depsId = Repository.DepartmentsDb.Where(x => x.ParentId == departmentId).Select(x => x.Id);
+            //TODO: Хорошо бы тут ничего не знать о департаменте, но пока без этого никак
+            var depsId = Department.Departments.Where(x => x.ParentId == departmentId).Select(x => x.Id);
 
             foreach (var id in depsId)
             {
