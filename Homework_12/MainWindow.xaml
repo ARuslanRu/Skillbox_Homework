@@ -5,8 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_12"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Основное окно" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TreeView x:Name="treeViewDepartments" Grid.Column="0" Grid.Row="0"/>
+
+        <ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding Position}"/>
+                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Зарплата" DisplayMemberBinding="{Binding Salary, StringFormat={}{0:N2} руб. в мес.}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
+            <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
+            <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
+            <Button x:Name="btnRefresh" Content="Обновить"></Button>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <Button x:Name="btnAddEmployee" Content="Добавить сотрудника"></Button>
+        </StackPanel>
+
+
     </Grid>
 </Window>
