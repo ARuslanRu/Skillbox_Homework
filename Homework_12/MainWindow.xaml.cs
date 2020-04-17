@@ -32,14 +32,10 @@ namespace Homework_12
             Repository.LoadData();
 
             employees = new ObservableCollection<Employee>();
-            treeviewNodes = new ObservableCollection<Node>();
-
-
-            //LoadTreeViewItems(treeViewDepartments);
+            treeviewNodes = GetTreeViewNodes();
 
             lvEmployees.ItemsSource = employees;
-
-            treeViewDepartments.ItemsSource = GetTreeViewNodes();
+            treeViewDepartments.ItemsSource = treeviewNodes;
 
             btnSaveToJson.Click += BtnSaveToJson_Click;
             btnLoadFromJson.Click += BtnLoadFromJson_Click;
@@ -69,16 +65,15 @@ namespace Homework_12
             {
                 DepartmentWindow newDep = new DepartmentWindow(0);
                 newDep.ShowDialog();
-                var root = treeViewDepartments.ItemsSource as ObservableCollection<Node>;
-                root.Add(new Node(newDep.Department.Id, newDep.Department.Name));
+                treeviewNodes.Add(new Node(newDep.Department.Id, newDep.Department.Name));
             }
             else
             {
-                int parentId = (treeViewDepartments.SelectedItem as Node).Id;
-                DepartmentWindow newDepWindow = new DepartmentWindow(parentId);
+                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
+                DepartmentWindow newDepWindow = new DepartmentWindow(selectedNode.Id);
                 newDepWindow.ShowDialog();
                 var node = new Node(newDepWindow.Department.Id, newDepWindow.Department.Name);
-                (treeViewDepartments.SelectedItem as Node).Nodes.Add(node);
+                selectedNode.Nodes.Add(node);
             }
         }
 
@@ -112,6 +107,12 @@ namespace Homework_12
             empls.ForEach(x => employees.Add(x));
         }
 
+
+        /// <summary>
+        /// Формируем узлы для TreeView из департаментов
+        /// </summary>
+        /// <param name="dep"></param>
+        /// <returns></returns>
         private ObservableCollection<Node> GetTreeViewNodes(Department dep = null)
         {
             ObservableCollection<Node> nodes = new ObservableCollection<Node>();
