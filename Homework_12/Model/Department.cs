@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Newtonsoft.Json;
 
 namespace Homework_12.Model
 {
-    class Department
+    public class Department
     {
         private static List<Department> departments;
         static Department()

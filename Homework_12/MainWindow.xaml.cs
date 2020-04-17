@@ -24,19 +24,26 @@ namespace Homework_12
     public partial class MainWindow : Window
     {
 
-        ObservableCollection<Employee> employees = new ObservableCollection<Employee>();
+        private ObservableCollection<Employee> employees;
+        private ObservableCollection<Node> treeviewNodes;
         public MainWindow()
         {
             InitializeComponent();
             Repository.LoadData();
-            LoadTreeViewItems(treeViewDepartments);
+
+            employees = new ObservableCollection<Employee>();
+            treeviewNodes = new ObservableCollection<Node>();
+
+
+            //LoadTreeViewItems(treeViewDepartments);
 
             lvEmployees.ItemsSource = employees;
+
+            treeViewDepartments.ItemsSource = GetTreeViewNodes();
 
             btnSaveToJson.Click += BtnSaveToJson_Click;
             btnLoadFromJson.Click += BtnLoadFromJson_Click;
             btnAddDepartment.Click += BtnAddDepartment_Click;
-            btnRefresh.Click += BtnRefresh_Click;
             btnAddEmployee.Click += BtnAddEmployee_Click;
 
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
@@ -50,35 +57,35 @@ namespace Homework_12
             }
             else
             {
-                int depId = int.Parse((treeViewDepartments.SelectedItem as TreeViewItem).Tag.ToString());
+                int depId = (treeViewDepartments.SelectedItem as Node).Id;
                 new EmployeeWindow(depId).Show();
 
             }
-        }
-
-        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            LoadTreeViewItems(treeViewDepartments);
         }
 
         private void BtnAddDepartment_Click(object sender, RoutedEventArgs e)
         {
             if (treeViewDepartments.SelectedItem == null)
             {
-                new DepartmentWindow(0).Show();
+                DepartmentWindow newDep = new DepartmentWindow(0);
+                newDep.ShowDialog();
+                var root = treeViewDepartments.ItemsSource as ObservableCollection<Node>;
+                root.Add(new Node(newDep.Department.Id, newDep.Department.Name));
             }
             else
             {
-                var parentDep = treeViewDepartments.SelectedItem as TreeViewItem;
-                int parentId = int.Parse(parentDep.Tag.ToString());
-                new DepartmentWindow(parentId).Show();
+                int parentId = (treeViewDepartments.SelectedItem as Node).Id;
+                DepartmentWindow newDepWindow = new DepartmentWindow(parentId);
+                newDepWindow.ShowDialog();
+                var node = new Node(newDepWindow.Department.Id, newDepWindow.Department.Name);
+                (treeViewDepartments.SelectedItem as Node).Nodes.Add(node);
             }
         }
 
         private void BtnLoadFromJson_Click(object sender, RoutedEventArgs e)
         {
             Repository.LoadData();
-            LoadTreeViewItems(treeViewDepartments);
+            treeViewDepartments.ItemsSource = GetTreeViewNodes();
         }
 
         private void BtnSaveToJson_Click(object sender, RoutedEventArgs e)
@@ -99,77 +106,40 @@ namespace Homework_12
             {
                 return;
             }
-            var n = int.Parse((e.NewValue as TreeViewItem).Tag.ToString(), null);
+            var n = (e.NewValue as Node).Id;
             var empls = Employee.Employees.Where(x => x.DepartmentId == n).ToList();
             employees.Clear();
             empls.ForEach(x => employees.Add(x));
         }
 
-        /// <summary>
-        /// Загрузка элементов для TreeView
-        /// </summary>
-        /// <param name="treeView"></param>
-        private void LoadTreeViewItems(TreeView treeView)
+        private ObservableCollection<Node> GetTreeViewNodes(Department dep = null)
         {
-            treeView.Items.Clear();
-            var rootDep = Department.Departments.Where(x => x.ParentId == 0).ToList();
+            ObservableCollection<Node> nodes = new ObservableCollection<Node>();
 
-            rootDep.ForEach(dep =>
+            if (dep == null)
             {
-                var item = new TreeViewItem()
+                var rootDep = Department.Departments.Where(x => x.ParentId == 0).ToList();
+                rootDep.ForEach(e =>
                 {
-                    Header = dep.Name,
-                    Tag = dep.Id
-                };
+                    var node = new Node(e.Id, e.Name);
+                    node.Nodes = GetTreeViewNodes(e);
+                    nodes.Add(node);
 
-                item.Items.Add(null);
-
-                item.Expanded += Item_Expanded;
-
-                treeView.Items.Add(item);
-            });
-        }
-
-        /// <summary>
-        /// Действие при раскрытии элемента в TreeView
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Item_Expanded(object sender, RoutedEventArgs e)
-        {
-            var item = (TreeViewItem)sender;
-
-            if (item.Items.Count != 1 || item.Items[0] != null)
-            {
-                return;
+                });
+                return nodes;
             }
-
-            item.Items.Clear();
-
-            var depId = int.Parse(item.Tag.ToString(), null);
-
-            #region Получение департаментов
-
-            var depsIn = Department.Departments.Where(x => x.ParentId == depId).ToList();
-
-            depsIn.ForEach(dep =>
+            else
             {
-                var subItem = new TreeViewItem()
+                var subDep = Department.Departments.Where(x => x.ParentId == dep.Id).ToList();
+                subDep.ForEach(e =>
                 {
-                    Header = dep.Name,
-                    Tag = dep.Id
-                };
+                    var node = new Node(e.Id, e.Name);
+                    node.Nodes = GetTreeViewNodes(e);
+                    nodes.Add(node);
 
-
-                subItem.Items.Add(null);
-                subItem.Expanded += Item_Expanded;
-
-                item.Items.Add(subItem);
-
-            });
-
-            #endregion
-
+                });
+                return nodes;
+            }
         }
 
         #endregion

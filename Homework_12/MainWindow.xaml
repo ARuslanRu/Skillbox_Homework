@@ -16,9 +16,18 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TreeView x:Name="treeViewDepartments" Grid.Column="0" Grid.Row="0"/>
+        <TreeView x:Name="treeViewDepartments" Grid.Column="0" Grid.Row="0">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
+                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                </HierarchicalDataTemplate>
+                <!--<DataTemplate>
+                    <TextBlock FontSize="10" Text="{Binding Name}"/>
+                </DataTemplate>-->
+            </TreeView.ItemTemplate>
+        </TreeView>
 
-        <ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
+            <ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding Position}"/>
@@ -31,7 +40,6 @@
             <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
             <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
             <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
-            <Button x:Name="btnRefresh" Content="Обновить"></Button>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1">

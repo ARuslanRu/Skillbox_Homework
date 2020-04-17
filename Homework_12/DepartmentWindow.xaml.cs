@@ -21,6 +21,9 @@ namespace Homework_12
     public partial class DepartmentWindow : Window
     {
         private int parentId;
+
+        public Department Department { get; private set; }
+
         public DepartmentWindow(int parentId)
         {
             this.parentId = parentId;
@@ -38,7 +41,7 @@ namespace Homework_12
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             string departmentName = tbDepartmentName.Text;
-            new Department(departmentName, parentId);
+            Department = new Department(departmentName, parentId);
             this.Close();
         }
     }
