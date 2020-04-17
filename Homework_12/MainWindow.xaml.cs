@@ -59,13 +59,9 @@ namespace Homework_12
             {
                 Node selectedNode = (treeViewDepartments.SelectedItem as Node);
                 Department.DeleteDepartment(selectedNode.Id);
-                //treeviewNodes.Remove(selectedNode);//так можем удалить узел из корня
 
                 var imetvdf = GetParentNode(treeviewNodes, selectedNode);
                 imetvdf.Remove(selectedNode);
-
-                //Пооже надо как-то получить родительский узел у выбранного и удалить из него выбранный
-                //Будем получать родительский узел
             }
         }
 
@@ -73,21 +69,6 @@ namespace Homework_12
         private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
         {
             ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
-
-            //if (nodes.Contains(node))
-            //{
-            //    return nodes;
-            //}
-
-            //foreach (var item in nodes)
-            //{
-            //    resultCollection = GetParentNode(item.Nodes, node);
-            //    if (resultCollection.Count != 0)
-            //    {
-            //        break;
-            //    }
-            //}
-
 
             if (nodes.Contains(node))
             {
@@ -135,7 +116,6 @@ namespace Homework_12
             {
                 int depId = (treeViewDepartments.SelectedItem as Node).Id;
                 new EmployeeWindow(depId).Show();
-
             }
         }
 
@@ -213,7 +193,6 @@ namespace Homework_12
                     var node = new Node(e.Id, e.Name);
                     node.Nodes = GetTreeViewNodes(e);
                     nodes.Add(node);
-
                 });
                 return nodes;
             }
@@ -225,7 +204,6 @@ namespace Homework_12
                     var node = new Node(e.Id, e.Name);
                     node.Nodes = GetTreeViewNodes(e);
                     nodes.Add(node);
-
                 });
                 return nodes;
             }

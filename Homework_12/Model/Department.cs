@@ -21,7 +21,7 @@ namespace Homework_12.Model
 
         //Если пометить свойство этим атрибутом [JsonProperty] то при десериализации процесс зайдет сюда и перезапишет поле,
         //которое проинициализировалось сперва в констуркторе
-        [JsonProperty] 
+        [JsonProperty]
         public int Id { get; private set; }
         [JsonProperty]
         public string Name { get; set; }
@@ -63,6 +63,12 @@ namespace Homework_12.Model
 
         public static void DeleteDepartment(int id)
         {
+            var childDepartmentsId = departments.Where(x => x.ParentId == id).Select(x => x.Id).ToList(); //Находим id дочерних департаментов
+            foreach (var item in childDepartmentsId)
+            {
+                DeleteDepartment(item); //Удаляем дочерние департаменты
+            }
+
             departments.Remove(
                 departments.Where(x => x.Id == id).FirstOrDefault()
                 );
