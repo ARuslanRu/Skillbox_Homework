@@ -31,7 +31,6 @@ namespace Homework_12.Model
             get { return GetSalary(this.DepartmentId) * 0.15m < 1300 ? 1300 : GetSalary(this.DepartmentId) * 0.15m; }
         } 
 
-        //TODO: Переделать метод для статического Employee
         /// <summary>
         /// Рассчет суммарной зарплаты всех подчиненных
         /// </summary>

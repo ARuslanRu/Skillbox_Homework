@@ -40,6 +40,8 @@
             <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
             <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
             <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
+            <Button x:Name="btnUpdateDepartment" Content="Редактировать департамент"></Button>
+            <Button x:Name="btnDeleteDepartment" Content="Удалить департамент"></Button>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="1">

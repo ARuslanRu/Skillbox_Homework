@@ -55,5 +55,17 @@ namespace Homework_12.Model
         {
             Department.departments = departments;
         }
+
+        public static void UpdateDepartment(int id, string name)
+        {
+            departments.Where(x => x.Id == id).FirstOrDefault().Name = name;
+        }
+
+        public static void DeleteDepartment(int id)
+        {
+            departments.Remove(
+                departments.Where(x => x.Id == id).FirstOrDefault()
+                );
+        }
     }
 }

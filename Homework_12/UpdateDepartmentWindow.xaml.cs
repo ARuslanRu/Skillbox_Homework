@@ -18,16 +18,18 @@ namespace Homework_12
     /// <summary>
     /// Interaction logic for Department.xaml
     /// </summary>
-    public partial class DepartmentWindow : Window
+    public partial class UpdateDepartmentWindow : Window
     {
-        private int parentId;
+        private int id;
 
-        public Department Department { get; private set; }
+        public string DepartmentName { get; private set; }
 
-        public DepartmentWindow(int parentId)
+        public UpdateDepartmentWindow(int id)
         {
-            this.parentId = parentId;
+            this.id = id;
             InitializeComponent();
+            DepartmentName = Department.Departments.Where(x => x.Id == id).FirstOrDefault().Name;
+            tbDepartmentName.Text = DepartmentName;
 
             btnSave.Click += BtnSave_Click;
             btnCancel.Click += BtnCancel_Click;
@@ -40,13 +42,8 @@ namespace Homework_12
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            string departmentName = tbDepartmentName.Text;
-            if (string.IsNullOrEmpty(departmentName))
-            {
-                MessageBox.Show("Не указано название департамента");
-                return;
-            }
-            Department = new Department(departmentName, parentId);
+            DepartmentName = tbDepartmentName.Text;
+            Department.UpdateDepartment(id, DepartmentName);
             this.Close();
         }
     }

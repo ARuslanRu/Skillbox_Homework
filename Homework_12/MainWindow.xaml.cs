@@ -39,10 +39,90 @@ namespace Homework_12
 
             btnSaveToJson.Click += BtnSaveToJson_Click;
             btnLoadFromJson.Click += BtnLoadFromJson_Click;
-            btnAddDepartment.Click += BtnAddDepartment_Click;
+
             btnAddEmployee.Click += BtnAddEmployee_Click;
 
+            btnAddDepartment.Click += BtnAddDepartment_Click;
+            btnUpdateDepartment.Click += BtnUpdateDepartment_Click;
+            btnDeleteDepartment.Click += BtnDeleteDepartment_Click;
+
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
+        }
+
+        private void BtnDeleteDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать департамент");
+            }
+            else
+            {
+                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
+                Department.DeleteDepartment(selectedNode.Id);
+                //treeviewNodes.Remove(selectedNode);//так можем удалить узел из корня
+
+                var imetvdf = GetParentNode(treeviewNodes, selectedNode);
+                imetvdf.Remove(selectedNode);
+
+                //Пооже надо как-то получить родительский узел у выбранного и удалить из него выбранный
+                //Будем получать родительский узел
+            }
+        }
+
+
+        private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
+        {
+            ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
+
+            //if (nodes.Contains(node))
+            //{
+            //    return nodes;
+            //}
+
+            //foreach (var item in nodes)
+            //{
+            //    resultCollection = GetParentNode(item.Nodes, node);
+            //    if (resultCollection.Count != 0)
+            //    {
+            //        break;
+            //    }
+            //}
+
+
+            if (nodes.Contains(node))
+            {
+                resultCollection = nodes;
+            }
+            else
+            {
+                foreach (var item in nodes)
+                {
+                    resultCollection = GetParentNode(item.Nodes, node);
+                    if (resultCollection.Count != 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return resultCollection;
+        }
+
+        private void BtnUpdateDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать департамент");
+            }
+            else
+            {
+                //TODO: Хммм
+                // Пока что идея создать новую форму, в которой будет редактироваться департамент
+                // В идеале использование одной формы.
+                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
+                UpdateDepartmentWindow newDepWindow = new UpdateDepartmentWindow(selectedNode.Id);
+                newDepWindow.ShowDialog();
+                selectedNode.Name = newDepWindow.DepartmentName;
+            }
         }
 
         private void BtnAddEmployee_Click(object sender, RoutedEventArgs e)
@@ -63,24 +143,32 @@ namespace Homework_12
         {
             if (treeViewDepartments.SelectedItem == null)
             {
-                DepartmentWindow newDep = new DepartmentWindow(0);
-                newDep.ShowDialog();
-                treeviewNodes.Add(new Node(newDep.Department.Id, newDep.Department.Name));
+                DepartmentWindow newDepWindow = new DepartmentWindow(0);
+                newDepWindow.ShowDialog();
+                if (newDepWindow.Department != null) //Если у окна добавления департамента не создалось департамета, тогда пропускаем.
+                {
+                    treeviewNodes.Add(new Node(newDepWindow.Department.Id, newDepWindow.Department.Name));
+                }
             }
             else
             {
                 Node selectedNode = (treeViewDepartments.SelectedItem as Node);
                 DepartmentWindow newDepWindow = new DepartmentWindow(selectedNode.Id);
                 newDepWindow.ShowDialog();
-                var node = new Node(newDepWindow.Department.Id, newDepWindow.Department.Name);
-                selectedNode.Nodes.Add(node);
+
+                if (newDepWindow.Department != null) //Если у окна добавления департамента не создалось департамета, тогда пропускаем.
+                {
+                    var node = new Node(newDepWindow.Department.Id, newDepWindow.Department.Name);
+                    selectedNode.Nodes.Add(node);
+                }
             }
         }
 
         private void BtnLoadFromJson_Click(object sender, RoutedEventArgs e)
         {
             Repository.LoadData();
-            treeViewDepartments.ItemsSource = GetTreeViewNodes();
+            treeviewNodes = GetTreeViewNodes();
+            treeViewDepartments.ItemsSource = treeviewNodes;
         }
 
         private void BtnSaveToJson_Click(object sender, RoutedEventArgs e)
