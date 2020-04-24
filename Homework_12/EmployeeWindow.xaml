@@ -40,11 +40,7 @@
             <TextBox x:Name="tbName" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16"></TextBox>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16">Должность:</TextBlock>
-            <ComboBox x:Name="cbEmployeePosition" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5">
-                <TextBlock>Начальник</TextBlock>
-                <TextBlock>Рабочий</TextBlock>
-                <TextBlock>Стажер</TextBlock>
-            </ComboBox>
+            <ComboBox x:Name="cbEmployeePosition" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5"/>
 
             <TextBlock x:Name="tblSalary" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16">Зарплата:</TextBlock>
             <TextBox x:Name="tbSalary" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16"></TextBox>

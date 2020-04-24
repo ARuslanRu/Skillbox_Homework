@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Homework_12.Model
 {
-    abstract class Employee
+    public abstract class Employee
     {
         private static List<Employee> employees;
         static Employee()
@@ -16,7 +16,7 @@ namespace Homework_12.Model
         }
 
         public static IReadOnlyList<Employee> Employees { get { return employees; } }
-        public int Id { get; private set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public int DepartmentId { get; set; }
         public string Position { get; set; }

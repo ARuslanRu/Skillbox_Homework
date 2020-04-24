@@ -21,15 +21,49 @@ namespace Homework_12
     public partial class EmployeeWindow : Window
     {
         private int departmentId;
+        private bool isUpdate;
+        private Employee _employee;
         public EmployeeWindow(int departmentId)
         {
             this.departmentId = departmentId;
+            this.isUpdate = false;
             InitializeComponent();
             cbEmployeePosition.SelectionChanged += CbEmployeePosition_SelectionChanged;
 
             btnSave.Click += BtnSave_Click;
             btnCancel.Click += BtnCancel_Click;
+
+            cbEmployeePosition.ItemsSource = new List<String> { "Начальник", "Рабочий", "Стажер" };
+
         }
+
+        public EmployeeWindow(Employee employee)
+        {
+
+            this.isUpdate = true;
+            this._employee = employee;
+            this.departmentId = employee.DepartmentId;
+
+            InitializeComponent();
+
+            tbName.Text = employee.Name;
+            cbEmployeePosition.SelectedItem = employee.Position;
+            cbEmployeePosition.ItemsSource = new List<String> { "Начальник", "Рабочий", "Стажер" };
+            tbSalary.Text = employee.Salary.ToString();
+
+            cbEmployeePosition.SelectionChanged += CbEmployeePosition_SelectionChanged;
+
+            btnSave.Click += BtnSave_Click;
+            btnCancel.Click += BtnCancel_Click;
+
+
+            if (employee.Position.Equals("Начальник"))
+            {
+                tblSalary.Visibility = Visibility.Hidden;
+                tbSalary.Visibility = Visibility.Hidden;
+            }
+        }
+
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -39,9 +73,9 @@ namespace Homework_12
         private void CbEmployeePosition_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox comboBox = (ComboBox)sender;
-            TextBlock selectedItem = (TextBlock)comboBox.SelectedItem;
+            var selectedItem = comboBox.SelectedItem.ToString();
 
-            if (selectedItem.Text.Equals("Начальник"))
+            if (selectedItem.Equals("Начальник"))
             {
                 tblSalary.Visibility = Visibility.Hidden;
                 tbSalary.Visibility = Visibility.Hidden;
@@ -55,31 +89,70 @@ namespace Homework_12
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            string name = tbName.Text;
 
-            TextBlock selectedItem = (TextBlock)cbEmployeePosition.SelectedItem;
-            string position = selectedItem.Text;
-
-            decimal salary = 0;
-            if (!position.Equals("Начальник"))
+            if(isUpdate)
             {
-                salary = decimal.Parse(tbSalary.Text);
+                Employee.DeleteEmployee(_employee);
+
+
+                string name = tbName.Text;
+
+                var selectedItem = cbEmployeePosition.SelectedItem.ToString();
+
+                decimal salary = 0;
+                if (!selectedItem.Equals("Начальник"))
+                {
+                    salary = decimal.Parse(tbSalary.Text);
+                }
+
+                switch (selectedItem)
+                {
+                    case "Начальник":
+                        Manager manager = new Manager(name, departmentId, selectedItem);
+                        manager.Id = _employee.Id;
+                        break;
+                    case "Рабочий":
+                        Worker worker = new Worker(name, departmentId, selectedItem, salary);
+                        worker.Id = _employee.Id;
+                        break;
+                    case "Стажер":
+                        Intertn intertn = new Intertn(name, departmentId, selectedItem, salary);
+                        intertn.Id = _employee.Id;
+                        break;
+                    default:
+                        break;
+                }
+
+
+            }
+            else
+            {
+                string name = tbName.Text;
+
+                var selectedItem = cbEmployeePosition.SelectedItem.ToString();
+
+                decimal salary = 0;
+                if (!selectedItem.Equals("Начальник"))
+                {
+                    salary = decimal.Parse(tbSalary.Text);
+                }
+
+                switch (selectedItem)
+                {
+                    case "Начальник":
+                        new Manager(name, departmentId, selectedItem);
+                        break;
+                    case "Рабочий":
+                        new Worker(name, departmentId, selectedItem, salary);
+                        break;
+                    case "Стажер":
+                        new Intertn(name, departmentId, selectedItem, salary);
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            switch (position)
-            {
-                case "Начальник":
-                    new Manager(name, departmentId, position);
-                    break;
-                case "Рабочий":
-                    new Worker(name, departmentId, position, salary);
-                    break;
-                case "Стажер":
-                    new Intertn(name, departmentId, position, salary);
-                    break;
-                default:
-                    break;
-            }
 
             this.Close();
         }

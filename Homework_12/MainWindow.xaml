@@ -26,10 +26,18 @@
 
             <ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
             <ListView.View>
+
                 <GridView>
-                    <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding Position}"/>
-                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Зарплата" DisplayMemberBinding="{Binding Salary, StringFormat={}{0:N2} руб. в мес.}"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Position}">
+                        <GridViewColumnHeader Click="Clik_Position_Sort" Content="Должность"/>
+                    </GridViewColumn>
+                    
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumnHeader Click="Clik_Name_Sort" Content="Имя"/>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Salary, StringFormat={}{0:N2} руб. в мес.}">
+                        <GridViewColumnHeader Click="Clik_Salary_Sort" Content="Зарплата"/>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -45,6 +53,7 @@
             <Button x:Name="btnAddEmployee" Content="Добавить сотрудника"></Button>
             <Button x:Name="btnUpdateEmployee" Content="Редактировать сотрудника"></Button>
             <Button x:Name="btnDeleteEmployee" Content="Удалить сотрудника"></Button>
+            <Button x:Name="btnRefresh" Content="Обновить"></Button>
         </StackPanel>
 
 
