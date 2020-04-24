@@ -30,16 +30,11 @@ namespace Homework_12
             InitializeComponent();
 
             btnSave.Click += BtnSave_Click;
-            btnCancel.Click += BtnCancel_Click;
-        }
-
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = true;
             string departmentName = tbDepartmentName.Text;
             if (string.IsNullOrEmpty(departmentName))
             {
@@ -47,7 +42,6 @@ namespace Homework_12
                 return;
             }
             Department = new Department(departmentName, parentId);
-            this.Close();
         }
     }
 }

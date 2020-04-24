@@ -69,6 +69,17 @@ namespace Homework_12.Model
                 DeleteDepartment(item); //Удаляем дочерние департаменты
             }
 
+            //Получаем сотрудников этого департамента
+            var emplsId = Employee.Employees.Where(x => x.DepartmentId == id).ToList();
+
+
+            //Сотрудников этого департамента
+            foreach (var item in emplsId)
+            {
+                Employee.DeleteEmployee(item);
+            }
+
+            //Удаляем этот департамент
             departments.Remove(
                 departments.Where(x => x.Id == id).FirstOrDefault()
                 );

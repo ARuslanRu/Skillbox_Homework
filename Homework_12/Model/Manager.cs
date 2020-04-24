@@ -51,7 +51,7 @@ namespace Homework_12.Model
                 sum = Employees.Where(x => x.DepartmentId == departmentId).Select(x => x.Salary).Sum();
             }
 
-            //TODO: Хорошо бы тут ничего не знать о департаменте, но пока без этого никак
+            //Хорошо бы тут ничего не знать о департаменте, но пока без этого никак
             var depsId = Department.Departments.Where(x => x.ParentId == departmentId).Select(x => x.Id);
 
             foreach (var id in depsId)

@@ -41,6 +41,8 @@ namespace Homework_12
             btnLoadFromJson.Click += BtnLoadFromJson_Click;
 
             btnAddEmployee.Click += BtnAddEmployee_Click;
+            btnUpdateEmployee.Click += BtnUpdateEmployee_Click;
+            btnDeleteEmployee.Click += BtnDeleteEmployee_Click;
 
             btnAddDepartment.Click += BtnAddDepartment_Click;
             btnUpdateDepartment.Click += BtnUpdateDepartment_Click;
@@ -49,61 +51,29 @@ namespace Homework_12
             treeViewDepartments.SelectedItemChanged += TreeViewDepartments_SelectedItemChanged;
         }
 
-        private void BtnDeleteDepartment_Click(object sender, RoutedEventArgs e)
+        #region Employee Methods
+
+        private void BtnDeleteEmployee_Click(object sender, RoutedEventArgs e)
         {
-            if (treeViewDepartments.SelectedItem == null)
+
+            if (lvEmployees.SelectedItem == null)
             {
-                MessageBox.Show("Необходимо выбрать департамент");
+                MessageBox.Show("Необходимо выбрать сотрудника");
             }
             else
             {
-                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
-                Department.DeleteDepartment(selectedNode.Id);
-
-                var imetvdf = GetParentNode(treeviewNodes, selectedNode);
-                imetvdf.Remove(selectedNode);
-            }
-        }
-
-
-        private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
-        {
-            ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
-
-            if (nodes.Contains(node))
-            {
-                resultCollection = nodes;
-            }
-            else
-            {
-                foreach (var item in nodes)
+                if (MessageBox.Show("Удаление сотрудника.\nПодтвердите удаление.", "Подтверждение", MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    resultCollection = GetParentNode(item.Nodes, node);
-                    if (resultCollection.Count != 0)
-                    {
-                        break;
-                    }
+                    var empl = lvEmployees.SelectedItem as Employee;
+                    employees.Remove(empl); //Удаляет из отображения
+                    Employee.DeleteEmployee(empl); //Удаляет из хранилища
                 }
             }
-            return resultCollection;
         }
 
-        private void BtnUpdateDepartment_Click(object sender, RoutedEventArgs e)
+        private void BtnUpdateEmployee_Click(object sender, RoutedEventArgs e)
         {
-            if (treeViewDepartments.SelectedItem == null)
-            {
-                MessageBox.Show("Необходимо выбрать департамент");
-            }
-            else
-            {
-                //TODO: Хммм
-                // Пока что идея создать новую форму, в которой будет редактироваться департамент
-                // В идеале использование одной формы.
-                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
-                UpdateDepartmentWindow newDepWindow = new UpdateDepartmentWindow(selectedNode.Id);
-                newDepWindow.ShowDialog();
-                selectedNode.Name = newDepWindow.DepartmentName;
-            }
+            throw new NotImplementedException();
         }
 
         private void BtnAddEmployee_Click(object sender, RoutedEventArgs e)
@@ -115,34 +85,14 @@ namespace Homework_12
             else
             {
                 int depId = (treeViewDepartments.SelectedItem as Node).Id;
-                new EmployeeWindow(depId).Show();
+                EmployeeWindow wnd = new EmployeeWindow(depId);
+                wnd.Owner = this;
+                wnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                wnd.ShowDialog();
             }
         }
 
-        private void BtnAddDepartment_Click(object sender, RoutedEventArgs e)
-        {
-            if (treeViewDepartments.SelectedItem == null)
-            {
-                DepartmentWindow newDepWindow = new DepartmentWindow(0);
-                newDepWindow.ShowDialog();
-                if (newDepWindow.Department != null) //Если у окна добавления департамента не создалось департамета, тогда пропускаем.
-                {
-                    treeviewNodes.Add(new Node(newDepWindow.Department.Id, newDepWindow.Department.Name));
-                }
-            }
-            else
-            {
-                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
-                DepartmentWindow newDepWindow = new DepartmentWindow(selectedNode.Id);
-                newDepWindow.ShowDialog();
-
-                if (newDepWindow.Department != null) //Если у окна добавления департамента не создалось департамета, тогда пропускаем.
-                {
-                    var node = new Node(newDepWindow.Department.Id, newDepWindow.Department.Name);
-                    selectedNode.Nodes.Add(node);
-                }
-            }
-        }
+        #endregion
 
         private void BtnLoadFromJson_Click(object sender, RoutedEventArgs e)
         {
@@ -155,6 +105,85 @@ namespace Homework_12
         {
             Repository.SaveData();
         }
+
+        #region Department Methods
+
+        private void BtnAddDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                DepartmentWindow newDepWindow = new DepartmentWindow(0);
+                newDepWindow.Owner = this;
+                newDepWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+                if (newDepWindow.ShowDialog() == true)
+                {
+                    treeviewNodes.Add(new Node(newDepWindow.Department.Id, newDepWindow.Department.Name));
+                }
+            }
+            else
+            {
+                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
+
+                DepartmentWindow newDepWindow = new DepartmentWindow(selectedNode.Id);
+                newDepWindow.Owner = this;
+                newDepWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+                if (newDepWindow.ShowDialog() == true)
+                {
+                    var node = new Node(newDepWindow.Department.Id, newDepWindow.Department.Name);
+                    selectedNode.Nodes.Add(node);
+                }
+            }
+        }
+
+        private void BtnUpdateDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать департамент");
+            }
+            else
+            {
+                Node selectedNode = (treeViewDepartments.SelectedItem as Node);
+
+                UpdateDepartmentWindow newDepWindow = new UpdateDepartmentWindow(selectedNode.Id);
+                newDepWindow.Owner = this;
+                newDepWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+                if (newDepWindow.ShowDialog() == true)
+                {
+                    selectedNode.Name = newDepWindow.DepartmentName;
+                }
+            }
+        }
+
+        private void BtnDeleteDepartment_Click(object sender, RoutedEventArgs e)
+        {
+            if (treeViewDepartments.SelectedItem == null)
+            {
+                MessageBox.Show("Необходимо выбрать департамент");
+            }
+            else
+            {
+
+                if (MessageBox.Show("Удаление департамента приведет к удалению всех дочерних департаментов\n" +
+                    "и сотрудников в этих департаментах.\n" +
+                    "Подтвердите удаление.", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    Node selectedNode = (treeViewDepartments.SelectedItem as Node);
+                    Department.DeleteDepartment(selectedNode.Id);
+
+                    var imetvdf = GetParentNode(treeviewNodes, selectedNode);
+                    imetvdf.Remove(selectedNode);
+                }
+
+
+            }
+        }
+
+        #endregion
+
 
         #region TreeView
 
@@ -174,7 +203,6 @@ namespace Homework_12
             employees.Clear();
             empls.ForEach(x => employees.Add(x));
         }
-
 
         /// <summary>
         /// Формируем узлы для TreeView из департаментов
@@ -207,6 +235,34 @@ namespace Homework_12
                 });
                 return nodes;
             }
+        }
+
+        /// <summary>
+        /// Получает коллекцию содержащую узел который необходимо удалить
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
+        {
+            ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
+
+            if (nodes.Contains(node))
+            {
+                resultCollection = nodes;
+            }
+            else
+            {
+                foreach (var item in nodes)
+                {
+                    resultCollection = GetParentNode(item.Nodes, node);
+                    if (resultCollection.Count != 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return resultCollection;
         }
 
         #endregion

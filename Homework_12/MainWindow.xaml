@@ -21,9 +21,6 @@
                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
                     <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
                 </HierarchicalDataTemplate>
-                <!--<DataTemplate>
-                    <TextBlock FontSize="10" Text="{Binding Name}"/>
-                </DataTemplate>-->
             </TreeView.ItemTemplate>
         </TreeView>
 
@@ -46,6 +43,8 @@
 
         <StackPanel Grid.Column="1" Grid.Row="1">
             <Button x:Name="btnAddEmployee" Content="Добавить сотрудника"></Button>
+            <Button x:Name="btnUpdateEmployee" Content="Редактировать сотрудника"></Button>
+            <Button x:Name="btnDeleteEmployee" Content="Удалить сотрудника"></Button>
         </StackPanel>
 
 

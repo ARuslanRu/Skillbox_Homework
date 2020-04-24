@@ -32,19 +32,13 @@ namespace Homework_12
             tbDepartmentName.Text = DepartmentName;
 
             btnSave.Click += BtnSave_Click;
-            btnCancel.Click += BtnCancel_Click;
-        }
-
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
+            this.DialogResult = true;
             DepartmentName = tbDepartmentName.Text;
             Department.UpdateDepartment(id, DepartmentName);
-            this.Close();
         }
     }
 }

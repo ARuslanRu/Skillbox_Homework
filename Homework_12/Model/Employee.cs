@@ -55,5 +55,10 @@ namespace Homework_12.Model
         {
             Employee.employees = employees;
         }
+
+        public static void DeleteEmployee(Employee employee)
+        {
+            employees.Remove(employee);
+        }
     }
 }

@@ -35,8 +35,8 @@
             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16">Название департамента:</TextBlock>
             <TextBox x:Name="tbDepartmentName" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16"></TextBox>
 
-            <Button x:Name="btnSave" Grid.Row="3" Grid.Column="1" Content="Сохранить"></Button>
-            <Button x:Name="btnCancel" Grid.Row="3" Grid.Column="3" Content="Отменить"></Button>
+            <Button x:Name="btnSave" IsDefault="True" Grid.Row="3" Grid.Column="1" Content="Сохранить"></Button>
+            <Button x:Name="btnCancel" IsCancel="True" Grid.Row="3" Grid.Column="3" Content="Отменить"></Button>
 
         </Grid>
     </Grid>
