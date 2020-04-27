@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Homework_13.Model;
+using Homework_13.View;
 
 namespace Homework_13.ViewModel
 {
@@ -54,7 +55,6 @@ namespace Homework_13.ViewModel
         #region Commands
 
         private RelayCommand addGroup;
-
         public RelayCommand AddGroup
         {
             get
@@ -62,15 +62,17 @@ namespace Homework_13.ViewModel
                 return addGroup ??
                     (addGroup = new RelayCommand(obj =>
                     {
-                        Group group = new Group()
-                        {
-                            Name = "АвтоСоздание"
-                        };
+                        //Group group = new Group()
+                        //{
+                        //    Name = "АвтоСоздание"
+                        //};
 
+                        //db.Groups.Add(group);
+                        //db.SaveChanges();
+
+                        GroupWindow groupWindow = new GroupWindow();
+                        groupWindow.ShowDialog();
                         
-                        db.Groups.Add(group);
-                        db.SaveChanges();
-
                         Groups = db.Groups.ToList();
 
                     }));
@@ -79,7 +81,6 @@ namespace Homework_13.ViewModel
 
 
         private RelayCommand addClient;
-
         public RelayCommand AddClient
         {
             get
