@@ -13,6 +13,18 @@ namespace Homework_13.ViewModel
     {
         HW13Context db;
 
+        private Group selectedGroup;
+        public Group SelectedGroup
+        {
+            get { return selectedGroup; }
+            set
+            {
+                selectedGroup = value;
+                ClientsInGroup = db.Clients.Where(x => x.GroupId == SelectedGroup.Id).ToList();
+                OnPropertyChanged("SelectedGroup");
+            }
+        }
+
 
         private IEnumerable<Group> groups;
         public IEnumerable<Group> Groups
@@ -22,6 +34,18 @@ namespace Homework_13.ViewModel
             {
                 groups = value;
                 OnPropertyChanged("Groups");
+            }
+        }
+
+
+        private IEnumerable<Client> clientsInGroup;
+        public IEnumerable<Client> ClientsInGroup
+        {
+            get { return clientsInGroup; }
+            set
+            {
+                clientsInGroup = value;
+                OnPropertyChanged("ClientsInGroup");
             }
         }
 

@@ -20,7 +20,30 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
 
-            <ListView Grid.Column="0" ItemsSource="{Binding Groups}">
+            <ListView Grid.Column="0" ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Id}" Margin="2"/>
+                            <TextBlock Text="{Binding Name}" Margin="2"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <ListView Grid.Column="1" ItemsSource="{Binding ClientsInGroup}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Ид" DisplayMemberBinding="{Binding Id}" Width="30"/>
+                        <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}" Width="160"/>
+                        <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding Status}" Width="100"/>
+                        <GridViewColumn Header="Ид Группы" DisplayMemberBinding="{Binding GroupId}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+                
+                
+                
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">

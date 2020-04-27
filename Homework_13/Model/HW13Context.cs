@@ -8,5 +8,6 @@ namespace Homework_13.Model
         {
         }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Client> Clients { get; set; }
     }
 }
