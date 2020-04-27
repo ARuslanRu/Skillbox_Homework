@@ -77,6 +77,33 @@ namespace Homework_13.ViewModel
             }
         }
 
+
+        private RelayCommand addClient;
+
+        public RelayCommand AddClient
+        {
+            get
+            {
+                return addClient ??
+                    (addClient = new RelayCommand(obj =>
+                    {
+                        Client client = new Client()
+                        {
+                            Name = "Автоимя",
+                            Status = "Автостатус",
+                            GroupId = SelectedGroup.Id
+                        };
+
+                        db.Clients.Add(client);
+                        db.SaveChanges();
+
+                        ClientsInGroup = db.Clients.Where(x => x.GroupId == SelectedGroup.Id).ToList();
+
+                    },
+                    obj => SelectedGroup != null));
+            }
+        }
+
         #endregion
 
 

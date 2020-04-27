@@ -59,6 +59,7 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button Content="Добавить группу" Margin="5" Command="{Binding AddGroup}"/>
+            <Button Content="Добавить клиента в выбранную группу" Margin="5" Command="{Binding AddClient}"/>
         </StackPanel>
 
 
