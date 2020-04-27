@@ -50,6 +50,36 @@ namespace Homework_13.ViewModel
         }
 
 
+
+        #region Commands
+
+        private RelayCommand addGroup;
+
+        public RelayCommand AddGroup
+        {
+            get
+            {
+                return addGroup ??
+                    (addGroup = new RelayCommand(obj =>
+                    {
+                        Group group = new Group()
+                        {
+                            Name = "АвтоСоздание"
+                        };
+
+                        
+                        db.Groups.Add(group);
+                        db.SaveChanges();
+
+                        Groups = db.Groups.ToList();
+
+                    }));
+            }
+        }
+
+        #endregion
+
+
         public MainViewModel()
         {
             db = new HW13Context();
