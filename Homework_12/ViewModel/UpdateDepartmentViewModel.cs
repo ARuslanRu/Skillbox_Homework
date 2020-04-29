@@ -43,8 +43,6 @@ namespace Homework_12.ViewModel
         }
 
 
-
-
         public UpdateDepartmentViewModel(Node node, Department department)
         {
             this.node = node;

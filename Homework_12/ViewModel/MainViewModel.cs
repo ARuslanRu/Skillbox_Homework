@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Homework_12.Model;
 using System.Windows;
+using System.Diagnostics;
 
 namespace Homework_12.ViewModel
 {
@@ -48,7 +49,6 @@ namespace Homework_12.ViewModel
         }
 
         private IEnumerable<Employee> employeesInDepartment;
-
         public IEnumerable<Employee> EmployeesInDepartment
         {
             get { return employeesInDepartment; }
@@ -60,8 +60,9 @@ namespace Homework_12.ViewModel
         }
 
 
-        private RelayCommand addDepartment;
+        #region Команды по департаментам
 
+        private RelayCommand addDepartment;
         public RelayCommand AddDepartment
         {
             get
@@ -73,12 +74,17 @@ namespace Homework_12.ViewModel
                         if (SelectedNode == null)
                         {
                             ObservableCollection<Node> RootNodes = Nodes;
-                            departmentWindow = new AddDepartmentWindow(RootNodes, SelectedDepartment);
+                            //departmentWindow = new AddDepartmentWindow(RootNodes, SelectedDepartment);
+                            var selectdep = Department.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
+                            Debug.WriteLine($"MainViewModel selectdep = {selectdep}");
+                            departmentWindow = new AddDepartmentWindow(RootNodes, selectdep);
                         }
                         else
                         {
                             ObservableCollection<Node> ChildNodes = SelectedNode.Nodes;
-                            departmentWindow = new AddDepartmentWindow(ChildNodes, SelectedDepartment);
+                            var selectdep = Department.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
+                            Debug.WriteLine($"MainViewModel selectdep = {selectdep}");
+                            departmentWindow = new AddDepartmentWindow(ChildNodes, selectdep);
                         }
 
                         //departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -88,9 +94,7 @@ namespace Homework_12.ViewModel
             }
         }
 
-
         private RelayCommand updateDepartment;
-
         public RelayCommand UpdateDepartment
         {
             get
@@ -107,6 +111,24 @@ namespace Homework_12.ViewModel
             }
         }
 
+        private RelayCommand deleteDepartment;
+        public RelayCommand DeleteDepartment
+        {
+            get
+            {
+                return deleteDepartment ??
+                    (deleteDepartment = new RelayCommand(obj =>
+                    {
+                        ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
+                        Department.DeleteDepartment(SelectedNode.Id);
+                        parentNode.Remove(SelectedNode);
+
+                    }, obj => SelectedNode != null));
+
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Формируем узлы для TreeView из департаментов
@@ -139,6 +161,34 @@ namespace Homework_12.ViewModel
                 });
                 return nodes;
             }
+        }
+
+        /// <summary>
+        /// Получает коллекцию содержащую узел который необходимо удалить
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
+        {
+            ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
+
+            if (nodes.Contains(node))
+            {
+                resultCollection = nodes;
+            }
+            else
+            {
+                foreach (var item in nodes)
+                {
+                    resultCollection = GetParentNode(item.Nodes, node);
+                    if (resultCollection.Count != 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return resultCollection;
         }
 
         public MainViewModel()

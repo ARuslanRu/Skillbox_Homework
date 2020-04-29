@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,11 +57,6 @@ namespace Homework_12.Model
             Department.departments = departments;
         }
 
-        public static void UpdateDepartment(int id, string name)
-        {
-            departments.Where(x => x.Id == id).FirstOrDefault().Name = name;
-        }
-
         public static void DeleteDepartment(int id)
         {
             var childDepartmentsId = departments.Where(x => x.ParentId == id).Select(x => x.Id).ToList(); //Находим id дочерних департаментов
@@ -72,7 +68,6 @@ namespace Homework_12.Model
             //Получаем сотрудников этого департамента
             var emplsId = Employee.Employees.Where(x => x.DepartmentId == id).ToList();
 
-
             //Сотрудников этого департамента
             foreach (var item in emplsId)
             {
@@ -80,6 +75,7 @@ namespace Homework_12.Model
             }
 
             //Удаляем этот департамент
+            Debug.WriteLine($"Department DeleteDepartment {departments.Where(x => x.Id == id).FirstOrDefault().Name}");
             departments.Remove(
                 departments.Where(x => x.Id == id).FirstOrDefault()
                 );

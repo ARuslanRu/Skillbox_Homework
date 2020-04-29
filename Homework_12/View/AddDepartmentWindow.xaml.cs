@@ -10,7 +10,7 @@ namespace Homework_12
     /// </summary>
     public partial class AddDepartmentWindow : Window
     {
-        public AddDepartmentWindow(ObservableCollection<Node> nodes, Department department)
+         public AddDepartmentWindow(ObservableCollection<Node> nodes, Department department)
         {
             InitializeComponent();
             DataContext = new AddDepartmentViewModel(nodes, department);
