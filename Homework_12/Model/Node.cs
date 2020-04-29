@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace Homework_12.Model
 {
-    class Node : INotifyPropertyChanged
+    public class Node : INotifyPropertyChanged
     {
         private string name;
         public int Id { get; set; }

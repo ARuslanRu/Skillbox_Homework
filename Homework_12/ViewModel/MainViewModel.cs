@@ -60,6 +60,34 @@ namespace Homework_12.ViewModel
             }
         }
 
+
+        private RelayCommand addDepartmetn;
+
+        public RelayCommand AddDepartmetn
+        {
+            get
+            {
+                return addDepartmetn ??
+                    (addDepartmetn = new RelayCommand(obj =>
+                    {
+                        AddDepartmentWindow departmentWindow;
+                        if (SelectedNode == null)
+                        {
+                            ObservableCollection<Node> RootNodes = Nodes;
+                            departmentWindow = new AddDepartmentWindow(RootNodes, SelectedDepartment);
+                        }
+                        else
+                        {
+                            ObservableCollection<Node> ChildNodes = SelectedNode.Nodes;
+                            departmentWindow = new AddDepartmentWindow(ChildNodes, SelectedDepartment);
+                        }
+
+                        departmentWindow.ShowDialog();
+                    }));
+
+            }
+        }
+
         /// <summary>
         /// Формируем узлы для TreeView из департаментов
         /// </summary>

@@ -41,11 +41,19 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
-        
-        
-        
-        
+
+
+
+        <StackPanel Grid.Column="0" Grid.Row="1">
+            <Button Content="Добавить департамент" Command="{Binding AddDepartmetn}"/>
+            <!--<Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
+            <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
+            <Button x:Name="btnUpdateDepartment" Content="Редактировать департамент"></Button>
+            <Button x:Name="btnDeleteDepartment" Content="Удалить департамент"></Button>-->
+        </StackPanel>
+
+
+
 
         <!--<StackPanel Grid.Column="1" Grid.Row="0">
             <TextBlock Text="{Binding SelectedNode.Name}"/>

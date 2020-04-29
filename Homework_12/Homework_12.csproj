@@ -59,16 +59,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Control\ExtendedTreeView.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="ViewModel\DepartmentViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Page Include="UpdateDepartmentWindow.xaml">
+    <Page Include="View\UpdateDepartmentWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DepartmentWindow.xaml">
+    <Page Include="View\AddDepartmentWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="EmployeeWindow.xaml">
+    <Page Include="View\EmployeeWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -80,13 +82,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UpdateDepartmentWindow.xaml.cs">
+    <Compile Include="View\UpdateDepartmentWindow.xaml.cs">
       <DependentUpon>UpdateDepartmentWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DepartmentWindow.xaml.cs">
-      <DependentUpon>DepartmentWindow.xaml</DependentUpon>
+    <Compile Include="View\AddDepartmentWindow.xaml.cs">
+      <DependentUpon>AddDepartmentWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EmployeeWindow.xaml.cs">
+    <Compile Include="View\EmployeeWindow.xaml.cs">
       <DependentUpon>EmployeeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
