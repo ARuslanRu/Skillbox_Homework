@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Homework_12.Model;
+using System.Windows;
 
 namespace Homework_12.ViewModel
 {
@@ -61,14 +60,14 @@ namespace Homework_12.ViewModel
         }
 
 
-        private RelayCommand addDepartmetn;
+        private RelayCommand addDepartment;
 
-        public RelayCommand AddDepartmetn
+        public RelayCommand AddDepartment
         {
             get
             {
-                return addDepartmetn ??
-                    (addDepartmetn = new RelayCommand(obj =>
+                return addDepartment ??
+                    (addDepartment = new RelayCommand(obj =>
                     {
                         AddDepartmentWindow departmentWindow;
                         if (SelectedNode == null)
@@ -82,11 +81,32 @@ namespace Homework_12.ViewModel
                             departmentWindow = new AddDepartmentWindow(ChildNodes, SelectedDepartment);
                         }
 
+                        //departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
                     }));
 
             }
         }
+
+
+        private RelayCommand updateDepartment;
+
+        public RelayCommand UpdateDepartment
+        {
+            get
+            {
+                return updateDepartment ??
+                    (updateDepartment = new RelayCommand(obj =>
+                    {
+                        UpdateDepartmentWindow departmentWindow;
+                        departmentWindow = new UpdateDepartmentWindow(SelectedNode, SelectedDepartment);
+
+                        departmentWindow.ShowDialog();
+                    }, obj => SelectedNode != null));
+
+            }
+        }
+
 
         /// <summary>
         /// Формируем узлы для TreeView из департаментов

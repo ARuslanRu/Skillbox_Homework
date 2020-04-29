@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Homework_12.Model;
@@ -11,12 +6,11 @@ using System.Windows;
 
 namespace Homework_12.ViewModel
 {
-    class DepartmentViewModel : INotifyPropertyChanged
+    class UpdateDepartmentViewModel : INotifyPropertyChanged
     {
-
+        private Node node;
         private Department department;
 
-        private ObservableCollection<Node> nodes;
 
         private string departmentName;
         public string DepartmentName
@@ -29,31 +23,35 @@ namespace Homework_12.ViewModel
             }
         }
 
-        private RelayCommand addDepartment;
-        public RelayCommand AddDepartment
+        private RelayCommand updateDepartment;
+        public RelayCommand UpdateDepartment
         {
             get
             {
-                return addDepartment ??
-                    (addDepartment = new RelayCommand(obj =>
+                return updateDepartment ??
+                    (updateDepartment = new RelayCommand(obj =>
                     {
-                        Department newDepartment = new Department(DepartmentName, department.Id);
-
-                        nodes.Add(new Node(newDepartment.Id, newDepartment.Name));
+                        this.department.Name = DepartmentName;
+                        this.node.Name = DepartmentName;
 
                         Window window = obj as Window;
                         window.Close();
 
                     }, obj => !string.IsNullOrEmpty(DepartmentName)));
+
             }
         }
 
 
-        public DepartmentViewModel(ObservableCollection<Node> nodes, Department department)
+
+
+        public UpdateDepartmentViewModel(Node node, Department department)
         {
-            this.nodes = nodes;
+            this.node = node;
             this.department = department;
+            DepartmentName = department.Name;
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
