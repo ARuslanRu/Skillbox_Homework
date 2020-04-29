@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_12"
+        xmlns:ctrl="clr-namespace:Homework_12.Control"
         mc:Ignorable="d"
         Title="Основное окно" Height="450" Width="800">
     <Grid>
@@ -16,22 +17,54 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <TreeView x:Name="treeViewDepartments" Grid.Column="0" Grid.Row="0">
+
+        <ctrl:ExtendedTreeView Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Path=Nodes}">
-                    <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                    <Border BorderThickness="1" BorderBrush="Gray">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Id}" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding ParentId}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
+                        </StackPanel>
+                    </Border>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-        </TreeView>
+        </ctrl:ExtendedTreeView>
 
-            <ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
+        <ListView Grid.Column="1" Grid.Row="0" ItemsSource="{Binding EmployeesInDepartment}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Path=Id}"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding Salary}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
+        
+        
+        
+        
+
+        <!--<StackPanel Grid.Column="1" Grid.Row="0">
+            <TextBlock Text="{Binding SelectedNode.Name}"/>
+        </StackPanel>-->
+
+
+
+
+
+
+
+        <!--<ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
             <ListView.View>
 
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Position}">
                         <GridViewColumnHeader Click="Clik_Position_Sort" Content="Должность"/>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn DisplayMemberBinding="{Binding Name}">
                         <GridViewColumnHeader Click="Clik_Name_Sort" Content="Имя"/>
                     </GridViewColumn>
@@ -40,8 +73,8 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
-        </ListView>
-        <StackPanel Grid.Column="0" Grid.Row="1">
+        </ListView>-->
+        <!--<StackPanel Grid.Column="0" Grid.Row="1">
             <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
             <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
             <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
@@ -54,7 +87,7 @@
             <Button x:Name="btnUpdateEmployee" Content="Редактировать сотрудника"></Button>
             <Button x:Name="btnDeleteEmployee" Content="Удалить сотрудника"></Button>
             <Button x:Name="btnRefresh" Content="Обновить"></Button>
-        </StackPanel>
+        </StackPanel>-->
 
 
     </Grid>
