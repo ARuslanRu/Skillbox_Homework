@@ -41,12 +41,12 @@
                 </TreeView.ItemTemplate>
             </ctrl:ExtendedTreeView>
 
-            <ListView Grid.Column="1" ItemsSource="{Binding EmployeesInDepartment}">
+            <ListView Grid.Column="1" ItemsSource="{Binding EmployeesInDepartment}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Path=Id}"/>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                        <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding Salary}"/>
+                        <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="20"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"/>
+                        <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding Salary}" Width="200"/>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -65,9 +65,9 @@
             </StackPanel>
 
             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                <Button Content="Добавить сотрудника" Command="{Binding AddDepartment}"/>
-                <Button Content="Редактировать сотрудника" Command="{Binding UpdateDepartment}"/>
-                <Button Content="Удалить сотрудника" Command="{Binding DeleteDepartment}"/>
+                <Button Content="Добавить сотрудника" Command="{Binding AddEmployee}"/>
+                <Button Content="Редактировать сотрудника" Command="{Binding UpdateEmployee}"/>
+                <Button Content="Удалить сотрудника" Command="{Binding DeleteEmployee}"/>
             </StackPanel>
 
         </Grid>

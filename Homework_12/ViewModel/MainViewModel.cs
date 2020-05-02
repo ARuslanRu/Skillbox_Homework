@@ -38,6 +38,17 @@ namespace Homework_12.ViewModel
             }
         }
 
+        private Employee selectedEmployee;
+        public Employee SelectedEmployee
+        {
+            get { return selectedEmployee; }
+            set
+            {
+                selectedEmployee = value;
+                OnPropertyChanged("SelectedEmployee");
+            }
+        }
+
 
         private ObservableCollection<Node> nodes;
         public ObservableCollection<Node> Nodes
@@ -133,17 +144,68 @@ namespace Homework_12.ViewModel
             }
         }
 
-    #endregion
+        #endregion
+
+        #region Команды по сотрудникам
+
+        private RelayCommand addEmployee;
+        public RelayCommand AddEmployee
+        {
+            get
+            {
+                return addEmployee ??
+                    (addEmployee = new RelayCommand(obj =>
+                    {
+
+
+                    }, obj => SelectedDepartment != null));
+            }
+        }
+
+
+        private RelayCommand updateEmployee;
+        public RelayCommand UpdateEmployee
+        {
+            get
+            {
+                return updateEmployee ??
+                    (updateEmployee = new RelayCommand(obj =>
+                    {
+
+
+                    }, obj => SelectedEmployee != null));
+            }
+        }
+
+        private RelayCommand deleteEmployee;
+        public RelayCommand DeleteEmployee
+        {
+            get
+            {
+                return deleteEmployee ??
+                    (deleteEmployee = new RelayCommand(obj =>
+                    {
+
+                        if (MessageBox.Show("Удаление сотрудника.\nПодтвердите удаление.", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            Employee.DeleteEmployee(SelectedEmployee); //Удаляет из хранилища
+                            EmployeesInDepartment = Employee.Employees.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
+                        }
+                    }, obj => SelectedEmployee != null)); ;
+            }
+        }
+
+        #endregion
 
 
 
 
-    /// <summary>
-    /// Формируем узлы для TreeView из департаментов
-    /// </summary>
-    /// <param name="dep"></param>
-    /// <returns></returns>
-    private ObservableCollection<Node> GetTreeViewNodes(Department department = null)
+        /// <summary>
+        /// Формируем узлы для TreeView из департаментов
+        /// </summary>
+        /// <param name="dep"></param>
+        /// <returns></returns>
+        private ObservableCollection<Node> GetTreeViewNodes(Department department = null)
         {
             ObservableCollection<Node> nodes = new ObservableCollection<Node>();
 
