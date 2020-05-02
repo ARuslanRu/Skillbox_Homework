@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 using Homework_12.Model;
 using System.Windows;
 using System.Diagnostics;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Homework_12.ViewModel
 {
@@ -119,23 +121,29 @@ namespace Homework_12.ViewModel
                 return deleteDepartment ??
                     (deleteDepartment = new RelayCommand(obj =>
                     {
-                        ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
-                        Department.DeleteDepartment(SelectedNode.Id);
-                        parentNode.Remove(SelectedNode);
-
+                        if (MessageBox.Show("Удаление департамента приведет к удалению всех дочерних департаментов и сотрудников.\nПодтвердите удаление.",
+                            "Подтверждение",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        {
+                            ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
+                            Department.DeleteDepartment(SelectedNode.Id);
+                            parentNode.Remove(SelectedNode);
+                        }
                     }, obj => SelectedNode != null));
-
             }
         }
 
-        #endregion
+    #endregion
 
-        /// <summary>
-        /// Формируем узлы для TreeView из департаментов
-        /// </summary>
-        /// <param name="dep"></param>
-        /// <returns></returns>
-        private ObservableCollection<Node> GetTreeViewNodes(Department department = null)
+
+
+
+    /// <summary>
+    /// Формируем узлы для TreeView из департаментов
+    /// </summary>
+    /// <param name="dep"></param>
+    /// <returns></returns>
+    private ObservableCollection<Node> GetTreeViewNodes(Department department = null)
         {
             ObservableCollection<Node> nodes = new ObservableCollection<Node>();
 
@@ -193,20 +201,20 @@ namespace Homework_12.ViewModel
 
         public MainViewModel()
         {
-            new Department("Департмент_1", 0);
-            new Department("Департмент_2", 0);
-            new Department("Департмент_3", 0);
-            new Department("Департмент_4", 1);
-            new Department("Департмент_5", 1);
-            new Department("Департмент_6", 4);
+            //new Department("Департмент_1", 0);
+            //new Department("Департмент_2", 0);
+            //new Department("Департмент_3", 0);
+            //new Department("Департмент_4", 1);
+            //new Department("Департмент_5", 1);
+            //new Department("Департмент_6", 4);
 
-            new Manager("Имя_1", 1, "Начальник");
-            new Worker("Имя_4", 1, "Рабочий", 100);
-            new Intertn("Имя_5", 1, "Стажер", 100);
-            new Worker("Имя_2", 2, "Рабочий", 100);
-            new Intertn("Имя_3", 3, "Стажер", 100);
+            //new Manager("Имя_1", 1, "Начальник");
+            //new Worker("Имя_4", 1, "Рабочий", 100);
+            //new Intertn("Имя_5", 1, "Стажер", 100);
+            //new Worker("Имя_2", 2, "Рабочий", 100);
+            //new Intertn("Имя_3", 3, "Стажер", 100);
 
-            Nodes = GetTreeViewNodes();
+            //Nodes = GetTreeViewNodes();
         }
 
 
@@ -216,5 +224,64 @@ namespace Homework_12.ViewModel
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
+
+        #region Команды сохранения в Json и загрузки из Json
+
+        private RelayCommand loadFromJson;
+        public RelayCommand LoadFromJson
+        {
+            get
+            {
+                return loadFromJson ??
+                    (loadFromJson = new RelayCommand(obj =>
+                    {
+                        //Загрузка из json
+                        if (!File.Exists("data.json"))
+                        {
+                            return;
+                        }
+
+                        string jsonString = File.ReadAllText("data.json");
+
+                        //Десериализация 
+                        var restoredJson = JsonConvert.DeserializeObject<JsonData>(jsonString, new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All
+                        });
+
+                        Employee.LoadEmployee(restoredJson.EmployeesDb);
+                        Department.LoadDepartments(restoredJson.DepartmentsDb);
+
+                        Nodes = GetTreeViewNodes();
+                    }));
+            }
+        }
+
+        private RelayCommand saveToJson;
+        public RelayCommand SaveToJson
+        {
+            get
+            {
+                return saveToJson ??
+                    (saveToJson = new RelayCommand(obj =>
+                    {
+                        List<Employee> employees = Employee.Employees as List<Employee>;
+                        List<Department> departments = Department.Departments as List<Department>;
+
+                        var jsonData = new JsonData(employees, departments);
+
+                        //Сериализация
+                        string jsonContent = JsonConvert.SerializeObject(jsonData, Formatting.Indented, new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All
+                        });
+
+                        File.WriteAllText("data.json", jsonContent);
+                    }));
+            }
+        }
+
+        #endregion
     }
 }

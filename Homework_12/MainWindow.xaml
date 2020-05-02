@@ -5,100 +5,71 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_12"
         xmlns:ctrl="clr-namespace:Homework_12.Control"
+        xmlns:vm="clr-namespace:Homework_12.ViewModel"
         mc:Ignorable="d"
         Title="Основное окно" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height ="*"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Загрузить из Json" Command="{Binding LoadFromJson}"></MenuItem>
+                <MenuItem Header="Сохранить в Json" Command="{Binding SaveToJson}"></MenuItem>
+            </MenuItem>
+        </Menu>
 
-        <ctrl:ExtendedTreeView Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
-                    <Border BorderThickness="1" BorderBrush="Gray">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Id}" HorizontalAlignment="Left" Margin="0 0 10 0"/>
-                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
-                            <TextBlock Text="{Binding ParentId}" HorizontalAlignment="Left" Margin="10 0 0 0"/>
-                        </StackPanel>
-                    </Border>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </ctrl:ExtendedTreeView>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <ListView Grid.Column="1" Grid.Row="0" ItemsSource="{Binding EmployeesInDepartment}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Path=Id}"/>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding Salary}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+            <ctrl:ExtendedTreeView Grid.Column="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Border>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </ctrl:ExtendedTreeView>
 
+            <ListView Grid.Column="1" ItemsSource="{Binding EmployeesInDepartment}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Path=Id}"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding Salary}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
 
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.Row="1">
-            <Button Content="Добавить департамент" Command="{Binding AddDepartment}"/>
-            <Button Content="Редактировать департамент" Command="{Binding UpdateDepartment}"/>
-            <Button Content="Удалить департамент" Command="{Binding DeleteDepartment}"/>
-            <!--<Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
-            <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
-            <Button x:Name="btnUpdateDepartment" Content="Редактировать департамент"></Button>
-            <Button x:Name="btnDeleteDepartment" Content="Удалить департамент"></Button>-->
-        </StackPanel>
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                <Button Content="Добавить департамент" Command="{Binding AddDepartment}"/>
+                <Button Content="Редактировать департамент" Command="{Binding UpdateDepartment}"/>
+                <Button Content="Удалить департамент" Command="{Binding DeleteDepartment}"/>
+            </StackPanel>
 
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                <Button Content="Добавить сотрудника" Command="{Binding AddDepartment}"/>
+                <Button Content="Редактировать сотрудника" Command="{Binding UpdateDepartment}"/>
+                <Button Content="Удалить сотрудника" Command="{Binding DeleteDepartment}"/>
+            </StackPanel>
 
-
-
-        <!--<StackPanel Grid.Column="1" Grid.Row="0">
-            <TextBlock Text="{Binding SelectedNode.Name}"/>
-        </StackPanel>-->
-
-
-
-
-
-
-
-        <!--<ListView x:Name="lvEmployees" Grid.Column="1" Grid.Row="0">
-            <ListView.View>
-
-                <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Position}">
-                        <GridViewColumnHeader Click="Clik_Position_Sort" Content="Должность"/>
-                    </GridViewColumn>
-
-                    <GridViewColumn DisplayMemberBinding="{Binding Name}">
-                        <GridViewColumnHeader Click="Clik_Name_Sort" Content="Имя"/>
-                    </GridViewColumn>
-                    <GridViewColumn DisplayMemberBinding="{Binding Salary, StringFormat={}{0:N2} руб. в мес.}">
-                        <GridViewColumnHeader Click="Clik_Salary_Sort" Content="Зарплата"/>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>-->
-        <!--<StackPanel Grid.Column="0" Grid.Row="1">
-            <Button x:Name="btnLoadFromJson" Content="Загрузить из Json"></Button>
-            <Button x:Name="btnSaveToJson" Content="Сохранить в Json"></Button>
-            <Button x:Name="btnAddDepartment" Content="Добавить департамент"></Button>
-            <Button x:Name="btnUpdateDepartment" Content="Редактировать департамент"></Button>
-            <Button x:Name="btnDeleteDepartment" Content="Удалить департамент"></Button>
-        </StackPanel>
-
-        <StackPanel Grid.Column="1" Grid.Row="1">
-            <Button x:Name="btnAddEmployee" Content="Добавить сотрудника"></Button>
-            <Button x:Name="btnUpdateEmployee" Content="Редактировать сотрудника"></Button>
-            <Button x:Name="btnDeleteEmployee" Content="Удалить сотрудника"></Button>
-            <Button x:Name="btnRefresh" Content="Обновить"></Button>
-        </StackPanel>-->
-
-
+        </Grid>
     </Grid>
 </Window>
