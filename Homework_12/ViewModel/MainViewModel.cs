@@ -86,21 +86,23 @@ namespace Homework_12.ViewModel
                         AddDepartmentWindow departmentWindow;
                         if (SelectedNode == null)
                         {
+                            if(Nodes == null)
+                            {
+                                Nodes = new ObservableCollection<Node>();
+                            }
+
                             ObservableCollection<Node> RootNodes = Nodes;
-                            //departmentWindow = new AddDepartmentWindow(RootNodes, SelectedDepartment);
-                            var selectdep = Department.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
-                            Debug.WriteLine($"MainViewModel selectdep = {selectdep}");
-                            departmentWindow = new AddDepartmentWindow(RootNodes, selectdep);
+                            departmentWindow = new AddDepartmentWindow(RootNodes, SelectedDepartment);
                         }
                         else
                         {
                             ObservableCollection<Node> ChildNodes = SelectedNode.Nodes;
                             var selectdep = Department.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
-                            Debug.WriteLine($"MainViewModel selectdep = {selectdep}");
                             departmentWindow = new AddDepartmentWindow(ChildNodes, selectdep);
                         }
 
-                        //departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        departmentWindow.Owner = obj as Window;
+                        departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
                     }));
 
@@ -118,6 +120,8 @@ namespace Homework_12.ViewModel
                         UpdateDepartmentWindow departmentWindow;
                         departmentWindow = new UpdateDepartmentWindow(SelectedNode, SelectedDepartment);
 
+                        departmentWindow.Owner = obj as Window;
+                        departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
                     }, obj => SelectedNode != null));
 
@@ -197,9 +201,6 @@ namespace Homework_12.ViewModel
 
         #endregion
 
-
-
-
         /// <summary>
         /// Формируем узлы для TreeView из департаментов
         /// </summary>
@@ -278,7 +279,6 @@ namespace Homework_12.ViewModel
 
             //Nodes = GetTreeViewNodes();
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")

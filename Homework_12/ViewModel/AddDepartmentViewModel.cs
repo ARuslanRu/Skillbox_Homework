@@ -9,7 +9,7 @@ namespace Homework_12.ViewModel
     class AddDepartmentViewModel : INotifyPropertyChanged
     {
 
-        private Department department;
+        private Department parentDepartment;
 
         private ObservableCollection<Node> nodes;
 
@@ -32,10 +32,17 @@ namespace Homework_12.ViewModel
                 return addDepartment ??
                     (addDepartment = new RelayCommand(obj =>
                     {
-                        Department newDepartment = new Department(DepartmentName, department.Id);
+                        Department newDepartment;
 
+                        if (parentDepartment == null)
+                        {
+                            newDepartment = new Department(DepartmentName, 0);
+                        }
+                        else
+                        {
+                            newDepartment = new Department(DepartmentName, parentDepartment.Id);
+                        }
                         nodes.Add(new Node(newDepartment.Id, newDepartment.Name));
-
                         Window window = obj as Window;
                         window.Close();
 
@@ -43,10 +50,10 @@ namespace Homework_12.ViewModel
             }
         }
 
-        public AddDepartmentViewModel(ObservableCollection<Node> nodes, Department department)
+        public AddDepartmentViewModel(ObservableCollection<Node> nodes, Department parentDepartment)
         {
             this.nodes = nodes;
-            this.department = department;
+            this.parentDepartment = parentDepartment;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

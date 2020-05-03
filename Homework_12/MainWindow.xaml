@@ -8,6 +8,9 @@
         xmlns:vm="clr-namespace:Homework_12.ViewModel"
         mc:Ignorable="d"
         Title="Основное окно" Height="450" Width="800">
+    
+
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -59,15 +62,25 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
-                <Button Content="Добавить департамент" Command="{Binding AddDepartment}"/>
-                <Button Content="Редактировать департамент" Command="{Binding UpdateDepartment}"/>
-                <Button Content="Удалить департамент" Command="{Binding DeleteDepartment}"/>
+                <Button Content="Добавить департамент"
+                        Command="{Binding AddDepartment}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Редактировать департамент" 
+                        Command="{Binding UpdateDepartment}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Удалить департамент"
+                        Command="{Binding DeleteDepartment}"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
-                <Button Content="Добавить сотрудника" Command="{Binding AddEmployee}"/>
-                <Button Content="Редактировать сотрудника" Command="{Binding UpdateEmployee}"/>
-                <Button Content="Удалить сотрудника" Command="{Binding DeleteEmployee}"/>
+                <Button Content="Добавить сотрудника"
+                        Command="{Binding AddEmployee}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Редактировать сотрудника" 
+                        Command="{Binding UpdateEmployee}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Удалить сотрудника"
+                        Command="{Binding DeleteEmployee}"/>
             </StackPanel>
 
         </Grid>
