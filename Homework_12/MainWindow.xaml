@@ -47,10 +47,18 @@
             <ListView Grid.Column="1" ItemsSource="{Binding EmployeesInDepartment}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="ИД" DisplayMemberBinding="{Binding Id}" Width="25"/>
-                        <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding Position}" Width="100"/>
-                        <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}" Width="200"/>
-                        <GridViewColumn Header="Зарплата" DisplayMemberBinding="{Binding Salary}" Width="200"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Id}" Width="25">
+                            <GridViewColumnHeader Command="{Binding SortById}" Content="ИД"/>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Position}" Width="100">
+                            <GridViewColumnHeader Command="{Binding SortByPosition}" Content="Должность"/>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="200">
+                            <GridViewColumnHeader Command="{Binding SortByName}" Content="Имя"/>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Salary}" Width="200">
+                            <GridViewColumnHeader Command="{Binding SortBySalary}" Content="Зарплата"/>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

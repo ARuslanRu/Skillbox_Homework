@@ -49,7 +49,6 @@ namespace Homework_12.ViewModel
             }
         }
 
-
         private ObservableCollection<Node> nodes;
         public ObservableCollection<Node> Nodes
         {
@@ -86,7 +85,7 @@ namespace Homework_12.ViewModel
                         AddDepartmentWindow departmentWindow;
                         if (SelectedNode == null)
                         {
-                            if(Nodes == null)
+                            if (Nodes == null)
                             {
                                 Nodes = new ObservableCollection<Node>();
                             }
@@ -166,7 +165,8 @@ namespace Homework_12.ViewModel
                         employeeWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         employeeWindow.ShowDialog();
 
-                        EmployeesInDepartment = Employee.Employees.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
+                        EmployeesInDepartment = Employee.Employees.Where(x => x.DepartmentId == SelectedNode.Id)
+                        .OrderBy(x => x.Id).ToList();
                     }, obj => SelectedDepartment != null));
             }
         }
@@ -186,7 +186,8 @@ namespace Homework_12.ViewModel
                         employeeWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         employeeWindow.ShowDialog();
 
-                        EmployeesInDepartment = Employee.Employees.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
+                        EmployeesInDepartment = Employee.Employees.Where(x => x.DepartmentId == SelectedNode.Id)
+                        .OrderBy(x => x.Id).ToList();
                     }, obj => SelectedEmployee != null));
             }
         }
@@ -208,6 +209,64 @@ namespace Homework_12.ViewModel
                     }, obj => SelectedEmployee != null)); ;
             }
         }
+
+        #endregion
+
+        #region Команды сортировки
+
+        private RelayCommand sortById;
+        public RelayCommand SortById
+        {
+            get
+            {
+                return sortById ??
+                    (sortById = new RelayCommand(obj =>
+                    {
+                        EmployeesInDepartment = EmployeesInDepartment.OrderBy(x => x.Id);
+                    }));
+            }
+        }
+
+        private RelayCommand sortByName;
+        public RelayCommand SortByName
+        {
+            get
+            {
+                return sortByName ??
+                    (sortByName = new RelayCommand(obj =>
+                    {
+                        EmployeesInDepartment = EmployeesInDepartment.OrderBy(x => x.Name);
+                    }));
+            }
+        }
+
+        private RelayCommand sortByPosition;
+        public RelayCommand SortByPosition
+        {
+            get
+            {
+                return sortByPosition ??
+                    (sortByPosition = new RelayCommand(obj =>
+                    {
+                        EmployeesInDepartment = EmployeesInDepartment.OrderBy(x => x.Position);
+                    }));
+            }
+        }
+
+        private RelayCommand sortBySalary;
+        public RelayCommand SortBySalary
+        {
+            get
+            {
+                return sortBySalary ??
+                    (sortBySalary = new RelayCommand(obj =>
+                    {
+                        EmployeesInDepartment = EmployeesInDepartment.OrderBy(x => x.Salary);
+                    }));
+            }
+        }
+
+
 
         #endregion
 
