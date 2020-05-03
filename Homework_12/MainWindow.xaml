@@ -47,9 +47,10 @@
             <ListView Grid.Column="1" ItemsSource="{Binding EmployeesInDepartment}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="20"/>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"/>
-                        <GridViewColumn Header="Salary" DisplayMemberBinding="{Binding Salary}" Width="200"/>
+                        <GridViewColumn Header="ИД" DisplayMemberBinding="{Binding Id}" Width="25"/>
+                        <GridViewColumn Header="Должность" DisplayMemberBinding="{Binding Position}" Width="100"/>
+                        <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}" Width="200"/>
+                        <GridViewColumn Header="Зарплата" DisplayMemberBinding="{Binding Salary}" Width="200"/>
                     </GridView>
                 </ListView.View>
             </ListView>

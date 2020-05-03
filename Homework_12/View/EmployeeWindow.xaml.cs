@@ -5,13 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Homework_12.ViewModel;
 
 namespace Homework_12
 {
@@ -20,141 +14,142 @@ namespace Homework_12
     /// </summary>
     public partial class EmployeeWindow : Window
     {
-        private int departmentId;
-        private bool isUpdate;
-        private Employee _employee;
-        public EmployeeWindow(int departmentId)
+        //private int departmentId;
+        //private bool isUpdate;
+        //private Employee _employee;
+        public EmployeeWindow(Department department, Employee employee = null)
         {
-            this.departmentId = departmentId;
-            this.isUpdate = false;
+            //this.departmentId = departmentId;
+            //this.isUpdate = false;
             InitializeComponent();
-            cbEmployeePosition.SelectionChanged += CbEmployeePosition_SelectionChanged;
+            DataContext = new EmployeeViewModel(department, employee);
+            //cbEmployeePosition.SelectionChanged += CbEmployeePosition_SelectionChanged;
 
-            btnSave.Click += BtnSave_Click;
-            btnCancel.Click += BtnCancel_Click;
+            //btnSave.Click += BtnSave_Click;
+            //btnCancel.Click += BtnCancel_Click;
 
-            cbEmployeePosition.ItemsSource = new List<String> { "Начальник", "Рабочий", "Стажер" };
+            //cbEmployeePosition.ItemsSource = new List<String> { "Начальник", "Рабочий", "Стажер" };
 
         }
 
-        public EmployeeWindow(Employee employee)
-        {
+        //public EmployeeWindow(Employee employee)
+        //{
 
-            this.isUpdate = true;
-            this._employee = employee;
-            this.departmentId = employee.DepartmentId;
+        //    this.isUpdate = true;
+        //    this._employee = employee;
+        //    this.departmentId = employee.DepartmentId;
 
-            InitializeComponent();
+        //    InitializeComponent();
 
-            tbName.Text = employee.Name;
-            cbEmployeePosition.SelectedItem = employee.Position;
-            cbEmployeePosition.ItemsSource = new List<String> { "Начальник", "Рабочий", "Стажер" };
-            tbSalary.Text = employee.Salary.ToString();
+        //    tbName.Text = employee.Name;
+        //    cbEmployeePosition.SelectedItem = employee.Position;
+        //    cbEmployeePosition.ItemsSource = new List<String> { "Начальник", "Рабочий", "Стажер" };
+        //    tbSalary.Text = employee.Salary.ToString();
 
-            cbEmployeePosition.SelectionChanged += CbEmployeePosition_SelectionChanged;
+        //    cbEmployeePosition.SelectionChanged += CbEmployeePosition_SelectionChanged;
 
-            btnSave.Click += BtnSave_Click;
-            btnCancel.Click += BtnCancel_Click;
-
-
-            if (employee.Position.Equals("Начальник"))
-            {
-                tblSalary.Visibility = Visibility.Hidden;
-                tbSalary.Visibility = Visibility.Hidden;
-            }
-        }
+        //    btnSave.Click += BtnSave_Click;
+        //    btnCancel.Click += BtnCancel_Click;
 
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void CbEmployeePosition_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox comboBox = (ComboBox)sender;
-            var selectedItem = comboBox.SelectedItem.ToString();
-
-            if (selectedItem.Equals("Начальник"))
-            {
-                tblSalary.Visibility = Visibility.Hidden;
-                tbSalary.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                tblSalary.Visibility = Visibility.Visible;
-                tbSalary.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
-        {
-
-            if(isUpdate)
-            {
-                Employee.DeleteEmployee(_employee);
+        //    if (employee.Position.Equals("Начальник"))
+        //    {
+        //        tblSalary.Visibility = Visibility.Hidden;
+        //        tbSalary.Visibility = Visibility.Hidden;
+        //    }
+        //}
 
 
-                string name = tbName.Text;
+        //private void BtnCancel_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.Close();
+        //}
 
-                var selectedItem = cbEmployeePosition.SelectedItem.ToString();
+        //private void CbEmployeePosition_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    ComboBox comboBox = (ComboBox)sender;
+        //    var selectedItem = comboBox.SelectedItem.ToString();
 
-                decimal salary = 0;
-                if (!selectedItem.Equals("Начальник"))
-                {
-                    salary = decimal.Parse(tbSalary.Text);
-                }
+        //    if (selectedItem.Equals("Начальник"))
+        //    {
+        //        tblSalary.Visibility = Visibility.Hidden;
+        //        tbSalary.Visibility = Visibility.Hidden;
+        //    }
+        //    else
+        //    {
+        //        tblSalary.Visibility = Visibility.Visible;
+        //        tbSalary.Visibility = Visibility.Visible;
+        //    }
+        //}
 
-                switch (selectedItem)
-                {
-                    case "Начальник":
-                        Manager manager = new Manager(name, departmentId, selectedItem);
-                        manager.Id = _employee.Id;
-                        break;
-                    case "Рабочий":
-                        Worker worker = new Worker(name, departmentId, selectedItem, salary);
-                        worker.Id = _employee.Id;
-                        break;
-                    case "Стажер":
-                        Intertn intertn = new Intertn(name, departmentId, selectedItem, salary);
-                        intertn.Id = _employee.Id;
-                        break;
-                    default:
-                        break;
-                }
+        //private void BtnSave_Click(object sender, RoutedEventArgs e)
+        //{
 
-
-            }
-            else
-            {
-                string name = tbName.Text;
-
-                var selectedItem = cbEmployeePosition.SelectedItem.ToString();
-
-                decimal salary = 0;
-                if (!selectedItem.Equals("Начальник"))
-                {
-                    salary = decimal.Parse(tbSalary.Text);
-                }
-
-                switch (selectedItem)
-                {
-                    case "Начальник":
-                        new Manager(name, departmentId, selectedItem);
-                        break;
-                    case "Рабочий":
-                        new Worker(name, departmentId, selectedItem, salary);
-                        break;
-                    case "Стажер":
-                        new Intertn(name, departmentId, selectedItem, salary);
-                        break;
-                    default:
-                        break;
-                }
-            }
+        //    if(isUpdate)
+        //    {
+        //        Employee.DeleteEmployee(_employee);
 
 
-            this.Close();
-        }
+        //        string name = tbName.Text;
+
+        //        var selectedItem = cbEmployeePosition.SelectedItem.ToString();
+
+        //        decimal salary = 0;
+        //        if (!selectedItem.Equals("Начальник"))
+        //        {
+        //            salary = decimal.Parse(tbSalary.Text);
+        //        }
+
+        //        switch (selectedItem)
+        //        {
+        //            case "Начальник":
+        //                Manager manager = new Manager(name, departmentId, selectedItem);
+        //                manager.Id = _employee.Id;
+        //                break;
+        //            case "Рабочий":
+        //                Worker worker = new Worker(name, departmentId, selectedItem, salary);
+        //                worker.Id = _employee.Id;
+        //                break;
+        //            case "Стажер":
+        //                Intertn intertn = new Intertn(name, departmentId, selectedItem, salary);
+        //                intertn.Id = _employee.Id;
+        //                break;
+        //            default:
+        //                break;
+        //        }
+
+
+        //    }
+        //    else
+        //    {
+        //        string name = tbName.Text;
+
+        //        var selectedItem = cbEmployeePosition.SelectedItem.ToString();
+
+        //        decimal salary = 0;
+        //        if (!selectedItem.Equals("Начальник"))
+        //        {
+        //            salary = decimal.Parse(tbSalary.Text);
+        //        }
+
+        //        switch (selectedItem)
+        //        {
+        //            case "Начальник":
+        //                new Manager(name, departmentId, selectedItem);
+        //                break;
+        //            case "Рабочий":
+        //                new Worker(name, departmentId, selectedItem, salary);
+        //                break;
+        //            case "Стажер":
+        //                new Intertn(name, departmentId, selectedItem, salary);
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+
+
+        //    this.Close();
+        //}
     }
 }

@@ -37,17 +37,21 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16">Имя:</TextBlock>
-            <TextBox x:Name="tbName" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16"></TextBox>
+            <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16" Text="{Binding EmployeeName, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16">Должность:</TextBlock>
-            <ComboBox x:Name="cbEmployeePosition" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5"/>
+            <ComboBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" ItemsSource="{Binding Positions}" SelectedItem="{Binding SelectedPosition, UpdateSourceTrigger=PropertyChanged}"/>
 
-            <TextBlock x:Name="tblSalary" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16">Зарплата:</TextBlock>
-            <TextBox x:Name="tbSalary" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16"></TextBox>
+            <TextBlock Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16" 
+                       Visibility="{Binding SalaryFieldVisibility}">Зарплата:</TextBlock>
+            <TextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="5" FontSize="16" 
+                     Text="{Binding EmployeeSalary, UpdateSourceTrigger=PropertyChanged}" 
+                     Visibility="{Binding SalaryFieldVisibility}"/>
 
-
-            <Button x:Name="btnSave" Grid.Row="7" Grid.Column="1" Content="Сохранить"></Button>
-            <Button x:Name="btnCancel" Grid.Row="7" Grid.Column="3" Content="Отменить"></Button>
+            <Button Content="Сохранить" Grid.Row="7" Grid.Column="1"
+                    Command="{Binding SaveEmployee}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+            <Button IsCancel="True" Grid.Row="7" Grid.Column="3" Content="Отменить"/>
 
         </Grid>
     </Grid>

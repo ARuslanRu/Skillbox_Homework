@@ -61,6 +61,7 @@
     <Compile Include="Control\ExtendedTreeView.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="ViewModel\AddDepartmentViewModel.cs" />
+    <Compile Include="ViewModel\EmployeeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Page Include="View\UpdateDepartmentWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
