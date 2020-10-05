@@ -1,12 +1,15 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Homework_13.Model
 {
-    public class Group : INotifyPropertyChanged
+    public class Department : INotifyPropertyChanged
     {
-
         public int Id { get; set; }
+
 
         private string name;
 
@@ -19,6 +22,7 @@ namespace Homework_13.Model
                 OnPropertyChanged("Name");
             }
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 

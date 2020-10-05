@@ -4,12 +4,11 @@ using System.Text;
 
 namespace Homework_13.Model
 {
-    public class Client
+    class Account
     {
         public int Id { get; set; }
-
         public string Name { get; set; }
-
-        public int DepartmentId { get; set; }
+        public decimal Balance { get; set; }
+        public int ClientId { get; set; }
     }
 }

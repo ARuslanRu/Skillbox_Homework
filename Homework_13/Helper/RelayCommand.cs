@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace Homework_13
+namespace Homework_13.Helper
 {
     class RelayCommand : ICommand
     {

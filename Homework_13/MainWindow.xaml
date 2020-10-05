@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Банк" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -13,14 +13,27 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
+        <Menu Grid.Row="0">
+            <MenuItem Header="Департаменты">
+                <MenuItem Header="Добавить"  Command="{Binding AddDepartment}"/>
+                <MenuItem Header="Редактировать" Command="{Binding EditDepartment}"/>
+                <MenuItem Header="Удалить"  Command="{Binding RemoveDepartment}"/>
+            </MenuItem>
+            <MenuItem Header="Клиенты">
+                <MenuItem Header="Добавить"  Command="{Binding AddClient}"/>
+                <MenuItem Header="Редактировать"  Command="{Binding EditClient}"/>
+                <MenuItem Header="Удалить"  Command="{Binding RemoveClient}"/>
+            </MenuItem>
+        </Menu>
+
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="350"/>
             </Grid.ColumnDefinitions>
 
-            <ListView Grid.Column="0" ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}">
+            <ListView Grid.Column="0" ItemsSource="{Binding Departments}" SelectedItem="{Binding SelectedDepartment}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -31,39 +44,93 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-
-            <ListView Grid.Column="1" ItemsSource="{Binding ClientsInGroup}">
+            <ListView Grid.Column="1" ItemsSource="{Binding ClientsInDepartment}" SelectedItem="{Binding SelectedClient}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Ид" DisplayMemberBinding="{Binding Id}" Width="30"/>
                         <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}" Width="160"/>
-                        <GridViewColumn Header="Статус" DisplayMemberBinding="{Binding Status}" Width="100"/>
-                        <GridViewColumn Header="Ид Группы" DisplayMemberBinding="{Binding GroupId}" Width="100"/>
+                        <GridViewColumn Header="Ид Группы" DisplayMemberBinding="{Binding DepartmentId}" Width="100"/>
                     </GridView>
                 </ListView.View>
-                
-                
-                
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Id}" Margin="2"/>
-                            <TextBlock Text="{Binding Name}" Margin="2"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
             </ListView>
 
+            <ScrollViewer Grid.Column="2">
+                <StackPanel Margin="10">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Информация по клиенту"/>
+                            <Button Grid.Column="1" Content="Редактировать"/>
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock  Margin="5" Text="Имя:"/>
+                            <TextBox Width="200" Margin="5" Text="{Binding ClientName, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Счета и вклады"/>
+                            <Button Grid.Column="1" Content="Открыть вклад"/>
+                        </Grid>
+
+                        <ListView ItemsSource="{Binding Accounts}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Id}" Margin="2"/>
+                                        <TextBlock Text="{Binding Name}" Margin="2"/>
+                                        <TextBlock Text="{Binding Balance}" Margin="2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="0.6*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Кредиты"/>
+                            <Button Grid.Column="1" Content="Открыть кредит"/>
+                        </Grid>
+
+                        <ListView ItemsSource="{Binding Accounts}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Id}" Margin="2"/>
+                                        <TextBlock Text="{Binding Name}" Margin="2"/>
+                                        <TextBlock Text="{Binding Balance}" Margin="2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+
+                    <StackPanel>
+
+                        <TextBlock FontWeight="Bold" Text="Переводы"/>
+                        <Button Content="Перевод между своими счетами"/>
+                        <Button Content="Перевод другому клиенту"/>
+
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+
         </Grid>
-
-
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Добавить группу" Margin="5" Command="{Binding AddGroup}"/>
-            <Button Content="Добавить клиента в выбранную группу" Margin="5" Command="{Binding AddClient}"/>
-        </StackPanel>
-
-
-
 
     </Grid>
 </Window>
