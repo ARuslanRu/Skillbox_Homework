@@ -72,6 +72,14 @@
                         </StackPanel>
                     </StackPanel>
 
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Основной счет" Margin="5 0 5 0"/>
+                        <TextBlock Text="Id:" FontWeight="Bold" Margin="5 0 5 0"/>
+                        <TextBlock Text="{Binding MainAccount.Id}"/>
+                        <TextBlock Text="Баланс:" Margin="5 0 5 0" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding MainAccount.Balance}" Margin="5 0 5 0"/>
+                    </StackPanel>
+
 
                     <StackPanel>
                         <Grid>
@@ -79,11 +87,11 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="0.6*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Счета и вклады"/>
+                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Вклады"/>
                             <Button Grid.Column="1" Content="Открыть вклад"/>
                         </Grid>
 
-                        <ListView ItemsSource="{Binding Accounts}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
+                        <ListView ItemsSource="{Binding Deposites}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -96,7 +104,7 @@
                         </ListView>
                     </StackPanel>
 
-                    <StackPanel>
+                    <!--<StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -117,7 +125,7 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </StackPanel>
+                    </StackPanel>-->
 
                     <StackPanel>
 

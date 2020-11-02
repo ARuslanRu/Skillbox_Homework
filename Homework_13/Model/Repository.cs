@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -12,36 +13,23 @@ namespace Homework_13.Model
         private static Repository instance;
         private static ObservableCollection<Department> departments;
         private static ObservableCollection<Client> clients;
-        private static ObservableCollection<Account> accounts;
+        private static ObservableCollection<Account> mainAccounts;
+        private static ObservableCollection<IDeposit> deposites;
 
         private Repository()
         {
             Departments = new ObservableCollection<Department>();
             Clients = new ObservableCollection<Client>();
-            Accounts = new ObservableCollection<Account>();
+            MainAccounts = new ObservableCollection<Account>();
+            Deposites = new ObservableCollection<IDeposit>();
 
-            departments.Add(new Department { Id = 1, Name = "Департамент_01" });
-            departments.Add(new Department { Id = 2, Name = "Департамент_02" });
+            AddDepartment(new Department { Name = "Департамент_01" });
+            AddDepartment(new Department { Name = "Департамент_02" });
 
-            clients.Add(new Client { Id = 1, Name = "Клиент_01", DepartmentId = 1 });
-            clients.Add(new Client { Id = 2, Name = "Клиент_02", DepartmentId = 1 });
-            clients.Add(new Client { Id = 3, Name = "Клиент_03", DepartmentId = 2 });
-
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
-            accounts.Add(new Account { Id = 1, Name = "Основной счет", Balance = 10000, ClientId = 1 });
+            AddClient(new Client { Name = "Клиент_01", DepartmentId = 1 });
+            AddClient(new Client { Name = "Клиент_02", DepartmentId = 1 });
+            AddClient(new Client { Name = "Клиент_03", DepartmentId = 2 });
+            AddDeposit(new Deposit { Name = "Вклад_01", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-3) });
         }
 
         public static Repository GetInstance()
@@ -51,17 +39,17 @@ namespace Homework_13.Model
             return instance;
         }
 
-        public static IReadOnlyCollection<Department> Departments 
+        public static IReadOnlyCollection<Department> Departments
         {
-            get 
+            get
             {
-                return departments; 
+                return departments;
             }
             private set
             {
                 departments = value as ObservableCollection<Department>;
             }
-        }      
+        }
         public static IReadOnlyCollection<Client> Clients
         {
             get
@@ -73,21 +61,32 @@ namespace Homework_13.Model
                 clients = value as ObservableCollection<Client>;
             }
         }
-        public static IReadOnlyCollection<Account> Accounts
+        public static IReadOnlyCollection<Account> MainAccounts
         {
             get
             {
-                return accounts;
+                return mainAccounts;
             }
             private set
             {
-                accounts = value as ObservableCollection<Account>;
+                mainAccounts = value as ObservableCollection<Account>;
+            }
+        }
+        public static IReadOnlyCollection<IDeposit> Deposites
+        {
+            get
+            {
+                return deposites;
+            }
+            private set
+            {
+                deposites = value as ObservableCollection<IDeposit>;
             }
         }
 
         public static void AddDepartment(Department department)
         {
-            if(department.Id == 0)
+            if (department.Id == 0)
             {
                 department.Id = GetDepartmentId();
             }
@@ -96,18 +95,27 @@ namespace Homework_13.Model
         }
         public static void RemoveDepartment(Department department)
         {
+            var clients = Repository.Clients.Where(x => x.DepartmentId == department.Id).ToList();
+            foreach (var client in clients)
+            {
+                Repository.RemoveClient(client);
+                Debug.Print($"Удален клиент: ID {client.Id} | Name {client.Name} | DepID {client.DepartmentId}");
+            }
+
             departments.Remove(department);
         }
         public static void AddClient(Client client)
         {
-            if(client.Id == 0)
+            if (client.Id == 0)
             {
                 client.Id = GetClientId();
+                mainAccounts.Add(new Account { Id = GetAccountId(), Balance = 0, ClientId = client.Id });
             }
             clients.Add(client);
         }
         public static void RemoveClient(Client client)
         {
+            //TODO: Удалять у клиента все счета, вклады и кредиты. После этого удалять самого клиента.
             clients.Remove(client);
         }
         public static void AddAcount(Account account)
@@ -116,11 +124,24 @@ namespace Homework_13.Model
             {
                 account.Id = GetClientId();
             }
-            accounts.Add(account);
+            mainAccounts.Add(account);
         }
         public static void RemoveAccount(Account account)
         {
-            accounts.Remove(account);
+            mainAccounts.Remove(account);
+        }
+
+        public static void AddDeposit(Deposit deposit)
+        {
+            if (deposit.Id == 0)
+            {
+                deposit.Id = GetDepositId();
+            }
+            deposites.Add(deposit);
+        }
+        public static void RemoveDeposit(Deposit deposit)
+        {
+            deposites.Remove(deposit);
         }
 
 
@@ -155,13 +176,12 @@ namespace Homework_13.Model
             }
             return clientId;
         }
-
         private static int GetAccountId()
         {
             int accountId;
-            if (Accounts.Count != 0)
+            if (MainAccounts.Count != 0)
             {
-                int[] number = Accounts.Select(x => x.Id).ToArray();
+                int[] number = MainAccounts.Select(x => x.Id).ToArray();
                 int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
                 accountId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
             }
@@ -170,6 +190,22 @@ namespace Homework_13.Model
                 accountId = 1;
             }
             return accountId;
+        }
+
+        private static int GetDepositId()
+        {
+            int depositId;
+            if (Deposites.Count != 0)
+            {
+                int[] number = Deposites.Select(x => x.Id).ToArray();
+                int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
+                depositId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
+            }
+            else
+            {
+                depositId = 1;
+            }
+            return depositId;
         }
 
 

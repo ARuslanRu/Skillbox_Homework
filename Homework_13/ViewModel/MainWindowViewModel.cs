@@ -20,7 +20,8 @@ namespace Homework_13.ViewModel
         private ObservableCollection<Department> departments;
         private Client selectedClient;
         private IEnumerable<Client> clientsInDepartment;
-        private IEnumerable<Account> accounts;
+        private Account mainAccount;
+        private IEnumerable<IDeposit> deposites; //Переделать после добавления вкладов
         //private IEnumerable<Credit> credits;
 
         #endregion
@@ -51,7 +52,8 @@ namespace Homework_13.ViewModel
             set
             {
                 selectedClient = value;
-                Accounts = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
+                MainAccount = Repository.MainAccounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
                 OnPropertyChanged("SelectedClient");
             }
         }
@@ -64,13 +66,22 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged("ClientsInDepartment");
             }
         }
-        public IEnumerable<Account> Accounts
+        public Account MainAccount
         {
-            get { return accounts; }
+            get { return mainAccount; }
             set
             {
-                accounts = value;
-                OnPropertyChanged("Accounts");
+                mainAccount = value;
+                OnPropertyChanged("MainAccount");
+            }
+        }
+        public IEnumerable<IDeposit> Deposites
+        {
+            get { return deposites; }
+            set
+            {
+                deposites = value;
+                OnPropertyChanged("Deposites");
             }
         }
         #endregion
@@ -123,17 +134,8 @@ namespace Homework_13.ViewModel
                 return removeDepartment ??
                     (removeDepartment = new RelayCommand(obj =>
                     {
-                        var clients = Repository.Clients.Where(x => x.DepartmentId == SelectedDepartment.Id).ToList();
-
-                        foreach (var client in clients)
-                        {
-                            Repository.RemoveClient(client);
-                            Debug.Print($"Удален клиент: ID {client.Id} | Name {client.Name} | DepID {client.DepartmentId}");
-                        }
-
                         Repository.RemoveDepartment(SelectedDepartment);
-                        ClientsInDepartment = null; //Для обновления отображения списка клиентов
-                        Debug.Print(Repository.Departments.Count.ToString());
+                        ClientsInDepartment = null; //Для обновления отображения пустого списка клиентов
                     },
                     obj => SelectedDepartment != null));
             }
@@ -145,8 +147,6 @@ namespace Homework_13.ViewModel
                 return addClient ??
                     (addClient = new RelayCommand(obj =>
                     {
-                        //Добавляем пока дефолтного клиента
-                        //Repository.AddClient(new Client { Name = "Клиент_10", DepartmentId = SelectedDepartment.Id });
                         ClientWindow clientWindow = new ClientWindow();
                         clientWindow.ShowDialog();
 

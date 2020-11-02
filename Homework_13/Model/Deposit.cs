@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Homework_13.Model
 {
-    class Account
+    class Deposit : IDeposit
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
-        //public string Name { get; set; }
+        public string Name { get; set; }
         public DateTime CreateDate { get; set; }
 
 
