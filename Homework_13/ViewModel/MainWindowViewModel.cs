@@ -51,7 +51,7 @@ namespace Homework_13.ViewModel
             set
             {
                 selectedClient = value;
-                Accounts = Repository.Accounts.Where(x => x.ClientId == selectedClient.Id);
+                Accounts = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
                 OnPropertyChanged("SelectedClient");
             }
         }
@@ -167,6 +167,8 @@ namespace Homework_13.ViewModel
                     {
                         ClientWindow clientWindow = new ClientWindow(selectedClient);
                         clientWindow.ShowDialog();
+                        ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == selectedDepartment.Id);
+
                     },
                     obj => SelectedClient != null));
             }
