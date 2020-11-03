@@ -20,7 +20,7 @@ namespace Homework_13.ViewModel
         private ObservableCollection<Department> departments;
         private Client selectedClient;
         private IEnumerable<Client> clientsInDepartment;
-        private Account mainAccount;
+        private Account account;
         private IEnumerable<IDeposit> deposites; //Переделать после добавления вкладов
         //private IEnumerable<Credit> credits;
 
@@ -52,7 +52,7 @@ namespace Homework_13.ViewModel
             set
             {
                 selectedClient = value;
-                MainAccount = Repository.MainAccounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
                 Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
                 OnPropertyChanged("SelectedClient");
             }
@@ -66,13 +66,13 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged("ClientsInDepartment");
             }
         }
-        public Account MainAccount
+        public Account Account
         {
-            get { return mainAccount; }
+            get { return account; }
             set
             {
-                mainAccount = value;
-                OnPropertyChanged("MainAccount");
+                account = value;
+                OnPropertyChanged("Account");
             }
         }
         public IEnumerable<IDeposit> Deposites
@@ -101,6 +101,7 @@ namespace Homework_13.ViewModel
         private RelayCommand addClient;
         private RelayCommand editClient;
         private RelayCommand removeClient;
+        private RelayCommand addDeposit;
 
         public RelayCommand AddDepartment
         {
@@ -183,6 +184,22 @@ namespace Homework_13.ViewModel
                         Repository.RemoveClient(SelectedClient);
                         //Обновляем информацию отображения клиентов в текущем выбранном департаменте
                         ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == selectedDepartment.Id);
+                    },
+                    obj => SelectedClient != null));
+            }
+        }
+        public RelayCommand AddDeposit
+        {
+            get
+            {
+                return addDeposit ??
+                    (addDeposit = new RelayCommand(obj =>
+                    {
+                        OpenDepositWindow openDepositWindow = new OpenDepositWindow(account);
+                        openDepositWindow.ShowDialog();
+
+                        //TODO: после открытия вклада нужно обновить список вкладов что бы вклад отобразился.
+                        //TODO: и обновить информацию об балансе на основном вкладе так как с него списались средства.
                     },
                     obj => SelectedClient != null));
             }

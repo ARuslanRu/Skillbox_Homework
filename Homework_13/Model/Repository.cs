@@ -13,14 +13,14 @@ namespace Homework_13.Model
         private static Repository instance;
         private static ObservableCollection<Department> departments;
         private static ObservableCollection<Client> clients;
-        private static ObservableCollection<Account> mainAccounts;
+        private static ObservableCollection<Account> accounts;
         private static ObservableCollection<IDeposit> deposites;
 
         private Repository()
         {
             Departments = new ObservableCollection<Department>();
             Clients = new ObservableCollection<Client>();
-            MainAccounts = new ObservableCollection<Account>();
+            Accounts = new ObservableCollection<Account>();
             Deposites = new ObservableCollection<IDeposit>();
 
             AddDepartment(new Department { Name = "Департамент_01" });
@@ -61,15 +61,15 @@ namespace Homework_13.Model
                 clients = value as ObservableCollection<Client>;
             }
         }
-        public static IReadOnlyCollection<Account> MainAccounts
+        public static IReadOnlyCollection<Account> Accounts
         {
             get
             {
-                return mainAccounts;
+                return accounts;
             }
             private set
             {
-                mainAccounts = value as ObservableCollection<Account>;
+                accounts = value as ObservableCollection<Account>;
             }
         }
         public static IReadOnlyCollection<IDeposit> Deposites
@@ -109,7 +109,7 @@ namespace Homework_13.Model
             if (client.Id == 0)
             {
                 client.Id = GetClientId();
-                mainAccounts.Add(new Account { Id = GetAccountId(), Balance = 0, ClientId = client.Id });
+                accounts.Add(new Account { Id = GetAccountId(), Balance = 0, ClientId = client.Id });
             }
             clients.Add(client);
         }
@@ -124,11 +124,11 @@ namespace Homework_13.Model
             {
                 account.Id = GetClientId();
             }
-            mainAccounts.Add(account);
+            accounts.Add(account);
         }
         public static void RemoveAccount(Account account)
         {
-            mainAccounts.Remove(account);
+            accounts.Remove(account);
         }
 
         public static void AddDeposit(Deposit deposit)
@@ -179,9 +179,9 @@ namespace Homework_13.Model
         private static int GetAccountId()
         {
             int accountId;
-            if (MainAccounts.Count != 0)
+            if (Accounts.Count != 0)
             {
-                int[] number = MainAccounts.Select(x => x.Id).ToArray();
+                int[] number = Accounts.Select(x => x.Id).ToArray();
                 int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
                 accountId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
             }

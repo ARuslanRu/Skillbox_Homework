@@ -57,28 +57,20 @@
             <ScrollViewer Grid.Column="2">
                 <StackPanel Margin="10">
                     <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="0.6*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Информация по клиенту"/>
-                            <Button Grid.Column="1" Content="Редактировать"/>
-                        </Grid>
-
+                        <TextBlock Grid.Column="0" FontWeight="Bold" Text="Информация по клиенту"/>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock  Margin="5" Text="Имя:"/>
-                            <TextBox Width="200" Margin="5" Text="{Binding ClientName, Mode=TwoWay}"/>
+                            <TextBlock Margin="5" Text="Имя:"/>
+                            <TextBlock Margin="5" Text="{Binding SelectedClient.Name}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Основной счет" Margin="5 0 5 0"/>
+                            <!--<TextBlock Text="Id:" FontWeight="Bold" Margin="5 0 5 0"/>
+                            <TextBlock Text="{Binding Account.Id}"/>-->
+                            <TextBlock Text="Баланс:" Margin="5 0 5 0" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Account.Balance}" Margin="5 0 5 0"/>
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Основной счет" Margin="5 0 5 0"/>
-                        <TextBlock Text="Id:" FontWeight="Bold" Margin="5 0 5 0"/>
-                        <TextBlock Text="{Binding MainAccount.Id}"/>
-                        <TextBlock Text="Баланс:" Margin="5 0 5 0" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding MainAccount.Balance}" Margin="5 0 5 0"/>
-                    </StackPanel>
 
 
                     <StackPanel>
@@ -88,7 +80,7 @@
                                 <ColumnDefinition Width="0.6*"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" FontWeight="Bold" Text="Вклады"/>
-                            <Button Grid.Column="1" Content="Открыть вклад"/>
+                            <Button Grid.Column="1" Content="Открыть вклад" Command="{Binding AddDeposit}"/>
                         </Grid>
 
                         <ListView ItemsSource="{Binding Deposites}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
@@ -130,7 +122,7 @@
                     <StackPanel>
 
                         <TextBlock FontWeight="Bold" Text="Переводы"/>
-                        <Button Content="Перевод между своими счетами"/>
+                        <!--<Button Content="Перевод между своими счетами"/>-->
                         <Button Content="Перевод другому клиенту"/>
 
                     </StackPanel>
