@@ -197,9 +197,8 @@ namespace Homework_13.ViewModel
                     {
                         OpenDepositWindow openDepositWindow = new OpenDepositWindow(account);
                         openDepositWindow.ShowDialog();
-
-                        //TODO: после открытия вклада нужно обновить список вкладов что бы вклад отобразился.
-                        //TODO: и обновить информацию об балансе на основном вкладе так как с него списались средства.
+                        Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
+                        Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
                     },
                     obj => SelectedClient != null));
             }

@@ -4,14 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Windows;
 
 namespace Homework_13.ViewModel
 {
     class OpenDepositViewModel : BaseViewModel
     {
         private Account account;
-        private decimal amount;
+        private string amount;
         private bool isWithCapitalization;
+        private string errorMessage;
 
         public Account Account
         {
@@ -22,13 +24,24 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged("Account");
             }
         }
-        public decimal Amount
+
+        public string Amount
         {
             get { return amount; }
             set
             {
                 this.amount = value;
                 OnPropertyChanged("Amount");
+            }
+        }
+
+        public string ErrorMessage
+        {
+            get { return errorMessage; }
+            set
+            {
+                this.errorMessage = value;
+                OnPropertyChanged("ErrorMessage");
             }
         }
 
@@ -59,7 +72,46 @@ namespace Homework_13.ViewModel
                 return confirmCommand ??
                     (confirmCommand = new RelayCommand(obj =>
                     {
-                        
+                        if (decimal.TryParse(amount, out decimal result))
+                        {
+                            if (result > Account.Balance)
+                            {
+                                ErrorMessage = "Недостаточно средств";
+                                return;
+                            }
+
+                            IDeposit deposit;
+                            if (isWithCapitalization)
+                            {
+                                deposit = new DepositWithCapitalization()
+                                {
+                                    Id = 0,
+                                    ClientId = Account.ClientId,
+                                    Name = "Депозит c капитализацией",
+                                    Balance = result,
+                                    CreateDate = DateTime.Now
+                                };
+                            }
+                            else
+                            {
+                                deposit = new Deposit()
+                                {
+                                    Id = 0,
+                                    ClientId = Account.ClientId,
+                                    Name = "Депозит",
+                                    Balance = result,
+                                    CreateDate = DateTime.Now
+                                };
+                            }
+
+                            Account.Balance -= result;
+                            Repository.AddDeposit(deposit);
+
+                            Window window = obj as Window;
+                            window.Close();
+                        }
+
+
                     }));
             }
         }

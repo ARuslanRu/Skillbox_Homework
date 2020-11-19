@@ -26,9 +26,10 @@ namespace Homework_13.Model
             AddDepartment(new Department { Name = "Департамент_01" });
             AddDepartment(new Department { Name = "Департамент_02" });
 
-            AddClient(new Client { Name = "Клиент_01", DepartmentId = 1 });
+            AddClient(new Client { Name = "Клиент_01", DepartmentId = 1, Id = 1 });
             AddClient(new Client { Name = "Клиент_02", DepartmentId = 1 });
             AddClient(new Client { Name = "Клиент_03", DepartmentId = 2 });
+            AddAcount(new Account { Balance = 10000, ClientId = 1, CreateDate = DateTime.Now, Id = 1 });
             AddDeposit(new Deposit { Name = "Вклад_01", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-3) });
         }
 
@@ -130,8 +131,7 @@ namespace Homework_13.Model
         {
             accounts.Remove(account);
         }
-
-        public static void AddDeposit(Deposit deposit)
+        public static void AddDeposit(IDeposit deposit)
         {
             if (deposit.Id == 0)
             {
@@ -139,7 +139,7 @@ namespace Homework_13.Model
             }
             deposites.Add(deposit);
         }
-        public static void RemoveDeposit(Deposit deposit)
+        public static void RemoveDeposit(IDeposit deposit)
         {
             deposites.Remove(deposit);
         }
