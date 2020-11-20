@@ -23,8 +23,9 @@ namespace Homework_13.Model
             Accounts = new ObservableCollection<Account>();
             Deposites = new ObservableCollection<IDeposit>();
 
-            AddDepartment(new Department { Name = "Департамент_01" });
-            AddDepartment(new Department { Name = "Департамент_02" });
+            AddDepartment(new Department { Name = "Департамент_01", ParentId = 0 });
+            AddDepartment(new Department { Name = "Департамент_02", ParentId = 0 });
+            AddDepartment(new Department { Name = "Департамент_03", ParentId = 1 });
 
             AddClient(new Client { Name = "Клиент_01", DepartmentId = 1, Id = 1 });
             AddClient(new Client { Name = "Клиент_02", DepartmentId = 1 });
@@ -103,7 +104,14 @@ namespace Homework_13.Model
                 Debug.Print($"Удален клиент: ID {client.Id} | Name {client.Name} | DepID {client.DepartmentId}");
             }
 
+            var childDepartments = Repository.Departments.Where(x => x.ParentId == department.Id).ToList();
+            foreach (var childDepartment in childDepartments)
+            {
+                Repository.RemoveDepartment(childDepartment);
+            }
+
             departments.Remove(department);
+            Debug.Print($"Удален клиент: ID {department.Id} | Name {department.Name}");
         }
         public static void AddClient(Client client)
         {

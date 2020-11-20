@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13"
+        xmlns:ctrl="clr-namespace:Homework_13.Control"
         mc:Ignorable="d"
         Title="Банк" Height="450" Width="800">
     <Grid>
@@ -15,13 +16,14 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="Департаменты">
-                <MenuItem Header="Добавить"  Command="{Binding AddDepartment}"/>
-                <MenuItem Header="Редактировать" Command="{Binding EditDepartment}"/>
+                <MenuItem Header="Добавить"  Command="{Binding AddDepartment}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <MenuItem Header="Добавить дочерний"  Command="{Binding AddChildDepartment}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <MenuItem Header="Редактировать" Command="{Binding EditDepartment}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
                 <MenuItem Header="Удалить"  Command="{Binding RemoveDepartment}"/>
             </MenuItem>
             <MenuItem Header="Клиенты">
-                <MenuItem Header="Добавить"  Command="{Binding AddClient}"/>
-                <MenuItem Header="Редактировать"  Command="{Binding EditClient}"/>
+                <MenuItem Header="Добавить"  Command="{Binding AddClient}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <MenuItem Header="Редактировать"  Command="{Binding EditClient}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
                 <MenuItem Header="Удалить"  Command="{Binding RemoveClient}"/>
             </MenuItem>
         </Menu>
@@ -33,16 +35,16 @@
                 <ColumnDefinition Width="350"/>
             </Grid.ColumnDefinitions>
 
-            <ListView Grid.Column="0" ItemsSource="{Binding Departments}" SelectedItem="{Binding SelectedDepartment}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
+            <ctrl:ExtendedTreeView Grid.Column="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Id}" Margin="2"/>
-                            <TextBlock Text="{Binding Name}" Margin="2"/>
+                            <TextBlock Text="{Binding Id}" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
                         </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </ctrl:ExtendedTreeView>
 
             <ListView Grid.Column="1" ItemsSource="{Binding ClientsInDepartment}" SelectedItem="{Binding SelectedClient}">
                 <ListView.View>

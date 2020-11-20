@@ -1,4 +1,5 @@
-﻿using Homework_13.Helper;
+﻿using Homework_13.Enum;
+using Homework_13.Helper;
 using Homework_13.Model;
 using Homework_13.View;
 using System;
@@ -9,12 +10,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Windows;
 
 namespace Homework_13.ViewModel
 {
     class MainWindowViewModel : BaseViewModel
     {
-
         #region fields
         private Department selectedDepartment;
         private ObservableCollection<Department> departments;
@@ -22,9 +23,12 @@ namespace Homework_13.ViewModel
         private IEnumerable<Client> clientsInDepartment;
         private Account account;
         private IEnumerable<IDeposit> deposites; //Переделать после добавления вкладов
+        private Node selectedNode;
+        private ObservableCollection<Node> nodes;
         //private IEnumerable<Credit> credits;
 
         #endregion
+
 
         #region properties
         public Department SelectedDepartment
@@ -84,13 +88,36 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged("Deposites");
             }
         }
+
+        public Node SelectedNode
+        {
+            get { return selectedNode; }
+            set
+            {
+                selectedNode = value;
+                SelectedDepartment = Repository.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
+                ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
+                OnPropertyChanged("SelectedNode");
+            }
+        }
+
+        public ObservableCollection<Node> Nodes
+        {
+            get { return nodes; }
+            set
+            {
+                nodes = value;
+                OnPropertyChanged("Nodes");
+            }
+        }
         #endregion
 
         #region constructor
         public MainWindowViewModel()
         {
             Repository.GetInstance();
-            departments = Repository.Departments as ObservableCollection<Department>;
+            Nodes = GetTreeViewNodes();
+            //departments = Repository.Departments as ObservableCollection<Department>;
         }
         #endregion
 
@@ -102,6 +129,7 @@ namespace Homework_13.ViewModel
         private RelayCommand editClient;
         private RelayCommand removeClient;
         private RelayCommand addDeposit;
+        private RelayCommand addChildDepartment;
 
         public RelayCommand AddDepartment
         {
@@ -110,8 +138,16 @@ namespace Homework_13.ViewModel
                 return addDepartment ??
                     (addDepartment = new RelayCommand(obj =>
                     {
-                        DepartmentWindow groupWindow = new DepartmentWindow();
-                        groupWindow.ShowDialog();
+                        if (Nodes == null)
+                        {
+                            Nodes = new ObservableCollection<Node>();
+                        }
+
+                        DepartmentWindow departmentWindow = new DepartmentWindow(ActionType.CREATE, Nodes);
+
+                        departmentWindow.Owner = obj as Window;
+                        departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        departmentWindow.ShowDialog();
                     }));
             }
         }
@@ -122,9 +158,28 @@ namespace Homework_13.ViewModel
                 return editDepartment ??
                     (editDepartment = new RelayCommand(obj =>
                     {
-                        DepartmentWindow departmentWindow = new DepartmentWindow(selectedDepartment);
+                        DepartmentWindow departmentWindow = new DepartmentWindow(ActionType.EDIT, null, selectedDepartment);
+                        departmentWindow.Owner = obj as Window;
+                        departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
+                        SelectedNode.Name = SelectedDepartment.Name;
                     },
+                    obj => SelectedDepartment != null));
+            }
+        }
+        public RelayCommand AddChildDepartment
+        {
+            get
+            {
+                return addChildDepartment ??
+                    (addChildDepartment = new RelayCommand(obj =>
+                    {
+                        ObservableCollection<Node> ChildNodes = SelectedNode.Nodes;
+                        DepartmentWindow departmentWindow = new DepartmentWindow(ActionType.CREATE, ChildNodes, selectedDepartment);
+                        departmentWindow.Owner = obj as Window;
+                        departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        departmentWindow.ShowDialog();
+                    }, 
                     obj => SelectedDepartment != null));
             }
         }
@@ -136,6 +191,8 @@ namespace Homework_13.ViewModel
                     (removeDepartment = new RelayCommand(obj =>
                     {
                         Repository.RemoveDepartment(SelectedDepartment);
+                        ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
+                        parentNode.Remove(SelectedNode);
                         ClientsInDepartment = null; //Для обновления отображения пустого списка клиентов
                     },
                     obj => SelectedDepartment != null));
@@ -203,6 +260,71 @@ namespace Homework_13.ViewModel
                     obj => SelectedClient != null));
             }
         }
+        #endregion
+
+        #region Приватные методы
+
+        /// <summary>
+        /// Формируем узлы для TreeView из департаментов
+        /// </summary>
+        /// <param name="dep"></param>
+        /// <returns></returns>
+        private ObservableCollection<Node> GetTreeViewNodes(Department department = null)
+        {
+            ObservableCollection<Node> nodes = new ObservableCollection<Node>();
+
+            if (department == null)
+            {
+                var rootDep = Repository.Departments.Where(x => x.ParentId == 0).ToList();
+                rootDep.ForEach(e =>
+                {
+                    var node = new Node(e.Id, e.Name);
+                    node.Nodes = GetTreeViewNodes(e);
+                    nodes.Add(node);
+                });
+                return nodes;
+            }
+            else
+            {
+                var subDep = Repository.Departments.Where(x => x.ParentId == department.Id).ToList();
+                subDep.ForEach(e =>
+                {
+                    var node = new Node(e.Id, e.Name);
+                    node.Nodes = GetTreeViewNodes(e);
+                    nodes.Add(node);
+                });
+                return nodes;
+            }
+        }
+
+        /// <summary>
+        /// Получает коллекцию содержащую узел который необходимо удалить
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
+        {
+            ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
+
+            if (nodes.Contains(node))
+            {
+                resultCollection = nodes;
+            }
+            else
+            {
+                foreach (var item in nodes)
+                {
+                    resultCollection = GetParentNode(item.Nodes, node);
+                    if (resultCollection.Count != 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            return resultCollection;
+        }
+
         #endregion
     }
 }
