@@ -125,7 +125,7 @@
 
                         <TextBlock FontWeight="Bold" Text="Переводы"/>
                         <!--<Button Content="Перевод между своими счетами"/>-->
-                        <Button Content="Перевод другому клиенту"/>
+                        <Button Content="Перевод другому клиенту" Command="{Binding SendTo}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
 
                     </StackPanel>
 

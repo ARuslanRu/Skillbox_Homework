@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Homework_13.Model;
+using Homework_13.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -17,9 +19,10 @@ namespace Homework_13.View
     /// </summary>
     public partial class TransferBetweenAccountsWindow : Window
     {
-        public TransferBetweenAccountsWindow()
+        public TransferBetweenAccountsWindow(Account account)
         {
             InitializeComponent();
+            DataContext = new TransferBetweenAccountsViewModel(account);
         }
     }
 }

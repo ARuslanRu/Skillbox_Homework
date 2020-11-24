@@ -1,32 +1,38 @@
-﻿using Homework_13.Model;
+﻿using Homework_13.Helper;
+using Homework_13.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace Homework_13.ViewModel
 {
-    class TransferBetweenAccountsViewModel : BaseViewModel
+    class TransferBetweenAccountsViewModel : BaseViewModel, IDataErrorInfo
     {
 
         #region fields
-        private decimal amount;
-        private Account selectedFromAccount;
-        private Account selectedToAccount;
-
-        private IEnumerable<Account> fromAccounts;
-        private IEnumerable<Account> toAccounts;
+        private string amount;
+        private Client selectedRecipient;
+        private Account senderAccount;
+        private IEnumerable<Client> recipients;
+        private string errorMessage;
+        private RelayCommand confirmCommand;
         #endregion
 
         #region constructors
-        public TransferBetweenAccountsViewModel(Client client)
+        public TransferBetweenAccountsViewModel(Account account)
         {
-            //TODO: Сперва сделать открытие счетов и вкладов 
+            SenderAccount = account;
+            Recipients = Repository.Clients.Where(x => x.Id != SenderAccount.ClientId);
+
         }
 
         #endregion
 
         #region properties
-        public decimal Amount
+        public string Amount
         {
             get { return amount; }
             set
@@ -36,46 +42,107 @@ namespace Homework_13.ViewModel
             }
         }
 
-        public Account SelectedFromAccount
+        public Client SelectedRecipient
         {
-            get { return selectedFromAccount; }
+            get { return selectedRecipient; }
             set
             {
-                this.selectedFromAccount = value;
-                OnPropertyChanged("SelectedFromAccount");
+                this.selectedRecipient = value;
+                OnPropertyChanged("SelectedRecipient");
             }
         }
 
-        public Account SelectedToAccount
+        public Account SenderAccount
         {
-            get { return selectedToAccount; }
+            get { return senderAccount; }
             set
             {
-                this.selectedToAccount = value;
-                OnPropertyChanged("SelectedToAccount");
+                this.senderAccount = value;
+                OnPropertyChanged("SenderAccount");
             }
         }
 
-        public IEnumerable<Account> FromAccounts
+        public IEnumerable<Client> Recipients
         {
-            get { return fromAccounts; }
+            get { return recipients; }
             set
             {
-                this.fromAccounts = value;
-                OnPropertyChanged("FromAccounts");
+                this.recipients = value;
+                OnPropertyChanged("Recipients");
             }
         }
 
-        public IEnumerable<Account> ToAccounts
+        public string ErrorMessage
         {
-            get { return toAccounts; }
+            get { return errorMessage; }
             set
             {
-                this.toAccounts = value;
-                OnPropertyChanged("ToAccounts");
+                this.errorMessage = value;
+                OnPropertyChanged("ErrorMessage");
             }
         }
+
         #endregion
 
+        #region commands
+
+        public RelayCommand ConfirmCommand
+        {
+            get
+            {
+                return confirmCommand ??
+                    (confirmCommand = new RelayCommand(obj =>
+                    {
+                        Account recipientAccount = Repository.Accounts.Where(x => x.ClientId == SelectedRecipient.Id).FirstOrDefault();
+                        decimal amountDecimal = decimal.Parse(Amount);
+                        SenderAccount.sendTo(recipientAccount, amountDecimal);
+                        Window window = obj as Window;
+                        window.Close();
+                    }
+                    , obj => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(Amount) && SelectedRecipient != null));
+            }
+        }
+
+
+        #endregion
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    case "Amount":
+                        if (!string.IsNullOrEmpty(Amount))
+                        {
+                            if (decimal.TryParse(amount, out decimal result))
+                            {
+                                if (result <= 0)
+                                {
+                                    error = "Сумма должна быть больше 0";
+                                }
+
+                                if (result > SenderAccount.Balance)
+                                {
+                                    error = "Сумма превышает сумму на счете списания";
+                                }
+                            }
+                            else
+                            {
+                                error = "Введены недопустимые символы";
+                            }
+                        }
+                        break;
+
+                }
+                ErrorMessage = error;
+                return error;
+            }
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

@@ -107,7 +107,7 @@ namespace Homework_13.ViewModel
 
 
                     },
-                    obj => string.IsNullOrEmpty(ErrorMessage)));
+                    obj => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(Amount)));
             }
         }
 

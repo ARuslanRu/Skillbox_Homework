@@ -130,6 +130,7 @@ namespace Homework_13.ViewModel
         private RelayCommand removeClient;
         private RelayCommand addDeposit;
         private RelayCommand addChildDepartment;
+        private RelayCommand sendTo;
 
         public RelayCommand AddDepartment
         {
@@ -256,6 +257,22 @@ namespace Homework_13.ViewModel
                         openDepositWindow.ShowDialog();
                         Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
                         Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                    },
+                    obj => SelectedClient != null));
+            }
+        }
+        public RelayCommand SendTo
+        {
+            get
+            {
+                return sendTo ??
+                    (sendTo = new RelayCommand(obj =>
+                    {
+                        Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                        TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow(Account);
+                        transferBetweenAccountsWindow.Owner = obj as Window;
+                        transferBetweenAccountsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                        transferBetweenAccountsWindow.ShowDialog();
                     },
                     obj => SelectedClient != null));
             }

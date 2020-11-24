@@ -10,9 +10,7 @@ namespace Homework_13.Model
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
-        //public string Name { get; set; }
         public DateTime CreateDate { get; set; }
-        //public decimal Balance { get; set; }
 
         private decimal balance;
         public decimal Balance
@@ -40,13 +38,13 @@ namespace Homework_13.Model
                 return false;
             }
 
-            if (amount > balance)
+            if (amount > Balance)
             {
                 return false;
             }
 
-            recipient.balance += amount;
-            this.balance -= amount;
+            recipient.Balance += amount;
+            this.Balance -= amount;
 
             return true;
         }
