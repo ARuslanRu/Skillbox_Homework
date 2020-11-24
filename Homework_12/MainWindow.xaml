@@ -1,0 +1,97 @@
+﻿<Window x:Class="Homework_12.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Homework_12"
+        xmlns:ctrl="clr-namespace:Homework_12.Control"
+        xmlns:vm="clr-namespace:Homework_12.ViewModel"
+        mc:Ignorable="d"
+        Title="Основное окно" Height="450" Width="800">
+    
+
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height ="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Загрузить из Json" Command="{Binding LoadFromJson}"></MenuItem>
+                <MenuItem Header="Сохранить в Json" Command="{Binding SaveToJson}"></MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ctrl:ExtendedTreeView Grid.Column="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                        <Border BorderThickness="1" BorderBrush="Gray">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Left" Margin="0 0 10 0"/>
+                                <TextBlock Text="{Binding Name}" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Border>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </ctrl:ExtendedTreeView>
+
+            <ListView Grid.Column="1" ItemsSource="{Binding EmployeesInDepartment}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Id}" Width="25">
+                            <GridViewColumnHeader Command="{Binding SortById}" Content="ИД"/>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Position}" Width="100">
+                            <GridViewColumnHeader Command="{Binding SortByPosition}" Content="Должность"/>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Name}" Width="200">
+                            <GridViewColumnHeader Command="{Binding SortByName}" Content="Имя"/>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Salary}" Width="200">
+                            <GridViewColumnHeader Command="{Binding SortBySalary}" Content="Зарплата"/>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                <Button Content="Добавить департамент"
+                        Command="{Binding AddDepartment}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Редактировать департамент" 
+                        Command="{Binding UpdateDepartment}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Удалить департамент"
+                        Command="{Binding DeleteDepartment}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                <Button Content="Добавить сотрудника"
+                        Command="{Binding AddEmployee}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Редактировать сотрудника" 
+                        Command="{Binding UpdateEmployee}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
+                <Button Content="Удалить сотрудника"
+                        Command="{Binding DeleteEmployee}"/>
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</Window>
