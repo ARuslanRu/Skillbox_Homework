@@ -31,6 +31,14 @@ namespace Homework_13.ViewModel
             set
             {
                 this.amount = value;
+                if (isAmount(amount))
+                {
+                    ErrorMessage = "";
+                }
+                else
+                {
+                    ErrorMessage = "Введены недопустимые символы";
+                }
                 OnPropertyChanged("Amount");
             }
         }
@@ -113,26 +121,19 @@ namespace Homework_13.ViewModel
 
 
                     },
-                    obj => {
-                        if (string.IsNullOrEmpty(Amount))
-                        {
-                            ErrorMessage = "";
-                            return false;
-                        }
-
-                        if(decimal.TryParse(Amount, out decimal result))
-                        {
-                            ErrorMessage = "";
-                            return true;
-                        }
-
-
-                        ErrorMessage = "введены недопустимые символы";
-                        return false;
-                    }));
+                    obj => !string.IsNullOrEmpty(Amount) && isAmount(amount)));
             }
         }
 
+        private bool isAmount(String amount)
+        {
+            if (decimal.TryParse(amount, out decimal result) || string.IsNullOrEmpty(Amount))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
     }
 }
