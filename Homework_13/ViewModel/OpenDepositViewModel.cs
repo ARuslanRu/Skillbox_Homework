@@ -72,7 +72,7 @@ namespace Homework_13.ViewModel
                 return confirmCommand ??
                     (confirmCommand = new RelayCommand(obj =>
                     {
-                        if (decimal.TryParse(amount, out decimal result))
+                        if (decimal.TryParse(Amount, out decimal result))
                         {
                             if (result > Account.Balance)
                             {
@@ -112,6 +112,23 @@ namespace Homework_13.ViewModel
                         }
 
 
+                    },
+                    obj => {
+                        if (string.IsNullOrEmpty(Amount))
+                        {
+                            ErrorMessage = "";
+                            return false;
+                        }
+
+                        if(decimal.TryParse(Amount, out decimal result))
+                        {
+                            ErrorMessage = "";
+                            return true;
+                        }
+
+
+                        ErrorMessage = "введены недопустимые символы";
+                        return false;
                     }));
             }
         }
