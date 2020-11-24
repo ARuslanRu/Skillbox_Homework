@@ -23,7 +23,16 @@
         </DockPanel>
         <DockPanel LastChildFill="True" Margin="5">
             <TextBlock Text="Сумма: " TextAlignment="Right" MinWidth="150"/>
-            <TextBox HorizontalAlignment="Stretch" Text="{Binding Amount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            
+            <TextBox HorizontalAlignment="Stretch">
+            <TextBox.Text>
+                    <Binding Path="Amount" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <DataErrorValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+            </TextBox>
         </DockPanel>
         <DockPanel LastChildFill="True" Margin="5">
             <TextBlock TextAlignment="Center" Text="{Binding ErrorMessage}" Foreground="Red"/>

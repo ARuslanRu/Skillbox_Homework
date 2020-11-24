@@ -32,5 +32,23 @@ namespace Homework_13.Model
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
+        public bool sendTo(Account recipient, decimal amount)
+        {
+            if (amount <= 0)
+            {
+                return false;
+            }
+
+            if (amount > balance)
+            {
+                return false;
+            }
+
+            recipient.balance += amount;
+            this.balance -= amount;
+
+            return true;
+        }
     }
 }

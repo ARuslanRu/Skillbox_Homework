@@ -2,13 +2,14 @@
 using Homework_13.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
 
 namespace Homework_13.ViewModel
 {
-    class OpenDepositViewModel : BaseViewModel
+    class OpenDepositViewModel : BaseViewModel, IDataErrorInfo
     {
         private Account account;
         private string amount;
@@ -31,14 +32,6 @@ namespace Homework_13.ViewModel
             set
             {
                 this.amount = value;
-                if (isAmount(amount))
-                {
-                    ErrorMessage = "";
-                }
-                else
-                {
-                    ErrorMessage = "Введены недопустимые символы";
-                }
                 OnPropertyChanged("Amount");
             }
         }
@@ -67,7 +60,6 @@ namespace Homework_13.ViewModel
                     (selectRadioButton = new RelayCommand(obj =>
                     {
                         isWithCapitalization = Boolean.Parse((string)obj);
-                        //Debug.Print("isWithCapitalization: " + isWithCapitalization.ToString());
                     }));
             }
         }
@@ -82,12 +74,6 @@ namespace Homework_13.ViewModel
                     {
                         if (decimal.TryParse(Amount, out decimal result))
                         {
-                            if (result > Account.Balance)
-                            {
-                                ErrorMessage = "Недостаточно средств";
-                                return;
-                            }
-
                             IDeposit deposit;
                             if (isWithCapitalization)
                             {
@@ -121,18 +107,48 @@ namespace Homework_13.ViewModel
 
 
                     },
-                    obj => !string.IsNullOrEmpty(Amount) && isAmount(amount)));
+                    obj => string.IsNullOrEmpty(ErrorMessage)));
             }
         }
 
-        private bool isAmount(String amount)
-        {
-            if (decimal.TryParse(amount, out decimal result) || string.IsNullOrEmpty(Amount))
-            {
-                return true;
-            }
 
-            return false;
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    case "Amount":
+                        if (!string.IsNullOrEmpty(Amount))
+                        {
+                            if (decimal.TryParse(amount, out decimal result))
+                            {
+                                if (result <= 0)
+                                {
+                                    error = "Сумма должна быть больше 0";
+                                }
+
+                                if (result > Account.Balance)
+                                {
+                                    error = "Сумма превышает сумму на счете списания";
+                                }
+                            }
+                            else
+                            {
+                                error = "Введены недопустимые символы";
+                            }
+                        }
+                        break;
+
+                }
+                ErrorMessage = error;
+                return error;
+            }
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
         }
 
     }
