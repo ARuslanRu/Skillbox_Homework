@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Homework_13.Model
 {
-    public class Client : INotifyPropertyChanged
+    public class Client : INotifyPropertyChanged, IIdentity
     {
         public int Id { get; set; }
 

@@ -9,7 +9,6 @@ namespace Homework_13.Model
 {
     class Repository
     {
-
         private static Repository instance;
         private static ObservableCollection<Department> departments;
         private static ObservableCollection<Client> clients;
@@ -88,12 +87,11 @@ namespace Homework_13.Model
                 deposites = value as ObservableCollection<IDeposit>;
             }
         }
-
         public static void AddDepartment(Department department)
         {
             if (department.Id == 0)
             {
-                department.Id = GetDepartmentId();
+                department.Id = GetId<Department>(departments);
             }
 
             departments.Add(department);
@@ -120,8 +118,8 @@ namespace Homework_13.Model
         {
             if (client.Id == 0)
             {
-                client.Id = GetClientId();
-                accounts.Add(new Account { Id = GetAccountId(), Balance = 0, ClientId = client.Id });
+                client.Id = GetId<Client>(clients);
+                accounts.Add(new Account { Id = GetId<Account>(accounts), Balance = 0, ClientId = client.Id });
             }
             clients.Add(client);
         }
@@ -134,7 +132,7 @@ namespace Homework_13.Model
         {
             if (account.Id == 0)
             {
-                account.Id = GetClientId();
+                account.Id = GetId<Account>(accounts);
             }
             accounts.Add(account);
         }
@@ -146,7 +144,7 @@ namespace Homework_13.Model
         {
             if (deposit.Id == 0)
             {
-                deposit.Id = GetDepositId();
+                deposit.Id = GetId<IDeposit>(deposites);
             }
             deposites.Add(deposit);
         }
@@ -157,68 +155,21 @@ namespace Homework_13.Model
 
 
         #region Возможно тут как раз можно использовать Generic
-        private static int GetDepartmentId()
+        private static int GetId<T>(ObservableCollection<T> collections) where T : IIdentity
         {
-            int departmentId;
-            if (Departments.Count != 0)
+            int id;
+            if (collections.Count != 0)
             {
-                int[] number = Departments.Select(x => x.Id).ToArray();
+                int[] number = collections.Select(x => x.Id).ToArray();
                 int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
-                departmentId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
+                id = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
             }
             else
             {
-                departmentId = 1;
+                id = 1;
             }
-            return departmentId;
+            return id;
         }
-        private static int GetClientId()
-        {
-            int clientId;
-            if (Clients.Count != 0)
-            {
-                int[] number = Clients.Select(x => x.Id).ToArray();
-                int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
-                clientId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
-            }
-            else
-            {
-                clientId = 1;
-            }
-            return clientId;
-        }
-        private static int GetAccountId()
-        {
-            int accountId;
-            if (Accounts.Count != 0)
-            {
-                int[] number = Accounts.Select(x => x.Id).ToArray();
-                int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
-                accountId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
-            }
-            else
-            {
-                accountId = 1;
-            }
-            return accountId;
-        }
-
-        private static int GetDepositId()
-        {
-            int depositId;
-            if (Deposites.Count != 0)
-            {
-                int[] number = Deposites.Select(x => x.Id).ToArray();
-                int[] missingNumbers = Enumerable.Range(1, number[number.Length - 1]).Except(number).ToArray();
-                depositId = missingNumbers.Length == 0 ? number.Max() + 1 : missingNumbers.FirstOrDefault();
-            }
-            else
-            {
-                depositId = 1;
-            }
-            return depositId;
-        }
-
 
         #endregion
     }
