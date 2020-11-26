@@ -111,7 +111,6 @@ namespace Homework_13.ViewModel
             }
         }
 
-
         public string this[string columnName]
         {
             get

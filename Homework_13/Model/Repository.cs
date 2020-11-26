@@ -98,21 +98,20 @@ namespace Homework_13.Model
         }
         public static void RemoveDepartment(Department department)
         {
-            var clients = Repository.Clients.Where(x => x.DepartmentId == department.Id).ToList();
+            var clients = Clients.Where(x => x.DepartmentId == department.Id).ToList();
             foreach (var client in clients)
             {
-                Repository.RemoveClient(client);
-                Debug.Print($"Удален клиент: ID {client.Id} | Name {client.Name} | DepID {client.DepartmentId}");
+                RemoveClient(client);
             }
 
-            var childDepartments = Repository.Departments.Where(x => x.ParentId == department.Id).ToList();
+            var childDepartments = Departments.Where(x => x.ParentId == department.Id).ToList();
             foreach (var childDepartment in childDepartments)
             {
-                Repository.RemoveDepartment(childDepartment);
+                RemoveDepartment(childDepartment);
             }
 
             departments.Remove(department);
-            Debug.Print($"Удален клиент: ID {department.Id} | Name {department.Name}");
+            Debug.Print($"Удален департамент: ID {department.Id} | Name {department.Name}");
         }
         public static void AddClient(Client client)
         {
@@ -125,8 +124,20 @@ namespace Homework_13.Model
         }
         public static void RemoveClient(Client client)
         {
-            //TODO: Удалять у клиента все счета, вклады и кредиты. После этого удалять самого клиента.
+            var clientAccounts = Accounts.Where(x => x.ClientId == client.Id).ToList();
+            foreach (var account in clientAccounts)
+            {
+                RemoveAccount(account);
+            }
+
+            var clientDeposits = Deposites.Where(x => x.ClientId == client.Id).ToList();
+            foreach (var deposit in clientDeposits)
+            {
+                RemoveDeposit(deposit);             
+            }
+
             clients.Remove(client);
+            Debug.Print($"Удален клиент: ID {client.Id} | Name {client.Name} | DepID {client.DepartmentId}");
         }
         public static void AddAcount(Account account)
         {
@@ -139,6 +150,7 @@ namespace Homework_13.Model
         public static void RemoveAccount(Account account)
         {
             accounts.Remove(account);
+            Debug.Print($"Удален счет: ID {account.Id}");
         }
         public static void AddDeposit(IDeposit deposit)
         {
@@ -151,6 +163,7 @@ namespace Homework_13.Model
         public static void RemoveDeposit(IDeposit deposit)
         {
             deposites.Remove(deposit);
+            Debug.Print($"Удален депосит: ID {deposit.Id} | Name {deposit.Name}");
         }
 
 

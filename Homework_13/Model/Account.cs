@@ -19,15 +19,14 @@ namespace Homework_13.Model
             set
             {
                 balance = value;
-                OnPropertyChanged("Balance");
+                OnPropertyChanged();
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         public bool sendTo(Account recipient, decimal amount)

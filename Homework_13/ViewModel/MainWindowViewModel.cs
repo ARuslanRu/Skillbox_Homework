@@ -38,7 +38,7 @@ namespace Homework_13.ViewModel
             {
                 selectedDepartment = value;
                 ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == selectedDepartment.Id);
-                OnPropertyChanged("SelectedDepartment");
+                OnPropertyChanged();
             }
         }
         public ObservableCollection<Department> Departments
@@ -47,7 +47,7 @@ namespace Homework_13.ViewModel
             set
             {
                 departments = value;
-                OnPropertyChanged("Departments");
+                OnPropertyChanged();
             }
         }
         public Client SelectedClient
@@ -58,7 +58,7 @@ namespace Homework_13.ViewModel
                 selectedClient = value;
                 Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
                 Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
-                OnPropertyChanged("SelectedClient");
+                OnPropertyChanged();
             }
         }
         public IEnumerable<Client> ClientsInDepartment
@@ -67,7 +67,7 @@ namespace Homework_13.ViewModel
             set
             {
                 clientsInDepartment = value;
-                OnPropertyChanged("ClientsInDepartment");
+                OnPropertyChanged();
             }
         }
         public Account Account
@@ -76,7 +76,7 @@ namespace Homework_13.ViewModel
             set
             {
                 account = value;
-                OnPropertyChanged("Account");
+                OnPropertyChanged();
             }
         }
         public IEnumerable<IDeposit> Deposites
@@ -85,7 +85,7 @@ namespace Homework_13.ViewModel
             set
             {
                 deposites = value;
-                OnPropertyChanged("Deposites");
+                OnPropertyChanged();
             }
         }
 
@@ -97,7 +97,7 @@ namespace Homework_13.ViewModel
                 selectedNode = value;
                 SelectedDepartment = Repository.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
                 ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
-                OnPropertyChanged("SelectedNode");
+                OnPropertyChanged();
             }
         }
 
@@ -107,7 +107,7 @@ namespace Homework_13.ViewModel
             set
             {
                 nodes = value;
-                OnPropertyChanged("Nodes");
+                OnPropertyChanged();
             }
         }
         #endregion
