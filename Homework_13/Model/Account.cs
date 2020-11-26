@@ -23,7 +23,6 @@ namespace Homework_13.Model
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName]string prop = "")
         {

@@ -31,7 +31,10 @@ namespace Homework_13.Model
             AddClient(new Client { Name = "Клиент_02", DepartmentId = 1 });
             AddClient(new Client { Name = "Клиент_03", DepartmentId = 2 });
             AddAcount(new Account { Balance = 10000, ClientId = 1, CreateDate = DateTime.Now, Id = 1 });
-            AddDeposit(new Deposit { Name = "Вклад_01", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-3) });
+            AddDeposit(new Deposit { Name = "Вклад открытый 3 месяца назад", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-3) });
+            AddDeposit(new Deposit { Name = "Вклад открытый 12 месяца назад", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-12) });
+            AddDeposit(new DepositWithCapitalization { Name = "С капитализацией открытый 3 месяца назад", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-3) });
+            AddDeposit(new DepositWithCapitalization { Name = "С капитализацией открытый 6 месяца назад", ClientId = Clients.First().Id, Balance = 1000, CreateDate = DateTime.Now.AddMonths(-6) });
         }
 
         public static Repository GetInstance()

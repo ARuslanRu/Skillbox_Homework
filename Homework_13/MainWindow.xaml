@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13"
         xmlns:ctrl="clr-namespace:Homework_13.Control"
+        xmlns:conv="clr-namespace:Homework_13.Converter"
         mc:Ignorable="d"
         Title="Банк" Height="450" Width="800">
+    <Window.Resources>
+        <conv:DecimalToFormatStringConverter x:Key="decimalToFormatStringConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
@@ -66,10 +70,8 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Основной счет" Margin="5 0 5 0"/>
-                            <!--<TextBlock Text="Id:" FontWeight="Bold" Margin="5 0 5 0"/>
-                            <TextBlock Text="{Binding Account.Id}"/>-->
                             <TextBlock Text="Баланс:" Margin="5 0 5 0" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Account.Balance}" Margin="5 0 5 0"/>
+                            <TextBlock Text="{Binding Account.Balance, Converter={StaticResource decimalToFormatStringConverter}}" Margin="5 0 5 0"/>
                         </StackPanel>
                     </StackPanel>
 
@@ -91,42 +93,17 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Id}" Margin="2"/>
                                         <TextBlock Text="{Binding Name}" Margin="2"/>
-                                        <TextBlock Text="{Binding Balance}" Margin="2"/>
+                                        <TextBlock Text="{Binding Balance, Converter={StaticResource decimalToFormatStringConverter}}" Margin="2"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                     </StackPanel>
 
-                    <!--<StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="0.6*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" FontWeight="Bold" Text="Кредиты"/>
-                            <Button Grid.Column="1" Content="Открыть кредит"/>
-                        </Grid>
-
-                        <ListView ItemsSource="{Binding Accounts}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Id}" Margin="2"/>
-                                        <TextBlock Text="{Binding Name}" Margin="2"/>
-                                        <TextBlock Text="{Binding Balance}" Margin="2"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </StackPanel>-->
-
+                    
                     <StackPanel>
-
                         <TextBlock FontWeight="Bold" Text="Переводы"/>
-                        <!--<Button Content="Перевод между своими счетами"/>-->
                         <Button Content="Перевод другому клиенту" Command="{Binding SendTo}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>
-
                     </StackPanel>
 
                 </StackPanel>
