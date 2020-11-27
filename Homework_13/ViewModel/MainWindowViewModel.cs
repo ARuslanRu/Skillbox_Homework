@@ -118,6 +118,7 @@ namespace Homework_13.ViewModel
         {
             Repository.GetInstance();
             Nodes = GetTreeViewNodes();
+            Account.Notify += Account_Notify;
             //departments = Repository.Departments as ObservableCollection<Department>;
         }
         #endregion
@@ -270,7 +271,7 @@ namespace Homework_13.ViewModel
                     (sendTo = new RelayCommand(obj =>
                     {
                         Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
-                        Account.Notify += Account_Notify;
+                        //Account.Notify += Account_Notify;
                         TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow(Account);
                         transferBetweenAccountsWindow.Owner = obj as Window;
                         transferBetweenAccountsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;

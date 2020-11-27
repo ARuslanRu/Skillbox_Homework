@@ -10,19 +10,20 @@ namespace Homework_13.Model
     public class Account : INotifyPropertyChanged, IIdentity
     {
         public delegate void AccountHandler(object sender, AccountEventArgs e);
-        private event AccountHandler notify; 
-        public event AccountHandler Notify
-        {
-            add
-            {
-                if (notify != null) return;
-                notify += value;
-            }
-            remove
-            {
-                notify -= value;
-            }
-        }
+        public static event AccountHandler Notify;
+        //private event AccountHandler notify; 
+        //public event AccountHandler Notify
+        //{
+        //    add
+        //    {
+        //        if (notify != null) return;
+        //        notify += value;
+        //    }
+        //    remove
+        //    {
+        //        notify -= value;
+        //    }
+        //}
 
 
         public int Id { get; set; }
@@ -59,7 +60,7 @@ namespace Homework_13.Model
                 return false;
             }
 
-            notify?.Invoke(this, new AccountEventArgs($"Со счета {this.Id} на счет {recipient.Id} переведена суммма {amount}", amount));
+            Notify?.Invoke(this, new AccountEventArgs($"Со счета {this.Id} на счет {recipient.Id} переведена суммма {amount}", amount));
             recipient.Balance += amount;
             this.Balance -= amount;
 
