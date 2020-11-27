@@ -22,7 +22,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.account = value;
-                OnPropertyChanged("Account");
+                OnPropertyChanged();
             }
         }
 
@@ -32,7 +32,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.amount = value;
-                OnPropertyChanged("Amount");
+                OnPropertyChanged();
             }
         }
 
@@ -42,7 +42,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.errorMessage = value;
-                OnPropertyChanged("ErrorMessage");
+                OnPropertyChanged();
             }
         }
 

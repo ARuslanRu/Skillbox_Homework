@@ -38,7 +38,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.amount = value;
-                OnPropertyChanged("Amount");
+                OnPropertyChanged();
             }
         }
 
@@ -48,7 +48,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.selectedRecipient = value;
-                OnPropertyChanged("SelectedRecipient");
+                OnPropertyChanged();
             }
         }
 
@@ -58,7 +58,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.senderAccount = value;
-                OnPropertyChanged("SenderAccount");
+                OnPropertyChanged();
             }
         }
 
@@ -68,7 +68,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.recipients = value;
-                OnPropertyChanged("Recipients");
+                OnPropertyChanged();
             }
         }
 
@@ -78,7 +78,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.errorMessage = value;
-                OnPropertyChanged("ErrorMessage");
+                OnPropertyChanged();
             }
         }
 
@@ -95,11 +95,11 @@ namespace Homework_13.ViewModel
                     {
                         Account recipientAccount = Repository.Accounts.Where(x => x.ClientId == SelectedRecipient.Id).FirstOrDefault();
                         decimal amountDecimal = decimal.Parse(Amount);
-                        SenderAccount.sendTo(recipientAccount, amountDecimal);
+                        SenderAccount.SendTo(recipientAccount, amountDecimal);
                         Window window = obj as Window;
                         window.Close();
-                    }
-                    , obj => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(Amount) && SelectedRecipient != null));
+                    },
+                    obj => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(Amount) && SelectedRecipient != null));
             }
         }
 

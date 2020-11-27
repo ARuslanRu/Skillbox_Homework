@@ -1,6 +1,7 @@
 ﻿using Homework_13.Enum;
 using Homework_13.Helper;
 using Homework_13.Model;
+using Homework_13.Model.Event;
 using Homework_13.View;
 using System;
 using System.Collections.Generic;
@@ -269,6 +270,7 @@ namespace Homework_13.ViewModel
                     (sendTo = new RelayCommand(obj =>
                     {
                         Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                        Account.Notify += Account_Notify;
                         TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow(Account);
                         transferBetweenAccountsWindow.Owner = obj as Window;
                         transferBetweenAccountsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -277,6 +279,12 @@ namespace Homework_13.ViewModel
                     obj => SelectedClient != null));
             }
         }
+
+        private void Account_Notify(object sender, AccountEventArgs e)
+        {
+            Debug.Print(e.Message);
+        }
+
         #endregion
 
         #region Приватные методы

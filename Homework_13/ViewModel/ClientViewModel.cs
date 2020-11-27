@@ -40,7 +40,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged();
             }
         }
 
@@ -50,7 +50,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.selectedDepartment = value;
-                OnPropertyChanged("SelectedDepartment");
+                OnPropertyChanged();
             }
         }
 
@@ -60,7 +60,7 @@ namespace Homework_13.ViewModel
             set
             {
                 this.departments = value;
-                OnPropertyChanged("Departments");
+                OnPropertyChanged();
             }
         }
 

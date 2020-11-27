@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Homework_13.Model.Event;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,22 @@ namespace Homework_13.Model
 {
     public class Account : INotifyPropertyChanged, IIdentity
     {
+        public delegate void AccountHandler(object sender, AccountEventArgs e);
+        private event AccountHandler notify; 
+        public event AccountHandler Notify
+        {
+            add
+            {
+                if (notify != null) return;
+                notify += value;
+            }
+            remove
+            {
+                notify -= value;
+            }
+        }
+
+
         public int Id { get; set; }
         public int ClientId { get; set; }
         public DateTime CreateDate { get; set; }
@@ -29,7 +46,8 @@ namespace Homework_13.Model
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-        public bool sendTo(Account recipient, decimal amount)
+
+        public bool SendTo(Account recipient, decimal amount)
         {
             if (amount <= 0)
             {
@@ -41,6 +59,7 @@ namespace Homework_13.Model
                 return false;
             }
 
+            notify?.Invoke(this, new AccountEventArgs($"Со счета {this.Id} на счет {recipient.Id} переведена суммма {amount}", amount));
             recipient.Balance += amount;
             this.Balance -= amount;
 

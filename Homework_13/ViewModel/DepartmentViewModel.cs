@@ -22,7 +22,7 @@ namespace Homework_13.ViewModel
             set
             {
                 name = value;
-                OnPropertyChanged("Name");
+                OnPropertyChanged();
             }
         }
 
