@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -120,6 +121,7 @@ namespace Homework_13.ViewModel
             Repository.GetInstance();
             Nodes = GetTreeViewNodes();
             Account.Notify += Account_Notify;
+            Account.Notify += Logging;
         }
         #endregion
 
@@ -277,6 +279,15 @@ namespace Homework_13.ViewModel
                         transferBetweenAccountsWindow.ShowDialog();
                     },
                     obj => SelectedClient != null));
+            }
+        }
+
+
+        private void Logging(object sender, AccountEventArgs e)
+        {
+            using (StreamWriter sw = new StreamWriter("log.txt", true))
+            {
+                sw.WriteLine(DateTime.Now +" " + e.Message);
             }
         }
 

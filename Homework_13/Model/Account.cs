@@ -11,20 +11,6 @@ namespace Homework_13.Model
     {
         public delegate void AccountHandler(object sender, AccountEventArgs e);
         public static event AccountHandler Notify;
-        //private event AccountHandler notify; 
-        //public event AccountHandler Notify
-        //{
-        //    add
-        //    {
-        //        if (notify != null) return;
-        //        notify += value;
-        //    }
-        //    remove
-        //    {
-        //        notify -= value;
-        //    }
-        //}
-
 
         public int Id { get; set; }
         public int ClientId { get; set; }
