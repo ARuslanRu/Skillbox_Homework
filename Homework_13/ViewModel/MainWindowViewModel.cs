@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Homework_13.ViewModel
@@ -119,7 +120,6 @@ namespace Homework_13.ViewModel
             Repository.GetInstance();
             Nodes = GetTreeViewNodes();
             Account.Notify += Account_Notify;
-            //departments = Repository.Departments as ObservableCollection<Department>;
         }
         #endregion
 
@@ -271,7 +271,6 @@ namespace Homework_13.ViewModel
                     (sendTo = new RelayCommand(obj =>
                     {
                         Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
-                        //Account.Notify += Account_Notify;
                         TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow(Account);
                         transferBetweenAccountsWindow.Owner = obj as Window;
                         transferBetweenAccountsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -284,7 +283,27 @@ namespace Homework_13.ViewModel
         private void Account_Notify(object sender, AccountEventArgs e)
         {
             Debug.Print(e.Message);
+
+            Application.Current.Dispatcher.InvokeAsync(async () =>
+            {
+                Window mainWindow = Application.Current.MainWindow;
+                NotificationWindow alarm = new NotificationWindow()
+                {
+                    DataContext = new NotificationWindowViewModel()
+                    {
+                        Message = e.Message
+                    }
+                };
+                alarm.Owner = mainWindow;
+                alarm.Left = mainWindow.Left + mainWindow.Width - alarm.Width - 8;
+                alarm.Top = mainWindow.Top + mainWindow.Height - alarm.Height - 8;
+                alarm.Show();
+                await Task.Delay(2000);
+                alarm.Close();
+            });
         }
+
+       
 
         #endregion
 
