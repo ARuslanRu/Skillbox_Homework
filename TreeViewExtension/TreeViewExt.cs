@@ -1,11 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Homework_13.Control
+namespace TreeViewExtension
 {
-    public class ExtendedTreeView : TreeView
+    public class TreeViewExt : TreeView
     {
-        public ExtendedTreeView()
+        public TreeViewExt()
             : base()
         {
             this.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(___ICH);
@@ -24,6 +24,6 @@ namespace Homework_13.Control
             get { return (object)GetValue(SelectedItem_Property); }
             set { SetValue(SelectedItem_Property, value); }
         }
-        public static readonly DependencyProperty SelectedItem_Property = DependencyProperty.Register("SelectedItem_", typeof(object), typeof(ExtendedTreeView), new UIPropertyMetadata(null));
+        public static readonly DependencyProperty SelectedItem_Property = DependencyProperty.Register("SelectedItem_", typeof(object), typeof(TreeViewExt), new UIPropertyMetadata(null));
     }
 }

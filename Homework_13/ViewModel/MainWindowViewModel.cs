@@ -32,7 +32,6 @@ namespace Homework_13.ViewModel
 
         #endregion
 
-
         #region properties
         public Department SelectedDepartment
         {
@@ -273,7 +272,10 @@ namespace Homework_13.ViewModel
                     (sendTo = new RelayCommand(obj =>
                     {
                         Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
-                        TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow(Account);
+                        TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow()
+                        {
+                            DataContext = new TransferBetweenAccountsViewModel(Account)
+                        };
                         transferBetweenAccountsWindow.Owner = obj as Window;
                         transferBetweenAccountsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         transferBetweenAccountsWindow.ShowDialog();
@@ -282,12 +284,15 @@ namespace Homework_13.ViewModel
             }
         }
 
+        #endregion
+
+        #region Приватные методы
 
         private void Logging(object sender, AccountEventArgs e)
         {
             using (StreamWriter sw = new StreamWriter("log.txt", true))
             {
-                sw.WriteLine(DateTime.Now +" " + e.Message);
+                sw.WriteLine(DateTime.Now + " " + e.Message);
             }
         }
 
@@ -313,12 +318,6 @@ namespace Homework_13.ViewModel
                 alarm.Close();
             });
         }
-
-       
-
-        #endregion
-
-        #region Приватные методы
 
         /// <summary>
         /// Формируем узлы для TreeView из департаментов

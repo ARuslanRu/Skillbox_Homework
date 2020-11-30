@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Homework_13"
-        xmlns:ctrl="clr-namespace:Homework_13.Control"
+        xmlns:ctrl="clr-namespace:TreeViewExtension;assembly=TreeViewExtension"
         xmlns:conv="clr-namespace:Homework_13.Converter"
         mc:Ignorable="d"
         Title="Банк" Height="450" Width="800">
@@ -39,7 +39,7 @@
                 <ColumnDefinition Width="350"/>
             </Grid.ColumnDefinitions>
 
-            <ctrl:ExtendedTreeView Grid.Column="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
+            <ctrl:TreeViewExt Grid.Column="0" ItemsSource="{Binding Nodes}" SelectedItem_="{Binding SelectedNode, Mode=TwoWay}">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
                         <StackPanel Orientation="Horizontal">
@@ -48,7 +48,7 @@
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
-            </ctrl:ExtendedTreeView>
+            </ctrl:TreeViewExt>
 
             <ListView Grid.Column="1" ItemsSource="{Binding ClientsInDepartment}" SelectedItem="{Binding SelectedClient}">
                 <ListView.View>

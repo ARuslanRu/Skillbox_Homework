@@ -26,9 +26,7 @@ namespace Homework_13.ViewModel
         {
             SenderAccount = account;
             Recipients = Repository.Clients.Where(x => x.Id != SenderAccount.ClientId);
-
         }
-
         #endregion
 
         #region properties
@@ -41,7 +39,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public Client SelectedRecipient
         {
             get { return selectedRecipient; }
@@ -51,7 +48,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public Account SenderAccount
         {
             get { return senderAccount; }
@@ -61,7 +57,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public IEnumerable<Client> Recipients
         {
             get { return recipients; }
@@ -71,7 +66,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public string ErrorMessage
         {
             get { return errorMessage; }
@@ -81,7 +75,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         #endregion
 
         #region commands
@@ -102,7 +95,6 @@ namespace Homework_13.ViewModel
                     obj => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(Amount) && SelectedRecipient != null));
             }
         }
-
 
         #endregion
 

@@ -19,10 +19,9 @@ namespace Homework_13.View
     /// </summary>
     public partial class TransferBetweenAccountsWindow : Window
     {
-        public TransferBetweenAccountsWindow(Account account)
+        public TransferBetweenAccountsWindow()
         {
             InitializeComponent();
-            DataContext = new TransferBetweenAccountsViewModel(account);
         }
     }
 }
