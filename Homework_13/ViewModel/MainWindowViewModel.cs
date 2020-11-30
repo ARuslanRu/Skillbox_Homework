@@ -1,4 +1,5 @@
 ﻿using Homework_13.Enum;
+using Homework_13.Exception;
 using Homework_13.Helper;
 using Homework_13.Model;
 using Homework_13.Model.Event;
@@ -59,6 +60,10 @@ namespace Homework_13.ViewModel
             {
                 selectedClient = value;
                 Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                if(Account == null)
+                {
+                    throw new СlientHasNoAccountException();
+                }
                 Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
                 OnPropertyChanged();
             }
