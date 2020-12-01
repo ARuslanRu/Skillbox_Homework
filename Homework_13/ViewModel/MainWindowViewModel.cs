@@ -7,14 +7,12 @@ using Homework_13.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Homework_13.Extensions;
 
 namespace Homework_13.ViewModel
 {
@@ -200,7 +198,9 @@ namespace Homework_13.ViewModel
                     (removeDepartment = new RelayCommand(obj =>
                     {
                         Repository.RemoveDepartment(SelectedDepartment);
-                        ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
+                        //ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
+
+                        ObservableCollection<Node> parentNode = Nodes.GetParentNode(SelectedNode);
                         parentNode.Remove(SelectedNode);
                         ClientsInDepartment = null; //Для обновления отображения пустого списка клиентов
                     },
@@ -363,27 +363,29 @@ namespace Homework_13.ViewModel
         /// <param name="nodes"></param>
         /// <param name="node"></param>
         /// <returns></returns>
-        private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
-        {
-            ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
+        //private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
+        //{
+        //    ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
 
-            if (nodes.Contains(node))
-            {
-                resultCollection = nodes;
-            }
-            else
-            {
-                foreach (var item in nodes)
-                {
-                    resultCollection = GetParentNode(item.Nodes, node);
-                    if (resultCollection.Count != 0)
-                    {
-                        break;
-                    }
-                }
-            }
-            return resultCollection;
-        }
+        //    if (nodes.Contains(node))
+        //    {
+        //        resultCollection = nodes;
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in nodes)
+        //        {
+        //            resultCollection = GetParentNode(item.Nodes, node);
+        //            if (resultCollection.Count != 0)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    return resultCollection;
+        //}
+
+       
 
         #endregion
     }
