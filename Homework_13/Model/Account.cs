@@ -1,9 +1,7 @@
 ﻿using Homework_13.Model.Event;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Homework_13.Model
 {

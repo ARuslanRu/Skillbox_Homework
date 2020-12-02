@@ -1,8 +1,6 @@
 ﻿using Homework_13.Helper;
 using Homework_13.Model;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Linq;
 
@@ -17,21 +15,18 @@ namespace Homework_13.ViewModel
         private Department selectedDepartment;
         private IEnumerable<Department> departments = Repository.Departments;
 
+        public ClientViewModel()
+        {
+            this.client = new Client() { Name = "" };
+            this.isEdit = false;
+        }
+
         public ClientViewModel(Client client)
         {
-
-            if (client == null)
-            {
-                this.client = new Client() { Name = "" };
-                this.isEdit = false;
-            }
-            else
-            {
-                this.client = client;
-                Name = client.Name;
-                SelectedDepartment = Repository.Departments.Where(x => x.Id == client.DepartmentId).FirstOrDefault();
-                this.isEdit = true;
-            }
+            this.client = client;
+            Name = client.Name;
+            SelectedDepartment = Repository.Departments.Where(x => x.Id == client.DepartmentId).FirstOrDefault();
+            this.isEdit = true;
         }
 
         public string Name
@@ -64,7 +59,6 @@ namespace Homework_13.ViewModel
             }
         }
 
-
         private RelayCommand saveCommand;
         public RelayCommand SaveCommand
         {
@@ -74,8 +68,6 @@ namespace Homework_13.ViewModel
                    (saveCommand = new RelayCommand(obj =>
                    {
                        client.Name = Name;
-
-                       //Нужно как-то делать выбор департамента, а пока что заглушка
                        client.DepartmentId = SelectedDepartment.Id;
                        if (!isEdit)
                        {

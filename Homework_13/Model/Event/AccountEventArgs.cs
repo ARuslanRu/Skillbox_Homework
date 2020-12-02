@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Homework_13.Model.Event
+﻿namespace Homework_13.Model.Event
 {
     public class AccountEventArgs
     {

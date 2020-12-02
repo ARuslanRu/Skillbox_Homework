@@ -24,10 +24,9 @@ namespace Homework_13.ViewModel
         private Client selectedClient;
         private IEnumerable<Client> clientsInDepartment;
         private Account account;
-        private IEnumerable<IDeposit> deposites; //Переделать после добавления вкладов
+        private IEnumerable<IDeposit> deposites;
         private Node selectedNode;
         private ObservableCollection<Node> nodes;
-        //private IEnumerable<Credit> credits;
 
         #endregion
 
@@ -58,7 +57,7 @@ namespace Homework_13.ViewModel
             {
                 selectedClient = value;
                 Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
-                if(Account == null)
+                if (Account == null)
                 {
                     throw new СlientHasNoAccountException();
                 }
@@ -150,7 +149,10 @@ namespace Homework_13.ViewModel
                             Nodes = new ObservableCollection<Node>();
                         }
 
-                        DepartmentWindow departmentWindow = new DepartmentWindow(ActionType.CREATE, Nodes);
+                        DepartmentWindow departmentWindow = new DepartmentWindow()
+                        {
+                            DataContext = new DepartmentViewModel(ActionType.CREATE, Nodes, null)
+                        };
 
                         departmentWindow.Owner = obj as Window;
                         departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
@@ -165,7 +167,10 @@ namespace Homework_13.ViewModel
                 return editDepartment ??
                     (editDepartment = new RelayCommand(obj =>
                     {
-                        DepartmentWindow departmentWindow = new DepartmentWindow(ActionType.EDIT, null, selectedDepartment);
+                        DepartmentWindow departmentWindow = new DepartmentWindow()
+                        {
+                            DataContext = new DepartmentViewModel(ActionType.EDIT, null, selectedDepartment)
+                        };
                         departmentWindow.Owner = obj as Window;
                         departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
@@ -182,11 +187,14 @@ namespace Homework_13.ViewModel
                     (addChildDepartment = new RelayCommand(obj =>
                     {
                         ObservableCollection<Node> ChildNodes = SelectedNode.Nodes;
-                        DepartmentWindow departmentWindow = new DepartmentWindow(ActionType.CREATE, ChildNodes, selectedDepartment);
+                        DepartmentWindow departmentWindow = new DepartmentWindow()
+                        {
+                            DataContext = new DepartmentViewModel(ActionType.CREATE, ChildNodes, selectedDepartment)
+                        };
                         departmentWindow.Owner = obj as Window;
                         departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
-                    }, 
+                    },
                     obj => SelectedDepartment != null));
             }
         }
@@ -198,7 +206,6 @@ namespace Homework_13.ViewModel
                     (removeDepartment = new RelayCommand(obj =>
                     {
                         Repository.RemoveDepartment(SelectedDepartment);
-                        //ObservableCollection<Node> parentNode = GetParentNode(Nodes, SelectedNode);
 
                         ObservableCollection<Node> parentNode = Nodes.GetParentNode(SelectedNode);
                         parentNode.Remove(SelectedNode);
@@ -214,7 +221,10 @@ namespace Homework_13.ViewModel
                 return addClient ??
                     (addClient = new RelayCommand(obj =>
                     {
-                        ClientWindow clientWindow = new ClientWindow();
+                        ClientWindow clientWindow = new ClientWindow()
+                        {
+                            DataContext = new ClientViewModel()
+                        };
                         clientWindow.ShowDialog();
 
                         if (SelectedDepartment != null)
@@ -232,7 +242,10 @@ namespace Homework_13.ViewModel
                 return editClient ??
                     (editClient = new RelayCommand(obj =>
                     {
-                        ClientWindow clientWindow = new ClientWindow(selectedClient);
+                        ClientWindow clientWindow = new ClientWindow()
+                        {
+                            DataContext = new ClientViewModel(selectedClient)
+                        };
                         clientWindow.ShowDialog();
                         ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == selectedDepartment.Id);
 
@@ -261,7 +274,10 @@ namespace Homework_13.ViewModel
                 return addDeposit ??
                     (addDeposit = new RelayCommand(obj =>
                     {
-                        OpenDepositWindow openDepositWindow = new OpenDepositWindow(account);
+                        OpenDepositWindow openDepositWindow = new OpenDepositWindow()
+                        {
+                            DataContext = new OpenDepositViewModel(account)
+                        };
                         openDepositWindow.ShowDialog();
                         Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
                         Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
@@ -356,36 +372,6 @@ namespace Homework_13.ViewModel
                 return nodes;
             }
         }
-
-        /// <summary>
-        /// Получает коллекцию содержащую узел который необходимо удалить
-        /// </summary>
-        /// <param name="nodes"></param>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        //private ObservableCollection<Node> GetParentNode(ObservableCollection<Node> nodes, Node node)
-        //{
-        //    ObservableCollection<Node> resultCollection = new ObservableCollection<Node>();
-
-        //    if (nodes.Contains(node))
-        //    {
-        //        resultCollection = nodes;
-        //    }
-        //    else
-        //    {
-        //        foreach (var item in nodes)
-        //        {
-        //            resultCollection = GetParentNode(item.Nodes, node);
-        //            if (resultCollection.Count != 0)
-        //            {
-        //                break;
-        //            }
-        //        }
-        //    }
-        //    return resultCollection;
-        //}
-
-       
 
         #endregion
     }

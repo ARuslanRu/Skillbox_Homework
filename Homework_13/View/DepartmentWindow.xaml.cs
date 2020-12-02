@@ -1,8 +1,4 @@
-﻿using Homework_13.Enum;
-using Homework_13.Model;
-using Homework_13.ViewModel;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Homework_13.View
 {
@@ -11,10 +7,9 @@ namespace Homework_13.View
     /// </summary>
     public partial class DepartmentWindow : Window
     {
-        public DepartmentWindow(ActionType action, ObservableCollection<Node> nodes, Department department = null)
+        public DepartmentWindow()
         {
             InitializeComponent();
-            DataContext = new DepartmentViewModel(action, nodes, department);
         }
     }
 }
