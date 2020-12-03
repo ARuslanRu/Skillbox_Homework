@@ -10,7 +10,7 @@ namespace Homework_16
 
             var t = DateTime.Now;
 
-            var tasks = InitTasksPool(10, 1_000_000_000, 2_000_000_000);
+            var tasks = InitTasksPool(Environment.ProcessorCount, 1_000_000_000, 2_000_000_000);
             foreach (var item in tasks)
             {
                 item.Start();
