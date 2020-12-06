@@ -20,7 +20,7 @@ namespace Homework_13.Services
             IntegratedSecurity = true
         };
 
-        public static ObservableCollection<Department> GetAll()
+        public static ObservableCollection<Department> GetAllDepartments()
         {
             string sqlExpression = "SELECT * FROM Departments";
             ObservableCollection<Department> departments = new ObservableCollection<Department>();
@@ -47,11 +47,7 @@ namespace Homework_13.Services
 
                         while (reader.Read()) // построчно считываем данные
                         {
-                            object id = reader.GetValue(0);
-                            object parentId = reader.GetValue(1);
-                            object name = reader.GetValue(2);
-
-                            Debug.WriteLine($"{id}\t{parentId}\t{name}");
+                            Debug.WriteLine($"{reader.GetValue(0)}\t{reader.GetValue(1)}\t{reader.GetValue(2)}");
 
                             departments.Add(new Department()
                             {
@@ -59,7 +55,6 @@ namespace Homework_13.Services
                                 ParentId = reader.GetInt32(1),
                                 Name = reader.GetString(2)
                             });
-
                         }
                     }
                 }
@@ -68,11 +63,89 @@ namespace Homework_13.Services
             return departments;
         }
 
-        public bool AddDepartment(Department department)
+        public static void InsertDepartment(Department department)
         {
+            string sqlExpression = @"INSERT INTO Departments (ParentId,  Name) 
+                                 VALUES (@ParentId, @Name);
+                                SET @Id = @@IDENTITY;";
 
+            using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
 
-            return false;
+                SqlParameter idParam = new SqlParameter
+                {
+                    ParameterName = "@Id",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.Output // параметр выходной
+                };
+
+                command.Parameters.Add(idParam);
+                command.Parameters.Add("@ParentId", SqlDbType.Int).Value = department.ParentId;
+                command.Parameters.Add("@Name", SqlDbType.NVarChar).Value = department.Name;
+
+                int number = command.ExecuteNonQuery();
+
+                Debug.WriteLine($"Добавлено департаментов: {number}");
+                Debug.WriteLine($"\tId нового департамента: {idParam.Value}");
+
+                department.Id = (int)idParam.Value;
+            }
+        }
+
+        public static void UpdateDepartment(Department department)
+        {
+            string sqlExpression = @"UPDATE Departments SET 
+                           ParentId = @ParentId, 
+                           Name = @Name 
+                            WHERE Id = @Id";
+
+            using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+
+                command.Parameters.Add("@Id", SqlDbType.Int).Value = department.Id;
+                command.Parameters.Add("@ParentId", SqlDbType.Int).Value = department.ParentId;
+                command.Parameters.Add("@Name", SqlDbType.NVarChar).Value = department.Name;
+
+                int number = command.ExecuteNonQuery();
+
+                Debug.WriteLine($"Изменено департаментов: {number}");
+            }
+
+        }
+
+        public static void DeleteDepartment(Department department)
+        {
+            //Рекурсивное удаление всех вложенных департаментов
+            string sqlExpression =
+                @"WITH RecursiveQuery (Id, ParentId, Name)
+                AS
+                (
+                SELECT Id, ParentId, Name
+                FROM Departments dep
+                WHERE dep.Id = @Id
+                UNION ALL
+                SELECT dep.Id, dep.ParentId, dep.Name
+                FROM Departments dep
+                JOIN RecursiveQuery rec ON dep.ParentId = rec.Id
+                )
+                
+                DELETE FROM Departments
+                WHERE Id in (SELECT Id From RecursiveQuery)";
+
+            using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+
+                command.Parameters.Add("@Id", SqlDbType.Int).Value = department.Id;
+                int number = command.ExecuteNonQuery();
+
+                Debug.WriteLine($"Удалено департаментов: {number}");
+            }
         }
 
     }

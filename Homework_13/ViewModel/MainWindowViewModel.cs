@@ -117,15 +117,13 @@ namespace Homework_13.ViewModel
         #region constructor
         public MainWindowViewModel()
         {
-            Departments = DepartmentService.GetAll();
+            Departments = DepartmentService.GetAllDepartments();
 
             Repository.GetInstance();
 
             Nodes = GetTreeViewNodes();
             Account.Notify += Account_Notify;
             Account.Notify += Logging;
-
-
         }
         #endregion
 
@@ -152,14 +150,22 @@ namespace Homework_13.ViewModel
                             Nodes = new ObservableCollection<Node>();
                         }
 
+                        Department newDepartment = new Department();
                         DepartmentWindow departmentWindow = new DepartmentWindow()
                         {
-                            DataContext = new DepartmentViewModel(ActionType.CREATE, Nodes, null)
+                            DataContext = new DepartmentViewModel(newDepartment)
                         };
 
                         departmentWindow.Owner = obj as Window;
                         departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
+
+                        if (departmentWindow.DialogResult.Value)
+                        {
+                            DepartmentService.InsertDepartment(newDepartment);
+                            Departments.Add(newDepartment);
+                            Nodes.Add(new Node(newDepartment.Id, newDepartment.Name));
+                        }
                     }));
             }
         }
@@ -170,14 +176,23 @@ namespace Homework_13.ViewModel
                 return editDepartment ??
                     (editDepartment = new RelayCommand(obj =>
                     {
+                        Department updatedDepartment = SelectedDepartment;
                         DepartmentWindow departmentWindow = new DepartmentWindow()
                         {
-                            DataContext = new DepartmentViewModel(ActionType.EDIT, null, selectedDepartment)
+                            DataContext = new DepartmentViewModel(updatedDepartment)
                         };
+
                         departmentWindow.Owner = obj as Window;
                         departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
-                        SelectedNode.Name = SelectedDepartment.Name;
+                        Debug.WriteLine($"Результат закрытия диалогового окна: {departmentWindow.DialogResult}");
+
+                        if (departmentWindow.DialogResult.Value)
+                        {
+                            DepartmentService.UpdateDepartment(updatedDepartment);
+                            SelectedNode.Id = updatedDepartment.Id;
+                            SelectedNode.Name = updatedDepartment.Name;
+                        }
                     },
                     obj => SelectedDepartment != null));
             }
@@ -189,14 +204,26 @@ namespace Homework_13.ViewModel
                 return addChildDepartment ??
                     (addChildDepartment = new RelayCommand(obj =>
                     {
-                        ObservableCollection<Node> ChildNodes = SelectedNode.Nodes;
+                        Department newChildDepartment = new Department()
+                        {
+                            ParentId = SelectedDepartment.Id
+                        };
+
                         DepartmentWindow departmentWindow = new DepartmentWindow()
                         {
-                            DataContext = new DepartmentViewModel(ActionType.CREATE, ChildNodes, selectedDepartment)
+                            DataContext = new DepartmentViewModel(newChildDepartment)
                         };
+
                         departmentWindow.Owner = obj as Window;
                         departmentWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         departmentWindow.ShowDialog();
+
+                        if (departmentWindow.DialogResult.Value)
+                        {
+                            DepartmentService.InsertDepartment(newChildDepartment);
+                            Departments.Add(newChildDepartment);
+                            SelectedNode.Nodes.Add(new Node(newChildDepartment.Id, newChildDepartment.Name));
+                        }
                     },
                     obj => SelectedDepartment != null));
             }
@@ -208,8 +235,8 @@ namespace Homework_13.ViewModel
                 return removeDepartment ??
                     (removeDepartment = new RelayCommand(obj =>
                     {
-                        Repository.RemoveDepartment(SelectedDepartment);
-
+                        DepartmentService.DeleteDepartment(SelectedDepartment);
+                        Departments.Remove(SelectedDepartment);
                         ObservableCollection<Node> parentNode = Nodes.GetParentNode(SelectedNode);
                         parentNode.Remove(SelectedNode);
                         ClientsInDepartment = null; //Для обновления отображения пустого списка клиентов

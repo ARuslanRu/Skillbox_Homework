@@ -24,7 +24,7 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Height="20" HorizontalAlignment="Center">
             <Button Content="Сохранить" 
-                    Command="{Binding SaveCommand}" 
+                    Command="{Binding ConfirmCommand}" 
                     CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                     Margin="10 0 10 0" Padding="3 0 3 0"/>
             <Button Content="Отмена" IsCancel="True" Margin="10 0 10 0" Padding="3 0 3 0"/>
