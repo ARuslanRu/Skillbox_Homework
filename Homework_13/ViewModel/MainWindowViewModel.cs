@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Homework_13.Extensions;
+using Homework_13.Services;
 
 namespace Homework_13.ViewModel
 {
@@ -27,7 +28,6 @@ namespace Homework_13.ViewModel
         private IEnumerable<IDeposit> deposites;
         private Node selectedNode;
         private ObservableCollection<Node> nodes;
-
         #endregion
 
         #region properties
@@ -92,19 +92,17 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public Node SelectedNode
         {
             get { return selectedNode; }
             set
             {
                 selectedNode = value;
-                SelectedDepartment = Repository.Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
+                SelectedDepartment = Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
                 ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
                 OnPropertyChanged();
             }
         }
-
         public ObservableCollection<Node> Nodes
         {
             get { return nodes; }
@@ -119,10 +117,15 @@ namespace Homework_13.ViewModel
         #region constructor
         public MainWindowViewModel()
         {
+            Departments = DepartmentService.GetAll();
+
             Repository.GetInstance();
+
             Nodes = GetTreeViewNodes();
             Account.Notify += Account_Notify;
             Account.Notify += Logging;
+
+
         }
         #endregion
 
@@ -351,7 +354,7 @@ namespace Homework_13.ViewModel
 
             if (department == null)
             {
-                var rootDep = Repository.Departments.Where(x => x.ParentId == 0).ToList();
+                var rootDep = Departments.Where(x => x.ParentId == 0).ToList();
                 rootDep.ForEach(e =>
                 {
                     var node = new Node(e.Id, e.Name);
@@ -362,7 +365,7 @@ namespace Homework_13.ViewModel
             }
             else
             {
-                var subDep = Repository.Departments.Where(x => x.ParentId == department.Id).ToList();
+                var subDep = Departments.Where(x => x.ParentId == department.Id).ToList();
                 subDep.ForEach(e =>
                 {
                     var node = new Node(e.Id, e.Name);
