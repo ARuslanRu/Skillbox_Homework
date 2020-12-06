@@ -28,12 +28,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Департамент: " VerticalAlignment="Center" HorizontalAlignment="Right"  Margin="5 5 5 5"/>
-            <ComboBox Grid.Column="1" ItemsSource="{Binding Departments}" SelectedItem="{Binding SelectedDepartment, Mode=TwoWay}" Height="20" Margin="5 5 5 5">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"></TextBlock>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+            <ComboBox Grid.Column="1" ItemsSource="{Binding Departments}" 
+                      SelectedItem="{Binding SelectedDepartment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="Name"
+                      Height="20" Margin="5 5 5 5">
             </ComboBox>
         </Grid>
 

@@ -63,6 +63,42 @@ namespace Homework_13.Services
             return departments;
         }
 
+        public static Department SelectDepartment(int id)
+        {
+            string sqlExpression = @"SELECT * FROM Departments
+                                   WHERE Id = @Id";
+            Department department = new Department();
+
+            using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+                command.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        Debug.WriteLine($"{reader.GetName(0)}\t{reader.GetName(1)}\t{reader.GetName(2)}");
+
+                        while (reader.Read())
+                        {
+                            Debug.WriteLine($"{reader.GetValue(0)}\t{reader.GetValue(1)}\t{reader.GetValue(2)}");
+
+                            department.Id = reader.GetInt32(0);
+                            department.ParentId = reader.GetInt32(1);
+                            department.Name = reader.GetString(2);
+                        }
+                    }
+                    else
+                    {
+                        department = null;
+                    }
+                }
+            }
+            return department;
+        }
+
         public static void InsertDepartment(Department department)
         {
             string sqlExpression = @"INSERT INTO Departments (ParentId,  Name) 
@@ -97,9 +133,9 @@ namespace Homework_13.Services
         public static void UpdateDepartment(Department department)
         {
             string sqlExpression = @"UPDATE Departments SET 
-                           ParentId = @ParentId, 
-                           Name = @Name 
-                            WHERE Id = @Id";
+                                   ParentId = @ParentId, 
+                                   Name = @Name 
+                                   WHERE Id = @Id";
 
             using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
             {
@@ -147,6 +183,5 @@ namespace Homework_13.Services
                 Debug.WriteLine($"Удалено департаментов: {number}");
             }
         }
-
     }
 }

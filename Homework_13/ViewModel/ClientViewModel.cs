@@ -3,30 +3,23 @@ using Homework_13.Model;
 using System.Collections.Generic;
 using System.Windows;
 using System.Linq;
+using Homework_13.Services;
 
 namespace Homework_13.ViewModel
 {
     class ClientViewModel : BaseViewModel
     {
         private Client client;
-        private bool isEdit;
         private string name;
 
         private Department selectedDepartment;
-        private IEnumerable<Department> departments = Repository.Departments;
-
-        public ClientViewModel()
-        {
-            this.client = new Client() { Name = "" };
-            this.isEdit = false;
-        }
+        private IEnumerable<Department> departments = DepartmentService.GetAllDepartments();
 
         public ClientViewModel(Client client)
         {
             this.client = client;
             Name = client.Name;
-            SelectedDepartment = Repository.Departments.Where(x => x.Id == client.DepartmentId).FirstOrDefault();
-            this.isEdit = true;
+            SelectedDepartment = DepartmentService.SelectDepartment(client.DepartmentId);
         }
 
         public string Name
@@ -38,7 +31,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public Department SelectedDepartment
         {
             get { return selectedDepartment; }
@@ -48,7 +40,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public IEnumerable<Department> Departments
         {
             get { return departments; }
@@ -58,7 +49,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         private RelayCommand saveCommand;
         public RelayCommand SaveCommand
         {
@@ -69,13 +59,9 @@ namespace Homework_13.ViewModel
                    {
                        client.Name = Name;
                        client.DepartmentId = SelectedDepartment.Id;
-                       if (!isEdit)
-                       {
-                           Repository.AddClient(client);
-                       }
-
 
                        Window window = obj as Window;
+                       window.DialogResult = true;
                        window.Close();
 
                    },
