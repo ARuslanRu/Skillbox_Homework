@@ -4,30 +4,41 @@ using System.Runtime.CompilerServices;
 
 namespace Homework_13.Model
 {
-    class Deposit : IDeposit, INotifyPropertyChanged
+    class Deposit : INotifyPropertyChanged
     {
         public int Id { get; set; }
         public int ClientId { get; set; }
         public string Name { get; set; }
         public DateTime CreateDate { get; set; }
+        public bool IsWithCapitalization { get; set; }
 
 
         private decimal balance;
-        public decimal Balance 
+        public decimal Balance
         {
-            get 
-            { 
-                if(MonthDifference(DateTime.Now, CreateDate) < 12)
+            get
+            {
+                if(IsWithCapitalization)
                 {
-                    return balance;
+                    double percentRate = 0.12;
+                    int part = 12;
+                    int monthsPassed = MonthDifference(DateTime.Now, CreateDate);
+                    return balance * (decimal)Math.Pow(1 + percentRate / part, part * monthsPassed / part);
                 }
-                return balance + balance * 0.12m;
-            } 
+                else
+                {
+                    if (MonthDifference(DateTime.Now, CreateDate) < 12)
+                    {
+                        return balance;
+                    }
+                    return balance + balance * 0.12m;
+                }
+            }
             set
             {
                 this.balance = value;
                 OnPropertyChanged();
-            } 
+            }
         }
 
         private int MonthDifference(DateTime lValue, DateTime rValue)
@@ -36,7 +47,7 @@ namespace Homework_13.Model
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

@@ -1,5 +1,6 @@
 ﻿using Homework_13.Helper;
 using Homework_13.Model;
+using Homework_13.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,10 +23,10 @@ namespace Homework_13.ViewModel
         #endregion
 
         #region constructors
-        public TransferBetweenAccountsViewModel(Account account)
+        public TransferBetweenAccountsViewModel(Account senderAccount)
         {
-            SenderAccount = account;
-            Recipients = Repository.Clients.Where(x => x.Id != SenderAccount.ClientId);
+            SenderAccount = senderAccount;
+            Recipients = ClientService.GetAllClients().Where(x => x.Id != SenderAccount.ClientId);
         }
         #endregion
 
@@ -86,10 +87,14 @@ namespace Homework_13.ViewModel
                 return confirmCommand ??
                     (confirmCommand = new RelayCommand(obj =>
                     {
-                        Account recipientAccount = Repository.Accounts.Where(x => x.ClientId == SelectedRecipient.Id).FirstOrDefault();
+                        Account recipientAccount = AccountService.SelectAccount(SelectedRecipient.Id);
                         decimal amountDecimal = decimal.Parse(Amount);
-                        SenderAccount.SendTo(recipientAccount, amountDecimal);
+                        senderAccount.Balance -= amountDecimal;
+                        recipientAccount.Balance += amountDecimal;
+                        AccountService.UpdateAccount(recipientAccount);
+
                         Window window = obj as Window;
+                        window.DialogResult = true;
                         window.Close();
                     },
                     obj => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(Amount) && SelectedRecipient != null));

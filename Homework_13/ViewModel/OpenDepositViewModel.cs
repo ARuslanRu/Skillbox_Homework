@@ -11,17 +11,28 @@ namespace Homework_13.ViewModel
 {
     class OpenDepositViewModel : BaseViewModel, IDataErrorInfo
     {
-        private Account account;
         private string amount;
         private bool isWithCapitalization;
         private string errorMessage;
 
+        private Account account;
         public Account Account
         {
             get { return account; }
             set
             {
                 this.account = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Deposit deposit;
+        public Deposit Deposit
+        {
+            get { return deposit; }
+            set
+            {
+                this.deposit = value;
                 OnPropertyChanged();
             }
         }
@@ -35,7 +46,6 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public string ErrorMessage
         {
             get { return errorMessage; }
@@ -46,8 +56,9 @@ namespace Homework_13.ViewModel
             }
         }
 
-        public OpenDepositViewModel(Account account)
+        public OpenDepositViewModel(Deposit deposit, Account account)
         {
+            this.deposit = deposit;
             this.account = account;
         }
 
@@ -74,34 +85,21 @@ namespace Homework_13.ViewModel
                     {
                         if (decimal.TryParse(Amount, out decimal result))
                         {
-                            IDeposit deposit;
                             if (isWithCapitalization)
                             {
-                                deposit = new DepositWithCapitalization()
-                                {
-                                    Id = 0,
-                                    ClientId = Account.ClientId,
-                                    Name = "Депозит c капитализацией",
-                                    Balance = result,
-                                    CreateDate = DateTime.Now
-                                };
+                                deposit.Name = "Вклад с капитализацией";   
                             }
                             else
                             {
-                                deposit = new Deposit()
-                                {
-                                    Id = 0,
-                                    ClientId = Account.ClientId,
-                                    Name = "Депозит",
-                                    Balance = result,
-                                    CreateDate = DateTime.Now
-                                };
+                                deposit.Name = "Вклад без капитализации";
                             }
-
-                            Account.Balance -= result;
-                            Repository.AddDeposit(deposit);
+                            deposit.IsWithCapitalization = isWithCapitalization;
+                            account.Balance -= result;
+                            deposit.Balance = result;
+                            deposit.CreateDate = DateTime.Now;
 
                             Window window = obj as Window;
+                            window.DialogResult = true;
                             window.Close();
                         }
 

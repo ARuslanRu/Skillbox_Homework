@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace Homework_13.Model
 {
-    public class Account : INotifyPropertyChanged, IIdentity
+    public class Account : INotifyPropertyChanged
     {
         public delegate void AccountHandler(object sender, AccountEventArgs e);
         public static event AccountHandler Notify;

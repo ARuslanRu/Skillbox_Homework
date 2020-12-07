@@ -17,6 +17,43 @@ namespace Homework_13.Services
             IntegratedSecurity = true
         };
 
+
+        public static ObservableCollection<Client> GetAllClients()
+        {
+            ObservableCollection<Client> clients = new ObservableCollection<Client>();
+            string sqlExpression = @"SELECT * FROM Clients";
+
+            using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand(sqlExpression, connection);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows) // если есть данные
+                    {
+                        Debug.WriteLine("Clients");
+                        Debug.WriteLine($"{reader.GetName(0)}\t{reader.GetName(1)}\t{reader.GetName(2)}");
+
+                        while (reader.Read()) // построчно считываем данные
+                        {
+                            Debug.WriteLine($"{reader.GetValue(0)}\t{reader.GetValue(1)}\t{reader.GetValue(2)}");
+
+                            clients.Add(new Client()
+                            {
+                                Id = reader.GetInt32(0),
+                                DepartmentId = reader.GetInt32(1),
+                                Name = reader.GetString(2)
+                            });
+                        }
+                    }
+                }
+            }
+
+
+            return clients;
+        }
+
         public static ObservableCollection<Client> GetClientsInDepartment(Department department)
         {
             string sqlExpression = @"SELECT * FROM Clients
@@ -34,6 +71,7 @@ namespace Homework_13.Services
                 {
                     if (reader.HasRows)
                     {
+                        Debug.WriteLine("Clients");
                         Debug.WriteLine($"{reader.GetName(0)}\t{reader.GetName(1)}\t{reader.GetName(2)}");
 
                         while (reader.Read())
@@ -58,8 +96,6 @@ namespace Homework_13.Services
             string sqlExpression = @"INSERT INTO Clients (DepartmentId,  Name) 
                                    VALUES (@DepartmentId, @Name);
                                    SET @Id = @@IDENTITY;";
-
-            ObservableCollection<Client> clients = new ObservableCollection<Client>();
 
             using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
             {

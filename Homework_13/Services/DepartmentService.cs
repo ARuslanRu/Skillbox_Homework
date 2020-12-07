@@ -43,6 +43,7 @@ namespace Homework_13.Services
                 {
                     if (reader.HasRows) // если есть данные
                     {
+                        Debug.WriteLine("Departments");
                         Debug.WriteLine($"{reader.GetName(0)}\t{reader.GetName(1)}\t{reader.GetName(2)}");
 
                         while (reader.Read()) // построчно считываем данные
@@ -79,6 +80,7 @@ namespace Homework_13.Services
                 {
                     if (reader.HasRows)
                     {
+                        Debug.WriteLine("Departments");
                         Debug.WriteLine($"{reader.GetName(0)}\t{reader.GetName(1)}\t{reader.GetName(2)}");
 
                         while (reader.Read())

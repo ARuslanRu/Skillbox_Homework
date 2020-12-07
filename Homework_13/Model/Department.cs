@@ -3,15 +3,12 @@ using System.Runtime.CompilerServices;
 
 namespace Homework_13.Model
 {
-    public class Department : INotifyPropertyChanged, IIdentity
+    public class Department : INotifyPropertyChanged
     {
         public int Id { get; set; }
-
         public int ParentId { get; set; }
 
-
         private string name;
-
         public string Name
         {
             get { return name; }

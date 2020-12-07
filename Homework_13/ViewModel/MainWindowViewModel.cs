@@ -25,7 +25,7 @@ namespace Homework_13.ViewModel
         private Client selectedClient;
         private ObservableCollection<Client> clientsInDepartment;
         private Account account;
-        private IEnumerable<IDeposit> deposites;
+        private ObservableCollection<Deposit> deposites;
         private Node selectedNode;
         private ObservableCollection<Node> nodes;
         #endregion
@@ -56,12 +56,13 @@ namespace Homework_13.ViewModel
             set
             {
                 selectedClient = value;
-                Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
-                if (Account == null)
+                Account = AccountService.SelectAccount(SelectedClient?.Id ?? 0);
+                Deposites = DepositService.SelectClientDeposites(SelectedClient?.Id ?? 0);
+                if (SelectedClient != null && Account == null)
                 {
-                    //throw new СlientHasNoAccountException();
+                    throw new СlientHasNoAccountException();
                 }
-                Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
+
                 OnPropertyChanged();
             }
         }
@@ -83,7 +84,7 @@ namespace Homework_13.ViewModel
                 OnPropertyChanged();
             }
         }
-        public IEnumerable<IDeposit> Deposites
+        public ObservableCollection<Deposit> Deposites
         {
             get { return deposites; }
             set
@@ -99,7 +100,6 @@ namespace Homework_13.ViewModel
             {
                 selectedNode = value;
                 SelectedDepartment = Departments.Where(x => x.Id == SelectedNode.Id).FirstOrDefault();
-                //ClientsInDepartment = Repository.Clients.Where(x => x.DepartmentId == SelectedNode.Id).ToList();
                 ClientsInDepartment = ClientService.GetClientsInDepartment(selectedDepartment);
                 OnPropertyChanged();
             }
@@ -119,8 +119,6 @@ namespace Homework_13.ViewModel
         public MainWindowViewModel()
         {
             Departments = DepartmentService.GetAllDepartments();
-
-            Repository.GetInstance();
 
             Nodes = GetTreeViewNodes();
             Account.Notify += Account_Notify;
@@ -266,10 +264,17 @@ namespace Homework_13.ViewModel
                         if (clientWindow.DialogResult.Value)
                         {
                             ClientService.InsertClient(newClient);
-                            ClientsInDepartment = ClientService.GetClientsInDepartment(selectedDepartment);
+                            AccountService.InsertAccount(new Account()
+                            {
+                                ClientId = newClient.Id,
+                                Balance = 10000, //Открываем счет с балансом 10000р по умолчанию
+                                CreateDate = DateTime.Now
+                            });
+                            if(SelectedDepartment != null)
+                            {
+                                ClientsInDepartment = ClientService.GetClientsInDepartment(SelectedDepartment);
+                            }
                         }
-
-                        //TODO: При добавлении клиента нужно сделать добавление Account
                     }));
             }
         }
@@ -321,13 +326,24 @@ namespace Homework_13.ViewModel
                 return addDeposit ??
                     (addDeposit = new RelayCommand(obj =>
                     {
+                        Deposit newDeposit = new Deposit();
+                        newDeposit.ClientId = SelectedClient.Id;
                         OpenDepositWindow openDepositWindow = new OpenDepositWindow()
                         {
-                            DataContext = new OpenDepositViewModel(account)
+                            DataContext = new OpenDepositViewModel(newDeposit, account)
                         };
+
+                        openDepositWindow.Owner = obj as Window;
+                        openDepositWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         openDepositWindow.ShowDialog();
-                        Deposites = Repository.Deposites.Where(x => x.ClientId == (selectedClient?.Id ?? 0));
-                        Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+
+                        if (openDepositWindow.DialogResult.Value)
+                        {
+                            DepositService.InsertDeposit(newDeposit);
+                            AccountService.UpdateAccount(account);
+                            Deposites = DepositService.SelectClientDeposites(SelectedClient?.Id ?? 0);
+                            Account = AccountService.SelectAccount(SelectedClient?.Id ?? 0);
+                        }
                     },
                     obj => SelectedClient != null));
             }
@@ -339,14 +355,20 @@ namespace Homework_13.ViewModel
                 return sendTo ??
                     (sendTo = new RelayCommand(obj =>
                     {
-                        Account = Repository.Accounts.Where(x => x.ClientId == (selectedClient?.Id ?? 0)).FirstOrDefault();
+                        Account = AccountService.SelectAccount(SelectedClient?.Id ?? 0);
                         TransferBetweenAccountsWindow transferBetweenAccountsWindow = new TransferBetweenAccountsWindow()
                         {
                             DataContext = new TransferBetweenAccountsViewModel(Account)
                         };
+
                         transferBetweenAccountsWindow.Owner = obj as Window;
                         transferBetweenAccountsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                         transferBetweenAccountsWindow.ShowDialog();
+
+                        if (transferBetweenAccountsWindow.DialogResult.Value)
+                        {
+                            AccountService.UpdateAccount(Account);
+                        }
                     },
                     obj => SelectedClient != null));
             }

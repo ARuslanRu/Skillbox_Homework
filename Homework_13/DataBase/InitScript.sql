@@ -65,14 +65,12 @@ set identity_insert [dbo].[Accounts] off;
 
 set identity_insert [dbo].[Deposites] on;
 
-insert into [dbo].[Deposites] ([Id], [ClientId], [Name], [CreateDate], [IsWithCapitalization]) 
-values (1, 1, N'Вклад открытый 3 месяца назад', DATEADD(MONTH,-3, GETDATE()), 0),
-(2, 1, N'Вклад открытый 12 месяцев назад', DATEADD(MONTH,-12, GETDATE()), 0),
-(3, 1, N'С капитализацией открытый 3 месяца назад', DATEADD(MONTH,-3, GETDATE()), 1),
-(4, 1, N'С капитализацией открытый 6 месяца назад', DATEADD(MONTH,-6, GETDATE()), 1);
+insert into [dbo].[Deposites] ([Id], [ClientId], [Name], [Balance], [CreateDate], [IsWithCapitalization]) 
+values (1, 1, N'Вклад открытый 3 месяца назад', 1000, DATEADD(MONTH,-3, GETDATE()), 0),
+(2, 1, N'Вклад открытый 12 месяцев назад', 1000, DATEADD(MONTH,-12, GETDATE()), 0),
+(3, 1, N'С капитализацией открытый 3 месяца назад', 1000, DATEADD(MONTH,-3, GETDATE()), 1),
+(4, 1, N'С капитализацией открытый 6 месяца назад', 1000, DATEADD(MONTH,-6, GETDATE()), 1);
 
 set identity_insert [dbo].[Deposites] off;
 
 --select * from [dbo].[Departments]
-
-    

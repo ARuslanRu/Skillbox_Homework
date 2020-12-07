@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Homework_13.Model
 {
-    public class Client : INotifyPropertyChanged, IIdentity
+    public class Client : INotifyPropertyChanged
     {
         public int Id { get; set; }
 
