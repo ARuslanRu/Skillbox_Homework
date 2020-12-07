@@ -1,11 +1,9 @@
-﻿using Homework_13.Enum;
-using Homework_13.Exception;
+﻿using Homework_13.Exception;
 using Homework_13.Helper;
 using Homework_13.Model;
 using Homework_13.Model.Event;
 using Homework_13.View;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
