@@ -35,7 +35,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeViewExtension", "TreeVi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Homework_16", "Homework_16\Homework_16.csproj", "{E0310477-C1D7-450C-8ECC-0DA2D18DF82B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homework_17", "Homework_17\Homework_17.csproj", "{AE658190-BB8D-4FA7-81DB-DA14D1714D1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Homework_17", "Homework_17\Homework_17.csproj", "{AE658190-BB8D-4FA7-81DB-DA14D1714D1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Homework_18", "Homework_18\Homework_18.csproj", "{C0F09778-D81B-4F7E-95C5-F9F32BF14A4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,10 @@ Global
 		{AE658190-BB8D-4FA7-81DB-DA14D1714D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE658190-BB8D-4FA7-81DB-DA14D1714D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE658190-BB8D-4FA7-81DB-DA14D1714D1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0F09778-D81B-4F7E-95C5-F9F32BF14A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0F09778-D81B-4F7E-95C5-F9F32BF14A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0F09778-D81B-4F7E-95C5-F9F32BF14A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0F09778-D81B-4F7E-95C5-F9F32BF14A4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
