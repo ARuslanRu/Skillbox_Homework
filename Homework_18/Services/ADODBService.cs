@@ -4,18 +4,28 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Configuration;
 
 namespace Homework_18.Services
 {
     class ADODBService : IDBService
     {
-        private SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
+        private string connectionString;
+
+        //private SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
+        //{
+        //    DataSource = @"(LocalDB)\MSSQLLocalDB",
+        //    InitialCatalog = "BankDB",
+        //    AttachDBFilename = Environment.CurrentDirectory + @"\DataBase\BankDB.mdf",
+        //    IntegratedSecurity = true
+        //};
+
+        public ADODBService()
         {
-            DataSource = @"(LocalDB)\MSSQLLocalDB",
-            InitialCatalog = "BankDB",
-            AttachDBFilename = Environment.CurrentDirectory + @"\DataBase\BankDB.mdf",
-            IntegratedSecurity = true
-        };
+            AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
+            connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            Debug.WriteLine($"\tСтрока подключения: {connectionString}");
+        }
 
         public Account SelectAccount(int clientId)
         {
@@ -26,7 +36,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -69,7 +79,7 @@ namespace Homework_18.Services
                                    SET @Id = @@IDENTITY;";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -109,7 +119,7 @@ namespace Homework_18.Services
                                    WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -135,7 +145,7 @@ namespace Homework_18.Services
                                    WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -161,7 +171,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -203,7 +213,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -244,7 +254,7 @@ namespace Homework_18.Services
                                    SET @Id = @@IDENTITY;";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -282,7 +292,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -308,7 +318,7 @@ namespace Homework_18.Services
                                    WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -331,7 +341,7 @@ namespace Homework_18.Services
             ObservableCollection<Department> departments = new ObservableCollection<Department>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
 
                     connection.Open();
@@ -339,6 +349,7 @@ namespace Homework_18.Services
 
                     Debug.WriteLine("Свойства подключения:");
                     Debug.WriteLine($"\tСтрока подключения: {connection.ConnectionString}");
+                    Debug.WriteLine($"\tСтрока подключения: {connectionString}");
                     Debug.WriteLine($"\tБаза данных: {connection.Database}");
                     Debug.WriteLine($"\tСервер: {connection.DataSource}");
                     Debug.WriteLine($"\tВерсия сервера: {connection.ServerVersion}");
@@ -384,7 +395,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -427,7 +438,7 @@ namespace Homework_18.Services
                                 SET @Id = @@IDENTITY;";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -466,7 +477,7 @@ namespace Homework_18.Services
                                    WHERE Id = @Id";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -506,7 +517,7 @@ namespace Homework_18.Services
                 WHERE Id in (SELECT Id From RecursiveQuery)";
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
@@ -533,7 +544,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
 
@@ -581,7 +592,7 @@ namespace Homework_18.Services
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
                     SqlCommand command = new SqlCommand(sqlExpression, connection);
