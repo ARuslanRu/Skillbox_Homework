@@ -9,8 +9,8 @@ namespace Homework_18.Services
 
         public DBManager()
         {
-            this.dBService = new ADODBService();
-            //this.dBService = new EFDBService();
+            //this.dBService = new ADODBService();
+            this.dBService = new EFDBService();
         }
 
         public Account SelectAccount(int clientId)
