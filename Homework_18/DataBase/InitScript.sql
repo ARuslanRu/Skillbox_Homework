@@ -1,7 +1,7 @@
 ﻿drop table [dbo].[Departments]
 drop table [dbo].[Clients]
 drop table [dbo].[Accounts]
-drop table [dbo].[Deposites]
+drop table [dbo].[Deposits]
 
 create table [dbo].[Departments]
 (
@@ -25,7 +25,7 @@ create table [dbo].[Accounts]
 	[CreateDate] datetime not null
 )
 
-create table [dbo].[Deposites]
+create table [dbo].[Deposits]
 (
 	[Id] int not null primary key identity,
 	[ClientId] int not null,
@@ -63,14 +63,14 @@ values (1, 1, 10000,  GETDATE()),
 
 set identity_insert [dbo].[Accounts] off;
 
-set identity_insert [dbo].[Deposites] on;
+set identity_insert [dbo].[Deposits] on;
 
-insert into [dbo].[Deposites] ([Id], [ClientId], [Name], [Balance], [CreateDate], [IsWithCapitalization]) 
+insert into [dbo].[Deposits] ([Id], [ClientId], [Name], [Balance], [CreateDate], [IsWithCapitalization]) 
 values (1, 1, N'Вклад открытый 3 месяца назад', 1000, DATEADD(MONTH,-3, GETDATE()), 0),
 (2, 1, N'Вклад открытый 12 месяцев назад', 1000, DATEADD(MONTH,-12, GETDATE()), 0),
 (3, 1, N'С капитализацией открытый 3 месяца назад', 1000, DATEADD(MONTH,-3, GETDATE()), 1),
 (4, 1, N'С капитализацией открытый 6 месяца назад', 1000, DATEADD(MONTH,-6, GETDATE()), 1);
 
-set identity_insert [dbo].[Deposites] off;
+set identity_insert [dbo].[Deposits] off;
 
 --select * from [dbo].[Departments]

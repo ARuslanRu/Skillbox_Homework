@@ -25,7 +25,7 @@ namespace Homework_18.ViewModel
         #region constructors
         public TransferBetweenAccountsViewModel(Account senderAccount)
         {
-            dBmanager = new DBManager(new ADODBService());
+            dBmanager = new DBManager();
             SenderAccount = senderAccount;
             Recipients = dBmanager.GetAllClients().Where(x => x.Id != SenderAccount.ClientId);
         }

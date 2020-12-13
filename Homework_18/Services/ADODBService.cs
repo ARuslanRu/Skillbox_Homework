@@ -11,20 +11,11 @@ namespace Homework_18.Services
     class ADODBService : IDBService
     {
         private string connectionString;
-
-        //private SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder
-        //{
-        //    DataSource = @"(LocalDB)\MSSQLLocalDB",
-        //    InitialCatalog = "BankDB",
-        //    AttachDBFilename = Environment.CurrentDirectory + @"\DataBase\BankDB.mdf",
-        //    IntegratedSecurity = true
-        //};
-
         public ADODBService()
         {
-            AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
-            connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-            Debug.WriteLine($"\tСтрока подключения: {connectionString}");
+            //AppDomain.CurrentDomain.SetData("DataDirectory", Environment.CurrentDirectory);
+            connectionString = ConfigurationManager.ConnectionStrings["DBConnectionServer"].ConnectionString;
+            //Debug.WriteLine($"\tСтрока подключения: {connectionString}");
         }
 
         public Account SelectAccount(int clientId)
@@ -535,12 +526,12 @@ namespace Homework_18.Services
             }
         }
 
-        public ObservableCollection<Deposit> SelectClientDeposites(int clientId)
+        public ObservableCollection<Deposit> SelectClientDeposits(int clientId)
         {
-            string sqlExpression = @"SELECT * FROM Deposites
+            string sqlExpression = @"SELECT * FROM Deposits
                                    WHERE ClientId = @ClientId";
 
-            ObservableCollection<Deposit> deposites = new ObservableCollection<Deposit>();
+            ObservableCollection<Deposit> deposits = new ObservableCollection<Deposit>();
 
             try
             {
@@ -556,14 +547,14 @@ namespace Homework_18.Services
                         if (reader.HasRows)
                         {
 
-                            Debug.WriteLine("Deposites");
+                            Debug.WriteLine("Deposits");
                             Debug.WriteLine($"{reader.GetName(0)}\t{reader.GetName(1)}\t{reader.GetName(2)}\t{reader.GetName(3)}\t{reader.GetName(4)}\t{reader.GetName(5)}");
 
                             while (reader.Read())
                             {
                                 Debug.WriteLine($"{reader.GetValue(0)}\t{reader.GetValue(1)}\t{reader.GetValue(2)}\t{reader.GetValue(3)}\t{reader.GetValue(4)}\t{reader.GetValue(5)}");
 
-                                deposites.Add(new Deposit()
+                                deposits.Add(new Deposit()
                                 {
                                     Id = reader.GetInt32(0),
                                     ClientId = reader.GetInt32(1),
@@ -581,12 +572,12 @@ namespace Homework_18.Services
             {
                 throw ex;
             }
-            return deposites;
+            return deposits;
         }
         public void InsertDeposit(Deposit deposit)
         {
 
-            string sqlExpression = @"INSERT INTO Deposites (ClientId,  Name, Balance, CreateDate, IsWithCapitalization) 
+            string sqlExpression = @"INSERT INTO Deposits (ClientId,  Name, Balance, CreateDate, IsWithCapitalization) 
                                  VALUES (@ClientId, @Name, @Balance, @CreateDate, @IsWithCapitalization);
                                 SET @Id = @@IDENTITY;";
 

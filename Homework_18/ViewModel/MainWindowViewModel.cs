@@ -56,7 +56,7 @@ namespace Homework_18.ViewModel
             {
                 selectedClient = value;
                 Account = dBmanager.SelectAccount(SelectedClient?.Id ?? 0);
-                Deposites = dBmanager.SelectClientDeposites(SelectedClient?.Id ?? 0);
+                Deposits = dBmanager.SelectClientDeposits(SelectedClient?.Id ?? 0);
                 if (SelectedClient != null && Account == null)
                 {
                     throw new СlientHasNoAccountException();
@@ -83,7 +83,7 @@ namespace Homework_18.ViewModel
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<Deposit> Deposites
+        public ObservableCollection<Deposit> Deposits
         {
             get { return deposites; }
             set
@@ -117,7 +117,7 @@ namespace Homework_18.ViewModel
         #region constructor
         public MainWindowViewModel()
         {
-            dBmanager = new DBManager(new ADODBService());
+            dBmanager = new DBManager();
             Departments = dBmanager.GetAllDepartments();
 
             Nodes = GetTreeViewNodes();
@@ -341,7 +341,7 @@ namespace Homework_18.ViewModel
                         {
                             dBmanager.InsertDeposit(newDeposit);
                             dBmanager.UpdateAccount(account);
-                            Deposites = dBmanager.SelectClientDeposites(SelectedClient?.Id ?? 0);
+                            Deposits = dBmanager.SelectClientDeposits(SelectedClient?.Id ?? 0);
                             Account = dBmanager.SelectAccount(SelectedClient?.Id ?? 0);
                         }
                     },

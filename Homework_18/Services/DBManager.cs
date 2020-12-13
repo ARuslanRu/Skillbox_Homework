@@ -7,9 +7,10 @@ namespace Homework_18.Services
     {
         private IDBService dBService;
 
-        public DBManager(IDBService dBService)
+        public DBManager()
         {
-            this.dBService = dBService;
+            this.dBService = new ADODBService();
+            //this.dBService = new EFDBService();
         }
 
         public Account SelectAccount(int clientId)
@@ -73,9 +74,9 @@ namespace Homework_18.Services
             dBService.DeleteDepartment(department);
         }
 
-        public ObservableCollection<Deposit> SelectClientDeposites(int clientId)
+        public ObservableCollection<Deposit> SelectClientDeposits(int clientId)
         {
-            return dBService.SelectClientDeposites(clientId);
+            return dBService.SelectClientDeposits(clientId);
         }
         public void InsertDeposit(Deposit deposit)
         {

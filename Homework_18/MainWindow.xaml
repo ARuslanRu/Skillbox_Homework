@@ -87,7 +87,7 @@
                             <Button Grid.Column="1" Content="Открыть вклад" Command="{Binding AddDeposit}"/>
                         </Grid>
 
-                        <ListView ItemsSource="{Binding Deposites}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
+                        <ListView ItemsSource="{Binding Deposits}" HorizontalAlignment="Left" Width="300" BorderThickness="0">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">

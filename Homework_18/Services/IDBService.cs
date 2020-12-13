@@ -27,7 +27,7 @@ namespace Homework_18.Services
         public void UpdateDepartment(Department department);
         public void DeleteDepartment(Department department);
 
-        public ObservableCollection<Deposit> SelectClientDeposites(int clientId);
+        public ObservableCollection<Deposit> SelectClientDeposits(int clientId);
         public void InsertDeposit(Deposit deposit);
     }
 }

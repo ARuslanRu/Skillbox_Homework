@@ -17,7 +17,7 @@ namespace Homework_18.ViewModel
 
         public ClientViewModel(Client client)
         {
-            dBmanager = new DBManager(new ADODBService());
+            dBmanager = new DBManager();
             this.client = client;
             Name = client.Name;
             departments = dBmanager.GetAllDepartments();
