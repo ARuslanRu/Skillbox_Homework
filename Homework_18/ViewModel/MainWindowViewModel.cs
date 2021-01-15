@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Homework_18.Extensions;
 using Homework_18.Services;
+using Homework_18.TemplateMethod;
 
 namespace Homework_18.ViewModel
 {
@@ -274,7 +275,11 @@ namespace Homework_18.ViewModel
                             {
                                 ClientsInDepartment = dBmanager.GetClientsInDepartment(SelectedDepartment);
                             }
+
+                            MyAbstractClass myAbstractClass = new FirstConcreteClass();
+                            myAbstractClass.TemplateMethod();
                         }
+
                     }));
             }
         }
@@ -315,6 +320,8 @@ namespace Homework_18.ViewModel
                         dBmanager.DeleteClient(SelectedClient);
                         ClientsInDepartment = dBmanager.GetClientsInDepartment(SelectedDepartment);
                         //TODO: Добавить удаление счетов и депозитов клиента
+                        MyAbstractClass myAbstractClass = new SecondConcreteClass();
+                        myAbstractClass.TemplateMethod();
                     },
                     obj => SelectedClient != null));
             }
