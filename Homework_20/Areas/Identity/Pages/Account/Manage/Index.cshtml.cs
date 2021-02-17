@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Homework_20.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,12 +12,12 @@ namespace Homework_20.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -32,12 +33,18 @@ namespace Homework_20.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Display(Name = "Фамилия")]
+            public string LastName { get; set; }
+            [Display(Name = "Имя")]
+            public string FirstName { get; set; }
+            [Display(Name = "Отчество")]
+            public string MiddleName { get; set; }
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Телефонный номер")]
             public string PhoneNumber { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -46,6 +53,9 @@ namespace Homework_20.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                LastName = user.LastName,
+                FirstName = user.FirstName,
+                MiddleName = user.MiddleName,
                 PhoneNumber = phoneNumber
             };
         }

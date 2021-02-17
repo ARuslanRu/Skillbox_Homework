@@ -21,16 +21,16 @@ namespace Homework_20.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _db;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             RoleManager<IdentityRole> roleManager,
@@ -54,29 +54,18 @@ namespace Homework_20.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [Display(Name = "Фамилия")]
-            public string LastName { get; set; }
-            [Required]
-            [Display(Name = "Имя")]
-            public string FirstName { get; set; }
-            [Required]
-            [Display(Name = "Отчество")]
-            public string MiddleName { get; set; }
-
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            [Display(Name = "Login")]
+            public string Login { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Пароль")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Подтвердите Пароль")]
+            [Compare("Password", ErrorMessage = "Пароль и пароль подтверждения не совпадают.")]
             public string ConfirmPassword { get; set; }
 
         }
@@ -100,24 +89,20 @@ namespace Homework_20.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
 
-
                 var user = new ApplicationUser
                 {
-                    LastName = Input.LastName,
-                    FirstName = Input.FirstName,
-                    MiddleName = Input.MiddleName,
-                    FullName = $"{Input.LastName} {Input.FirstName} {Input.MiddleName}",
-
-                    UserName = Input.Email,
-                    Email = Input.Email 
+                    UserName = Input.Login
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
-
-                    //Если имеем роль администратора или только что создалась первая учетная запись, то создаем учетную запись с ролью администратора.
-                    if (User.IsInRole(WebConstants.AdminRole) || _db.ApplicationUser.Count() == 1)
+                    //Если имеем роль администратора или только что создалась первая учетная запись, то добавляем создаваемой учетной записи роль администратора
+                    if (
+                        User.IsInRole(WebConstants.AdminRole) 
+                        //|| _db.ApplicationUser.Count() == 1
+                        )
                     {
                         await _userManager.AddToRoleAsync(user, WebConstants.AdminRole);
                     }
@@ -128,26 +113,9 @@ namespace Homework_20.Areas.Identity.Pages.Account
 
                     _logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return LocalRedirect(returnUrl);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
                 }
                 foreach (var error in result.Errors)
                 {
