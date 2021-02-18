@@ -11,7 +11,7 @@
                 <div class="col-12 col-md-6 text-right">
                     @if (User.IsInRole(Homework_20.WebConstants.AdminRole))
                     {
-                        <a asp-action="" class="btn btn-primary mr-2">
+                        <a asp-action="Edit" class="btn btn-primary mr-2">
                             <i class="fas fa-edit"></i>
                         </a>
                     }
@@ -22,12 +22,13 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-12 col-lg-4 text-center">
-                    <img src="@WebConstants.ImagePath@Model.Image" width="100%" class="rounded" alt="зображение" />
+                    <img src="@WebConstants.ImagePath@Model.Image" width="100%" class="rounded" alt="Изображение" />
                 </div>
 
                 <div class="col-12 col-lg-8">
                     <h4 class="text-success">О Себе:</h4>
-                    <p class="text-secondary">@Model.About</p>
+                    @*@Html.Raw*@
+                    <p class="text-secondary">@Html.Raw(Model.About)</p>
                 </div>
             </div>
         </div>
