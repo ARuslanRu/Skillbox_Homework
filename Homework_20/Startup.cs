@@ -1,4 +1,5 @@
 using Homework_20.Data;
+using Homework_20.Extensions;
 using Homework_20.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,6 +28,10 @@ namespace Homework_20
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IPasswordValidator<ApplicationUser>,
+            CustomPasswordValidator>(serv => new CustomPasswordValidator(6));
+
+
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
