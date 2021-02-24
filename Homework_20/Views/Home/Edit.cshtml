@@ -3,13 +3,49 @@
 <h1>Редактирование профиля</h1>
 <div class="row justify-content-md-center">
     <div class="col-md-3">
-        <img class="card-img-top img-fluid d-block mx-auto" id="preview" src="@WebConstants.ImagePath@Model.Image" alt="Изображение"/>
+        @if (!string.IsNullOrEmpty(Model.Image))
+        {
+            <img class="card-img-top img-fluid d-block mx-auto" id="preview" src="@WebConstants.ImagePath@Model.Image" alt="Изображение" />
+        }
+        else
+        {
+            <img class="card-img-top img-fluid d-block mx-auto" id="preview" src="@(WebConstants.ImagePath)base.png" alt="Изображение" />
+        }
+
+        <form method="post" asp-action="UpdateImage" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col">
+
+                    <label for="updateImage" class="btn btn-success">Изменить</label>
+                    <input type="file" onchange="this.form.submit()" id="updateImage" name="files"
+                           style="
+                                    opacity: 0;
+                                    z-index: -1;
+                                    overflow: hidden;
+                                    position: absolute;
+                                    width: 0.1px;
+                                    height: 0.1px;" />
+
+
+                </div>
+                <div class="col-auto">
+                    <a asp-action="RemoveImage" class="btn btn-outline-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+
+
+
+
     </div>
 
     <div class="col-md-6">
         <form method="post" enctype="multipart/form-data">
 
             <input asp-for="Id" hidden />
+            <input asp-for="Image" hidden />
 
             <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -31,17 +67,18 @@
                 <span asp-validation-for="MiddleName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="Image"></label>
-                <input type="file" name="files" class="form-control-file" id="uploadBox" onchange="previewImage();">
-            </div>
+            @*<div class="form-group">
+            <label asp-for="Image"></label>
+            <input asp-for="Image" disabled class="form-control" />
+            <input type="file" name="files" class="form-control-file" id="uploadBox" onchange="previewImage();">
+        </div>*@
 
             <div class="form-group">
                 <label asp-for="About"></label>
                 <textarea asp-for="About" class="form-control summernote"></textarea>
                 <span asp-validation-for="About" class="text-danger"></span>
             </div>
-            
+
             <div class="form-group row">
 
                 <div class="col">
@@ -62,23 +99,24 @@
 
     @{
         <partial name="_ValidationScriptsPartial" />
-
     }
     <script>
 
-        function previewImage() {
-            var file = document.getElementById("uploadBox").files;
-            if (file.length > 0) {
-                var fileReader = new FileReader();
+        //function readURL(input) {
+        //    if (input.files && input.files[0]) {
+        //        var reader = new FileReader();
 
-                fileReader.onload = function (event) {
-                    document.getElementById("preview").setAttribute("src", event.target.result);
-                };
+        //        reader.onload = function (e) {
+        //            $('#preview').attr('src', e.target.result);
+        //        }
 
-                fileReader.readAsDataURL(file[0]);
-            }
-        }
+        //        reader.readAsDataURL(input.files[0]);
+        //    }
+        //}
 
+        //$("#uploadBox").change(function () {
+        //    readURL(this);
+        //});
 
         $(document).ready(function () {
             $('.summernote').summernote({
@@ -86,17 +124,17 @@
             });
         });
 
-        function validateInput() {
-            if (document.getElementById("uploadBox").value == "") {
-                Swal.fire(
-                    'Ошибка!',
-                    'Пожалуйста загрузите изображение!',
-                    'error'
-                )
-                return false;
-            }
-            return true;
-        }
+        //function validateInput() {
+        //    if (document.getElementById("uploadBox").value == "") {
+        //        Swal.fire(
+        //            'Ошибка!',
+        //            'Пожалуйста загрузите изображение!',
+        //            'error'
+        //        )
+        //        return false;
+        //    }
+        //    return true;
+        //}
     </script>
 
 }

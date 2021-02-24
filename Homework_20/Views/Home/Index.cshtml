@@ -22,12 +22,18 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-12 col-lg-4 text-center">
-                    <img src="@WebConstants.ImagePath@Model.Image" width="100%" class="rounded" alt="Изображение" />
+                    @if (!string.IsNullOrEmpty(Model.Image))
+                    {
+                        <img src="@WebConstants.ImagePath@Model.Image" width="100%" class="rounded" alt="Изображение" />
+                    }
+                    else
+                    {
+                        <img src="@(WebConstants.ImagePath)base.png" width="100%" class="rounded" alt="Изображение" />
+                    }
                 </div>
 
                 <div class="col-12 col-lg-8">
                     <h4 class="text-success">О Себе:</h4>
-                    @*@Html.Raw*@
                     <p class="text-secondary">@Html.Raw(Model.About)</p>
                 </div>
             </div>

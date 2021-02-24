@@ -13,7 +13,7 @@ namespace Homework_20.Data
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+            Database.EnsureCreated();        
         }
 
         public DbSet<Profile> Profile { get; set; }

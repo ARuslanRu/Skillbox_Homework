@@ -20,7 +20,7 @@ namespace Homework_20.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public HomeController(
-            ILogger<HomeController> logger, 
+            ILogger<HomeController> logger,
             AppDbContext db,
             IWebHostEnvironment webHostEnvironment)
         {
@@ -33,15 +33,14 @@ namespace Homework_20.Controllers
         {
             Profile profile = _db.Profile.FirstOrDefault();
 
-            if(profile == null)
+            if (profile == null)
             {
                 profile = new Profile()
                 {
                     LastName = "Фамилия",
                     FirstName = "Имя",
                     MiddleName = "Отчество",
-                    About = "Текст о себе",
-                    Image = "base.gif"
+                    About = "Текст о себе"
                 };
 
                 _db.Profile.Add(profile);
@@ -70,45 +69,106 @@ namespace Homework_20.Controllers
         {
             if (ModelState.IsValid)
             {
-                var files = HttpContext.Request.Form.Files;
-                string webRootPath = _webHostEnvironment.WebRootPath;
+                //var files = HttpContext.Request.Form.Files;
+                //string webRootPath = _webHostEnvironment.WebRootPath;
 
-                if (files.Count > 0)
-                {
-                    string upload = webRootPath + WebConstants.ImagePath;
-                    string fileName = Guid.NewGuid().ToString();
-                    string extension = Path.GetExtension(files[0].FileName);
+                //if (files.Count > 0)
+                //{
+                //    string upload = webRootPath + WebConstants.ImagePath;
+                //    string fileName = Guid.NewGuid().ToString();
+                //    string extension = Path.GetExtension(files[0].FileName);
 
-                    //Если изображение уже было то старое удаляем
-                    string oldImage = _db.Profile.AsNoTracking().FirstOrDefault(x=> x.Id == model.Id).Image;
-                    if(!string.IsNullOrEmpty(oldImage))
-                    {
-                        var oldFile = Path.Combine(upload, oldImage);
+                //    //Если изображение уже было то старое удаляем
+                //    string oldImage = _db.Profile.AsNoTracking().FirstOrDefault(x => x.Id == model.Id).Image;
+                //    if (!string.IsNullOrEmpty(oldImage))
+                //    {
+                //        var oldFile = Path.Combine(upload, oldImage);
 
-                        if (System.IO.File.Exists(oldFile))
-                        {
-                            System.IO.File.Delete(oldFile);
-                        }
-                    }
+                //        if (System.IO.File.Exists(oldFile))
+                //        {
+                //            System.IO.File.Delete(oldFile);
+                //        }
+                //    }
 
-                    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
-                    {
-                        files[0].CopyTo(fileStream);
-                    }
+                //    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                //    {
+                //        files[0].CopyTo(fileStream);
+                //    }
 
-                    model.Image = fileName + extension;
+                //    model.Image = fileName + extension;
 
-                    _db.Profile.Update(model);
-                }
+                //    _db.Profile.Update(model);
+                //}
                 _db.Profile.Update(model);
                 _db.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult RemoveImage()
+        {
+            Profile profile = _db.Profile.FirstOrDefault();
+
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            profile.Image = null;
+
+            _db.SaveChanges();
+
+            return RedirectToAction(nameof(Edit));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateImage()
+        {
+            var files = HttpContext.Request.Form.Files;
+            string webRootPath = _webHostEnvironment.WebRootPath;
+
+            if (files.Count > 0)
+            {
+                string upload = webRootPath + WebConstants.ImagePath;
+                string fileName = Guid.NewGuid().ToString();
+                string extension = Path.GetExtension(files[0].FileName);
+                Profile profile = _db.Profile.FirstOrDefault();
+
+                if (profile == null)
+                {
+                    return NotFound();
+                }
+
+                //Если изображение уже было то старое удаляем
+                string oldImage = profile.Image;
+                if (!string.IsNullOrEmpty(oldImage))
+                {
+                    var oldFile = Path.Combine(upload, oldImage);
+
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+                }
+
+                using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                {
+                    files[0].CopyTo(fileStream);
+                }
+
+                profile.Image = fileName + extension;
+
+                _db.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Edit));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
